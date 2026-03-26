@@ -6,6 +6,11 @@ export default {
   components: {
     NextButton,
   },
+  data() {
+    return {
+      dropdownSearchQuery: '',
+    };
+  },
   props: {
     modelValue: {
       type: Object,
@@ -107,6 +112,23 @@ export default {
         });
       },
     },
+    shouldShowDropdownSearch() {
+      return (
+        ['multi_select', 'search_select'].includes(this.inputType) &&
+        this.dropdownValues.length > 8
+      );
+    },
+    filteredDropdownValues() {
+      const normalizedSearch = this.dropdownSearchQuery.trim().toLowerCase();
+
+      if (!normalizedSearch) {
+        return this.dropdownValues;
+      }
+
+      return this.dropdownValues.filter(option => {
+        return option.name?.toLowerCase().includes(normalizedSearch);
+      });
+    },
   },
   watch: {
     customAttributeType: {
@@ -128,6 +150,7 @@ export default {
       this.$emit('removeFilter');
     },
     resetFilter() {
+      this.dropdownSearchQuery = '';
       this.$emit('resetFilter');
     },
     getInputErrorClass(errorMessage) {
@@ -195,6 +218,13 @@ export default {
         </select>
 
         <div v-if="showUserInput" class="flex-grow mr-1 filter__answer--wrap">
+          <input
+            v-if="shouldShowDropdownSearch"
+            v-model="dropdownSearchQuery"
+            type="text"
+            class="!mb-2"
+            :placeholder="$t('AUTOMATION.SEARCH_OPTIONS_PLACEHOLDER')"
+          />
           <div
             v-if="inputType === 'multi_select'"
             class="multiselect-wrap--small"
@@ -209,8 +239,9 @@ export default {
               :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
               deselect-label=""
               :max-height="160"
-              :options="dropdownValues"
+              :options="filteredDropdownValues"
               :allow-empty="false"
+              :searchable="false"
             >
               <template #noOptions>
                 {{ $t('FORMS.MULTISELECT.NO_OPTIONS') }}
@@ -230,9 +261,10 @@ export default {
               :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
               deselect-label=""
               :max-height="160"
-              :options="dropdownValues"
+              :options="filteredDropdownValues"
               :allow-empty="false"
               :option-height="104"
+              :searchable="false"
             >
               <template #noOptions>
                 {{ $t('FORMS.MULTISELECT.NO_OPTIONS') }}

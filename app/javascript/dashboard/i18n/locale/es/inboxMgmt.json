@@ -10,6 +10,9 @@
     "LIST": {
       "404": "No hay entradas adjuntas a esta cuenta."
     },
+    "SEARCH": {
+      "PLACEHOLDER": "Buscar por nombre, correo o empresa"
+    },
     "CREATE_FLOW": {
       "CHANNEL": {
         "TITLE": "Elegir canal",

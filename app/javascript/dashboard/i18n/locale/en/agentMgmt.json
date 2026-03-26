@@ -97,6 +97,7 @@
       }
     },
     "SEARCH": {
+      "PLACEHOLDER": "Search by name, email, role, or status",
       "NO_RESULTS": "No results found."
     },
     "MULTI_SELECTOR": {

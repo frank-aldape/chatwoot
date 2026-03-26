@@ -97,6 +97,7 @@
       }
     },
     "SEARCH": {
+      "PLACEHOLDER": "Buscar por nombre, correo, rol o estado",
       "NO_RESULTS": "No se encontraron resultados."
     },
     "MULTI_SELECTOR": {

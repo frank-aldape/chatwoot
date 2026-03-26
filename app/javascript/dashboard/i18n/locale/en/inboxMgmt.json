@@ -10,6 +10,9 @@
     "LIST": {
       "404": "There are no inboxes attached to this account."
     },
+    "SEARCH": {
+      "PLACEHOLDER": "Search by name, email, or business"
+    },
     "CREATE_FLOW": {
       "CHANNEL": {
         "TITLE": "Choose Channel",

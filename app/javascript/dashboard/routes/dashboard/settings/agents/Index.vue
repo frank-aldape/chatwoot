@@ -14,6 +14,8 @@ import EditAgent from './EditAgent.vue';
 import BaseSettingsHeader from '../components/BaseSettingsHeader.vue';
 import SettingsLayout from '../SettingsLayout.vue';
 import Button from 'dashboard/components-next/button/Button.vue';
+import Input from 'dashboard/components-next/input/Input.vue';
+import Icon from 'dashboard/components-next/icon/Icon.vue';
 
 const getters = useStoreGetters();
 const store = useStore();
@@ -25,6 +27,7 @@ const showDeletePopup = ref(false);
 const showEditPopup = ref(false);
 const agentAPI = ref({ message: '' });
 const currentAgent = ref({});
+const searchQuery = ref('');
 
 const deleteConfirmText = computed(
   () => `${t('AGENT_MGMT.DELETE.CONFIRM.YES')} ${currentAgent.value.name}`
@@ -64,6 +67,37 @@ const getAgentRolePermissions = agent => {
   const customRole = findCustomRole(agent);
   return customRole?.permissions || [];
 };
+
+const getAgentVerificationLabel = agent => {
+  return agent.confirmed
+    ? t('AGENT_MGMT.LIST.VERIFIED')
+    : t('AGENT_MGMT.LIST.VERIFICATION_PENDING');
+};
+
+const getAgentSearchFields = agent => {
+  return [
+    agent.name,
+    agent.email,
+    agent.role,
+    getAgentRoleName(agent),
+    getAgentVerificationLabel(agent),
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+};
+
+const filteredAgentList = computed(() => {
+  const normalizedSearch = searchQuery.value.trim().toLowerCase();
+
+  if (!normalizedSearch) {
+    return agentList.value;
+  }
+
+  return agentList.value.filter(agent =>
+    getAgentSearchFields(agent).includes(normalizedSearch)
+  );
+});
 
 const verifiedAdministrators = computed(() => {
   return agentList.value.filter(
@@ -139,7 +173,7 @@ const confirmDeletion = () => {
   <SettingsLayout
     :is-loading="uiFlags.isFetching"
     :loading-message="$t('AGENT_MGMT.LOADING')"
-    :no-records-found="!agentList.length"
+    :no-records-found="!filteredAgentList.length"
     :no-records-message="$t('AGENT_MGMT.LIST.404')"
   >
     <template #header>
@@ -159,9 +193,26 @@ const confirmDeletion = () => {
       </BaseSettingsHeader>
     </template>
     <template #body>
+      <div class="mb-4 max-w-md">
+        <Input
+          v-model="searchQuery"
+          type="search"
+          :placeholder="$t('AGENT_MGMT.SEARCH.PLACEHOLDER')"
+          :custom-input-class="[
+            'h-10 [&:not(.focus)]:!border-transparent bg-n-alpha-2 ltr:!pl-9 rtl:!pr-9',
+          ]"
+        >
+          <template #prefix>
+            <Icon
+              icon="i-lucide-search"
+              class="absolute -translate-y-1/2 text-n-slate-11 size-4 top-1/2 ltr:left-3 rtl:right-3"
+            />
+          </template>
+        </Input>
+      </div>
       <table class="divide-y divide-n-weak">
         <tbody class="divide-y divide-n-weak text-n-slate-11">
-          <tr v-for="(agent, index) in agentList" :key="agent.email">
+          <tr v-for="(agent, index) in filteredAgentList" :key="agent.email">
             <td class="py-4 ltr:pr-4 rtl:pl-4">
               <div class="flex flex-row items-center gap-4">
                 <Avatar
@@ -217,11 +268,8 @@ const confirmDeletion = () => {
               </span>
             </td>
             <td class="py-4 ltr:pr-4 rtl:pl-4">
-              <span v-if="agent.confirmed">
-                {{ $t('AGENT_MGMT.LIST.VERIFIED') }}
-              </span>
-              <span v-if="!agent.confirmed">
-                {{ $t('AGENT_MGMT.LIST.VERIFICATION_PENDING') }}
+              <span>
+                {{ getAgentVerificationLabel(agent) }}
               </span>
             </td>
             <td class="py-4">

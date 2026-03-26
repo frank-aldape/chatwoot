@@ -6,6 +6,8 @@ import Avatar from 'next/avatar/Avatar.vue';
 import { useAdmin } from 'dashboard/composables/useAdmin';
 import SettingsLayout from '../SettingsLayout.vue';
 import BaseSettingsHeader from '../components/BaseSettingsHeader.vue';
+import Input from 'dashboard/components-next/input/Input.vue';
+import Icon from 'dashboard/components-next/icon/Icon.vue';
 import {
   useMapGetter,
   useStoreGetters,
@@ -22,11 +24,38 @@ const { isAdmin } = useAdmin();
 
 const showDeletePopup = ref(false);
 const selectedInbox = ref({});
+const searchQuery = ref('');
 
 const inboxes = useMapGetter('inboxes/getInboxes');
 
+const getInboxSearchFields = inbox => {
+  return [
+    inbox.name,
+    inbox.email,
+    inbox.forward_to_email,
+    inbox.business_name,
+    inbox.channel_type,
+    inbox.provider,
+    inbox.website_url,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+};
+
 const inboxesList = computed(() => {
-  return inboxes.value?.slice().sort((a, b) => a.name.localeCompare(b.name));
+  const normalizedSearch = searchQuery.value.trim().toLowerCase();
+  const sortedInboxes = inboxes.value
+    ?.slice()
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  if (!normalizedSearch) {
+    return sortedInboxes;
+  }
+
+  return sortedInboxes.filter(inbox =>
+    getInboxSearchFields(inbox).includes(normalizedSearch)
+  );
 });
 
 const uiFlags = computed(() => getters['inboxes/getUIFlags'].value);
@@ -96,6 +125,23 @@ const openDelete = inbox => {
       </BaseSettingsHeader>
     </template>
     <template #body>
+      <div class="mb-4 max-w-md">
+        <Input
+          v-model="searchQuery"
+          type="search"
+          :placeholder="$t('INBOX_MGMT.SEARCH.PLACEHOLDER')"
+          :custom-input-class="[
+            'h-10 [&:not(.focus)]:!border-transparent bg-n-alpha-2 ltr:!pl-9 rtl:!pr-9',
+          ]"
+        >
+          <template #prefix>
+            <Icon
+              icon="i-lucide-search"
+              class="absolute -translate-y-1/2 text-n-slate-11 size-4 top-1/2 ltr:left-3 rtl:right-3"
+            />
+          </template>
+        </Input>
+      </div>
       <table class="min-w-full overflow-x-auto">
         <tbody class="divide-y divide-n-weak flex-1 text-n-slate-12">
           <tr v-for="inbox in inboxesList" :key="inbox.id">
