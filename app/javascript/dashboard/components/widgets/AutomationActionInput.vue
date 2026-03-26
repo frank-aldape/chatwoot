@@ -123,11 +123,20 @@ export default {
 
 <template>
   <div class="filter" :class="actionInputStyles">
-    <div class="filter-inputs">
+    <div
+      class="filter-inputs"
+      :class="{ 'filter-inputs--stacked': shouldShowDropdownSearch }"
+    >
+      <div
+        class="filter-inputs-row"
+        :class="{ 'filter-inputs-row--stacked': shouldShowDropdownSearch }"
+      >
       <select
         v-model="action_name"
         class="action__question"
-        :class="{ 'full-width': !showActionInput }"
+        :class="{
+          'full-width': !showActionInput || shouldShowDropdownSearch,
+        }"
         @change="resetAction()"
       >
         <option
@@ -140,13 +149,20 @@ export default {
       </select>
       <div v-if="showActionInput" class="filter__answer--wrap">
         <div v-if="inputType" class="w-full">
-          <input
-            v-if="shouldShowDropdownSearch"
-            v-model="dropdownSearchQuery"
-            type="text"
-            class="answer--text-input !mb-2"
-            :placeholder="$t('AUTOMATION.SEARCH_OPTIONS_PLACEHOLDER')"
-          />
+          <div v-if="shouldShowDropdownSearch" class="search-input-wrap">
+            <input
+              v-model="dropdownSearchQuery"
+              type="text"
+              class="answer--text-input !mb-2 search-input"
+              :placeholder="$t('AUTOMATION.SEARCH_OPTIONS_PLACEHOLDER')"
+            />
+            <p
+              v-if="dropdownSearchQuery && !filteredDropdownValues.length"
+              class="search-empty-state"
+            >
+              {{ $t('AUTOMATION.SEARCH_OPTIONS_EMPTY') }}
+            </p>
+          </div>
           <div
             v-if="inputType === 'search_select'"
             class="multiselect-wrap--small"
@@ -223,6 +239,7 @@ export default {
         class="flex-shrink-0"
         @click="removeAction"
       />
+      </div>
     </div>
     <AutomationActionTeamMessageInput
       v-if="inputType === 'team_message'"
@@ -268,6 +285,18 @@ export default {
   @apply flex gap-1;
 }
 
+.filter-inputs--stacked {
+  @apply flex-col;
+}
+
+.filter-inputs-row {
+  @apply flex gap-1;
+}
+
+.filter-inputs-row--stacked {
+  @apply items-start;
+}
+
 .filter-error {
   @apply text-n-ruby-9 dark:text-n-ruby-9 block my-1 mx-0;
 }
@@ -291,6 +320,22 @@ export default {
   input {
     @apply mb-0;
   }
+}
+
+.filter-inputs--stacked .filter__answer--wrap {
+  @apply max-w-full;
+}
+
+.search-input-wrap {
+  @apply w-full rounded-lg border border-n-strong bg-n-slate-1 p-2;
+}
+
+.search-input {
+  @apply w-full;
+}
+
+.search-empty-state {
+  @apply mb-0 text-xs text-n-slate-11;
 }
 .filter__answer {
   &.answer--text-input {

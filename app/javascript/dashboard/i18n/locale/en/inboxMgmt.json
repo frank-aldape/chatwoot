@@ -11,7 +11,8 @@
       "404": "There are no inboxes attached to this account."
     },
     "SEARCH": {
-      "PLACEHOLDER": "Search by name, email, or business"
+      "PLACEHOLDER": "Search by name, email, or business",
+      "NO_RESULTS": "No inboxes matched your search."
     },
     "CREATE_FLOW": {
       "CHANNEL": {

@@ -11,7 +11,8 @@
       "404": "No hay entradas adjuntas a esta cuenta."
     },
     "SEARCH": {
-      "PLACEHOLDER": "Buscar por nombre, correo o empresa"
+      "PLACEHOLDER": "Buscar por nombre, correo o empresa",
+      "NO_RESULTS": "No se encontraron entradas con esa búsqueda."
     },
     "CREATE_FLOW": {
       "CHANNEL": {

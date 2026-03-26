@@ -57,6 +57,10 @@ const inboxesList = computed(() => {
     getInboxSearchFields(inbox).includes(normalizedSearch)
   );
 });
+const hasInboxes = computed(() => inboxes.value?.length > 0);
+const showEmptySearchResults = computed(
+  () => hasInboxes.value && !inboxesList.value.length
+);
 
 const uiFlags = computed(() => getters['inboxes/getUIFlags'].value);
 
@@ -103,7 +107,7 @@ const openDelete = inbox => {
 
 <template>
   <SettingsLayout
-    :no-records-found="!inboxesList.length"
+    :no-records-found="!hasInboxes"
     :no-records-message="$t('INBOX_MGMT.LIST.404')"
     :is-loading="uiFlags.isFetching"
   >
@@ -124,7 +128,7 @@ const openDelete = inbox => {
         </template>
       </BaseSettingsHeader>
     </template>
-    <template #body>
+    <template #preBody>
       <div class="mb-4 max-w-md">
         <Input
           v-model="searchQuery"
@@ -142,7 +146,15 @@ const openDelete = inbox => {
           </template>
         </Input>
       </div>
-      <table class="min-w-full overflow-x-auto">
+    </template>
+    <template #body>
+      <p
+        v-if="showEmptySearchResults"
+        class="flex items-center justify-center py-16 text-base text-n-slate-11"
+      >
+        {{ $t('INBOX_MGMT.SEARCH.NO_RESULTS') }}
+      </p>
+      <table v-else class="min-w-full overflow-x-auto">
         <tbody class="divide-y divide-n-weak flex-1 text-n-slate-12">
           <tr v-for="inbox in inboxesList" :key="inbox.id">
             <td class="py-4 ltr:pr-4 rtl:pl-4">

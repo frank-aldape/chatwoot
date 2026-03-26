@@ -98,6 +98,10 @@ const filteredAgentList = computed(() => {
     getAgentSearchFields(agent).includes(normalizedSearch)
   );
 });
+const hasAgents = computed(() => agentList.value.length > 0);
+const showEmptySearchResults = computed(
+  () => hasAgents.value && !filteredAgentList.value.length
+);
 
 const verifiedAdministrators = computed(() => {
   return agentList.value.filter(
@@ -173,7 +177,7 @@ const confirmDeletion = () => {
   <SettingsLayout
     :is-loading="uiFlags.isFetching"
     :loading-message="$t('AGENT_MGMT.LOADING')"
-    :no-records-found="!filteredAgentList.length"
+    :no-records-found="!hasAgents"
     :no-records-message="$t('AGENT_MGMT.LIST.404')"
   >
     <template #header>
@@ -192,7 +196,7 @@ const confirmDeletion = () => {
         </template>
       </BaseSettingsHeader>
     </template>
-    <template #body>
+    <template #preBody>
       <div class="mb-4 max-w-md">
         <Input
           v-model="searchQuery"
@@ -210,7 +214,15 @@ const confirmDeletion = () => {
           </template>
         </Input>
       </div>
-      <table class="divide-y divide-n-weak">
+    </template>
+    <template #body>
+      <p
+        v-if="showEmptySearchResults"
+        class="flex items-center justify-center py-16 text-base text-n-slate-11"
+      >
+        {{ $t('AGENT_MGMT.SEARCH.NO_RESULTS') }}
+      </p>
+      <table v-else class="divide-y divide-n-weak">
         <tbody class="divide-y divide-n-weak text-n-slate-11">
           <tr v-for="(agent, index) in filteredAgentList" :key="agent.email">
             <td class="py-4 ltr:pr-4 rtl:pl-4">

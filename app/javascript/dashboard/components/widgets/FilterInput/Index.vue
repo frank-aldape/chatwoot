@@ -169,11 +169,19 @@ export default {
       class="p-2 border border-solid rounded-lg"
       :class="getInputErrorClass(errorMessage)"
     >
-      <div class="flex gap-1">
+      <div
+        class="gap-1"
+        :class="shouldShowDropdownSearch ? 'flex flex-col' : 'flex'"
+      >
+        <div
+          class="gap-1"
+          :class="shouldShowDropdownSearch ? 'flex items-start' : 'flex'"
+        >
         <select
           v-if="groupedFilters"
           v-model="attributeKey"
-          class="max-w-[30%] mb-0 mr-1"
+          class="mb-0 mr-1"
+          :class="shouldShowDropdownSearch ? 'w-full max-w-full' : 'max-w-[30%]'"
           @change="resetFilter()"
         >
           <optgroup
@@ -194,7 +202,8 @@ export default {
         <select
           v-else
           v-model="attributeKey"
-          class="max-w-[30%] mb-0 mr-1"
+          class="mb-0 mr-1"
+          :class="shouldShowDropdownSearch ? 'w-full max-w-full' : 'max-w-[30%]'"
           @change="resetFilter()"
         >
           <option
@@ -207,7 +216,11 @@ export default {
           </option>
         </select>
 
-        <select v-model="filterOperator" class="max-w-[20%] mb-0 mr-1">
+        <select
+          v-model="filterOperator"
+          class="mb-0 mr-1"
+          :class="shouldShowDropdownSearch ? 'w-full max-w-full' : 'max-w-[20%]'"
+        >
           <option
             v-for="(operator, o) in operators"
             :key="o"
@@ -218,13 +231,20 @@ export default {
         </select>
 
         <div v-if="showUserInput" class="flex-grow mr-1 filter__answer--wrap">
-          <input
-            v-if="shouldShowDropdownSearch"
-            v-model="dropdownSearchQuery"
-            type="text"
-            class="!mb-2"
-            :placeholder="$t('AUTOMATION.SEARCH_OPTIONS_PLACEHOLDER')"
-          />
+          <div v-if="shouldShowDropdownSearch" class="search-input-wrap">
+            <input
+              v-model="dropdownSearchQuery"
+              type="text"
+              class="!mb-2 search-input"
+              :placeholder="$t('AUTOMATION.SEARCH_OPTIONS_PLACEHOLDER')"
+            />
+            <p
+              v-if="dropdownSearchQuery && !filteredDropdownValues.length"
+              class="search-empty-state"
+            >
+              {{ $t('AUTOMATION.SEARCH_OPTIONS_EMPTY') }}
+            </p>
+          </div>
           <div
             v-if="inputType === 'multi_select'"
             class="multiselect-wrap--small"
@@ -294,6 +314,7 @@ export default {
           class="flex-shrink-0"
           @click="removeFilter"
         />
+        </div>
       </div>
       <p v-if="errorMessage" class="filter-error">
         {{ errorMessage }}
@@ -322,9 +343,23 @@ export default {
 
 <style lang="scss" scoped>
 .filter__answer--wrap {
+  @apply flex flex-col gap-2;
+
   input {
     @apply bg-n-background mb-0 text-n-slate-12 border-n-weak;
   }
+}
+
+.search-input-wrap {
+  @apply w-full rounded-lg border border-n-strong bg-n-slate-1 p-2;
+}
+
+.search-input {
+  @apply w-full;
+}
+
+.search-empty-state {
+  @apply mb-0 text-xs text-n-slate-11;
 }
 
 .filter-error {
