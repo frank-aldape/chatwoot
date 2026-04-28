@@ -15,15 +15,29 @@
 #
 
 class InboxMember < ApplicationRecord
+  ACCESS_TYPES = %w[manual team].freeze
+
   validates :inbox_id, presence: true
   validates :user_id, presence: true
   validates :user_id, uniqueness: { scope: :inbox_id }
+  validates :access_type, inclusion: { in: ACCESS_TYPES }
 
   belongs_to :user
   belongs_to :inbox
 
   after_create :add_agent_to_round_robin
   after_destroy :remove_agent_from_round_robin
+
+  scope :manual_access, -> { where(access_type: 'manual') }
+  scope :team_access, -> { where(access_type: 'team') }
+
+  def manual_access?
+    access_type == 'manual'
+  end
+
+  def team_access?
+    access_type == 'team'
+  end
 
   private
 

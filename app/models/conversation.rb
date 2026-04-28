@@ -78,6 +78,20 @@ class Conversation < ApplicationRecord
   scope :unassigned, -> { where(assignee_id: nil) }
   scope :assigned, -> { where.not(assignee_id: nil) }
   scope :assigned_to, ->(agent) { where(assignee_id: agent.id) }
+  scope :search_by_term, lambda { |query|
+    sanitized_query = query.to_s.strip
+    return all if sanitized_query.blank?
+
+    rank_sql = sanitize_sql_array(
+      ["ts_rank(conversations.search_vector, websearch_to_tsquery('simple', ?)) DESC", sanitized_query]
+    )
+
+    where(
+      'conversations.search_vector @@ websearch_to_tsquery(\'simple\', ?) OR CAST(conversations.display_id AS TEXT) ILIKE ?',
+      sanitized_query,
+      "%#{sanitized_query}%"
+    ).order(Arel.sql("#{rank_sql}, conversations.last_activity_at DESC"))
+  }
   scope :unattended, -> { where(first_reply_created_at: nil).or(where.not(waiting_since: nil)) }
   scope :resolvable_not_waiting, lambda { |auto_resolve_after|
     return none if auto_resolve_after.to_i.zero?

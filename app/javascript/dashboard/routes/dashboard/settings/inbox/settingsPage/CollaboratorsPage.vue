@@ -26,7 +26,9 @@ export default {
   data() {
     return {
       selectedAgents: [],
+      selectedTeams: [],
       isAgentListUpdating: false,
+      isTeamListUpdating: false,
       enableAutoAssignment: false,
       maxAssignmentLimit: null,
     };
@@ -34,6 +36,7 @@ export default {
   computed: {
     ...mapGetters({
       agentList: 'agents/getAgents',
+      teamList: 'teams/getTeams',
     }),
     maxAssignmentLimitErrors() {
       if (this.v$.maxAssignmentLimit.$error) {
@@ -48,6 +51,11 @@ export default {
     inbox() {
       this.setDefaults();
     },
+    teamList() {
+      this.selectedTeams = this.teamList.filter(team =>
+        (this.inbox.team_ids || []).includes(team.id)
+      );
+    },
   },
   mounted() {
     this.setDefaults();
@@ -57,6 +65,9 @@ export default {
       this.enableAutoAssignment = this.inbox.enable_auto_assignment;
       this.maxAssignmentLimit =
         this.inbox?.auto_assignment_config?.max_assignment_limit || null;
+      this.selectedTeams = this.teamList.filter(team =>
+        (this.inbox.team_ids || []).includes(team.id)
+      );
       this.fetchAttachedAgents();
     },
     async fetchAttachedAgents() {
@@ -88,6 +99,20 @@ export default {
         useAlert(this.$t('AGENT_MGMT.EDIT.API.ERROR_MESSAGE'));
       }
       this.isAgentListUpdating = false;
+    },
+    async updateTeams() {
+      this.isTeamListUpdating = true;
+      try {
+        await this.$store.dispatch('inboxes/updateInbox', {
+          id: this.inbox.id,
+          formData: false,
+          team_ids: this.selectedTeams.map(team => team.id),
+        });
+        useAlert(this.$t('INBOX_MGMT.EDIT.API.SUCCESS_MESSAGE'));
+      } catch (error) {
+        useAlert(this.$t('INBOX_MGMT.EDIT.API.ERROR_MESSAGE'));
+      }
+      this.isTeamListUpdating = false;
     },
     async updateInbox() {
       try {
@@ -145,6 +170,32 @@ export default {
         :label="$t('INBOX_MGMT.SETTINGS_POPUP.UPDATE')"
         :is-loading="isAgentListUpdating"
         @click="updateAgents"
+      />
+    </SettingsSection>
+
+    <SettingsSection
+      :title="$t('INBOX_MGMT.SETTINGS_POPUP.INBOX_TEAMS')"
+      :sub-title="$t('INBOX_MGMT.SETTINGS_POPUP.INBOX_TEAMS_SUB_TEXT')"
+    >
+      <multiselect
+        v-model="selectedTeams"
+        :options="teamList"
+        track-by="id"
+        label="name"
+        multiple
+        :close-on-select="false"
+        :clear-on-select="false"
+        hide-selected
+        placeholder="Pick some"
+        selected-label
+        :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
+        :deselect-label="$t('FORMS.MULTISELECT.ENTER_TO_REMOVE')"
+      />
+
+      <NextButton
+        :label="$t('INBOX_MGMT.SETTINGS_POPUP.UPDATE')"
+        :is-loading="isTeamListUpdating"
+        @click="updateTeams"
       />
     </SettingsSection>
 

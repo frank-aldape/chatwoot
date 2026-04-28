@@ -115,6 +115,19 @@ class Message < ApplicationRecord
   scope :created_since, ->(datetime) { where('created_at > ?', datetime) }
   scope :chat, -> { where.not(message_type: :activity).where(private: false) }
   scope :non_activity_messages, -> { where.not(message_type: :activity).reorder('id desc') }
+  scope :search_by_term, lambda { |query|
+    sanitized_query = query.to_s.strip
+    return all if sanitized_query.blank?
+
+    rank_sql = sanitize_sql_array(
+      ["ts_rank(messages.search_vector, websearch_to_tsquery('simple', ?)) DESC", sanitized_query]
+    )
+
+    where(
+      'messages.search_vector @@ websearch_to_tsquery(\'simple\', ?)',
+      sanitized_query
+    ).reorder(Arel.sql("#{rank_sql}, messages.created_at DESC"))
+  }
   scope :today, -> { where("date_trunc('day', created_at) = ?", Date.current) }
   scope :voice_calls, -> { where(content_type: :voice_call) }
 

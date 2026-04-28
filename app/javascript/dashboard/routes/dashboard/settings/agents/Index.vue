@@ -16,6 +16,7 @@ import SettingsLayout from '../SettingsLayout.vue';
 import Button from 'dashboard/components-next/button/Button.vue';
 import Input from 'dashboard/components-next/input/Input.vue';
 import Icon from 'dashboard/components-next/icon/Icon.vue';
+import { useSettingsSearchState } from 'dashboard/composables/useSettingsSearchState';
 
 const getters = useStoreGetters();
 const store = useStore();
@@ -27,7 +28,6 @@ const showDeletePopup = ref(false);
 const showEditPopup = ref(false);
 const agentAPI = ref({ message: '' });
 const currentAgent = ref({});
-const searchQuery = ref('');
 
 const deleteConfirmText = computed(
   () => `${t('AGENT_MGMT.DELETE.CONFIRM.YES')} ${currentAgent.value.name}`
@@ -98,10 +98,11 @@ const filteredAgentList = computed(() => {
     getAgentSearchFields(agent).includes(normalizedSearch)
   );
 });
-const hasAgents = computed(() => agentList.value.length > 0);
-const showEmptySearchResults = computed(
-  () => hasAgents.value && !filteredAgentList.value.length
-);
+const { searchQuery, showNoRecordsFound, showEmptySearchResults } =
+  useSettingsSearchState({
+    sourceRecords: agentList,
+    filteredRecords: filteredAgentList,
+  });
 
 const verifiedAdministrators = computed(() => {
   return agentList.value.filter(
@@ -177,7 +178,7 @@ const confirmDeletion = () => {
   <SettingsLayout
     :is-loading="uiFlags.isFetching"
     :loading-message="$t('AGENT_MGMT.LOADING')"
-    :no-records-found="!hasAgents"
+    :no-records-found="showNoRecordsFound"
     :no-records-message="$t('AGENT_MGMT.LIST.404')"
   >
     <template #header>

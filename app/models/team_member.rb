@@ -18,6 +18,23 @@ class TeamMember < ApplicationRecord
   belongs_to :user
   belongs_to :team
   validates :user_id, uniqueness: { scope: :team_id }
+
+  after_create :grant_team_inbox_access
+  after_destroy :revoke_team_inbox_access
+
+  private
+
+  def grant_team_inbox_access
+    team.inboxes.find_each do |inbox|
+      InboxMembers::AccessService.new(inbox: inbox, user: user).grant_team_access!
+    end
+  end
+
+  def revoke_team_inbox_access
+    team.inboxes.find_each do |inbox|
+      InboxMembers::AccessService.new(inbox: inbox, user: user).revoke_team_access!
+    end
+  end
 end
 
 TeamMember.include_mod_with('Audit::TeamMember')

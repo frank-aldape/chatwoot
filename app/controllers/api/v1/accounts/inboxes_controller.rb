@@ -35,17 +35,19 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
           name: inbox_name(channel),
           channel: channel
         }.merge(
-          permitted_params.except(:channel)
+          permitted_params.except(:channel, :team_ids)
         )
       )
       @inbox.save!
+      update_team_assignments if permitted_params.key?(:team_ids)
     end
   end
 
   def update
-    inbox_params = permitted_params.except(:channel, :csat_config)
+    inbox_params = permitted_params.except(:channel, :csat_config, :team_ids)
     inbox_params[:csat_config] = format_csat_config(permitted_params[:csat_config]) if permitted_params[:csat_config].present?
     @inbox.update!(inbox_params)
+    update_team_assignments if permitted_params.key?(:team_ids)
     update_inbox_working_hours
     update_channel if channel_update_required?
   end
@@ -173,7 +175,7 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
   def inbox_attributes
     [:name, :avatar, :greeting_enabled, :greeting_message, :enable_email_collect, :csat_survey_enabled,
      :enable_auto_assignment, :working_hours_enabled, :out_of_office_message, :timezone, :allow_messages_after_resolved,
-     :lock_to_single_conversation, :portal_id, :sender_name_type, :business_name,
+     :lock_to_single_conversation, :portal_id, :sender_name_type, :business_name, { team_ids: [] },
      { csat_config: [:display_type, :message, :button_text, :language,
                      { survey_rules: [:operator, { values: [] }],
                        template: [:name, :template_id, :friendly_name, :content_sid, :approval_sid, :created_at, :language, :status] }] }]
@@ -203,6 +205,10 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
 
   def whatsapp_channel?
     @inbox.whatsapp? || (@inbox.twilio? && @inbox.channel.whatsapp?)
+  end
+
+  def update_team_assignments
+    ::Inboxes::TeamAssignmentsService.new(inbox: @inbox, team_ids: permitted_params[:team_ids]).perform
   end
 
   def trigger_template_sync

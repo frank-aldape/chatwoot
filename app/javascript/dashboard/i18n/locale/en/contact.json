@@ -614,7 +614,8 @@
       },
       "INBOX_SELECTOR": {
         "LABEL": "Via:",
-        "BUTTON": "Show inboxes"
+        "BUTTON": "Show inboxes",
+        "SEARCH_PLACEHOLDER": "Search by company name or email"
       },
       "EMAIL_OPTIONS": {
         "SUBJECT_LABEL": "Subject :",

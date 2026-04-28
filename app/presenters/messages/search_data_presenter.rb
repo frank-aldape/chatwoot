@@ -3,6 +3,8 @@ class Messages::SearchDataPresenter < SimpleDelegator
     {
       **searchable_content,
       **message_attributes,
+      contact: contact_data,
+      conversation_custom_attributes: conversation.custom_attributes,
       additional_attributes: additional_attributes_data,
       conversation: conversation_data
     }
@@ -46,7 +48,10 @@ class Messages::SearchDataPresenter < SimpleDelegator
   end
 
   def conversation_data
-    { id: conversation.display_id }
+    {
+      id: conversation.display_id,
+      custom_attributes: conversation.custom_attributes
+    }
   end
 
   def additional_attributes_data
@@ -54,5 +59,18 @@ class Messages::SearchDataPresenter < SimpleDelegator
       campaign_id: additional_attributes&.dig('campaign_id'),
       automation_rule_id: content_attributes&.dig('automation_rule_id')
     }
+  end
+
+  def contact_data
+    return {} if conversation.contact.blank?
+
+    conversation.contact.slice(
+      'name',
+      'email',
+      'phone_number',
+      'identifier',
+      'additional_attributes',
+      'custom_attributes'
+    )
   end
 end

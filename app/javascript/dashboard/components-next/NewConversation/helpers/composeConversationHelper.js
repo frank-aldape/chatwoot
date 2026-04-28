@@ -52,6 +52,7 @@ const transformInbox = ({
   name,
   email,
   phoneNumber,
+  searchableText: [name, email, phoneNumber].filter(Boolean).join(' '),
   channelType,
   medium,
   ...rest,

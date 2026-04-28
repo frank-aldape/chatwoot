@@ -66,7 +66,11 @@ const filteredMenuItems = computed(() => {
   if (!searchQuery.value) return flattenedMenuItems.value;
 
   return flattenedMenuItems.value.filter(item =>
-    item.label.toLowerCase().includes(searchQuery.value.toLowerCase())
+    [item.label, item.searchableText]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+      .includes(searchQuery.value.toLowerCase())
   );
 });
 
@@ -84,7 +88,11 @@ const filteredMenuSections = computed(() => {
   return props.menuSections
     .map(section => {
       const filteredItems = (section.items || []).filter(item =>
-        item.label.toLowerCase().includes(query)
+        [item.label, item.searchableText]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+          .includes(query)
       );
 
       return {

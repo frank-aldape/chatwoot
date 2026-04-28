@@ -32,18 +32,28 @@ class SearchService
 
   def filter_conversations
     conversations_query = current_account.conversations.where(inbox_id: accessable_inbox_ids)
-                                         .joins('INNER JOIN contacts ON conversations.contact_id = contacts.id')
-                                         .where("cast(conversations.display_id as text) ILIKE :search OR contacts.name ILIKE :search OR contacts.email
-                            ILIKE :search OR contacts.phone_number ILIKE :search OR contacts.identifier ILIKE :search", search: "%#{search_query}%")
+
+    conversations_query = if use_gin_search
+                            conversations_query.search_by_term(search_query)
+                          else
+                            conversations_query.joins('INNER JOIN contacts ON conversations.contact_id = contacts.id')
+                                               .where(
+                                                 "cast(conversations.display_id as text) ILIKE :search OR contacts.name ILIKE :search OR
+                                                  contacts.email ILIKE :search OR contacts.phone_number ILIKE :search OR
+                                                  contacts.identifier ILIKE :search OR conversations.custom_attributes::text ILIKE :search OR
+                                                  contacts.additional_attributes::text ILIKE :search OR contacts.custom_attributes::text ILIKE :search",
+                                                 search: "%#{search_query}%"
+                                               )
+                          end
 
     if current_account.feature_enabled?('advanced_search')
       conversations_query = apply_time_filter(conversations_query,
                                               'conversations.last_activity_at')
     end
 
-    @conversations = conversations_query.order('conversations.created_at DESC')
-                                        .page(params[:page])
-                                        .per(15)
+    conversations_query = conversations_query.order('conversations.created_at DESC') unless use_gin_search
+
+    @conversations = conversations_query.page(params[:page]).per(15)
   end
 
   def filter_messages
@@ -73,32 +83,24 @@ class SearchService
     base_query = message_base_query
     base_query = apply_message_filters(base_query)
 
-    if search_query.present?
-      # Use the @@ operator with to_tsquery for better GIN index utilization
-      # Convert search query to tsquery format with prefix matching
+    return base_query.reorder('created_at DESC').page(params[:page]).per(15) if search_query.blank?
 
-      # Use this if we wanna match splitting the words
-      # split_query = search_query.split.map { |term| "#{term} | #{term}:*" }.join(' & ')
-
-      # This will do entire sentence matching using phrase distance operator
-      tsquery = search_query.split.join(' <-> ')
-
-      # Apply the text search using the GIN index
-      base_query.where('content @@ to_tsquery(?)', tsquery)
-                .reorder('created_at DESC')
-                .page(params[:page])
-                .per(15)
-    else
-      base_query.reorder('created_at DESC')
-                .page(params[:page])
-                .per(15)
-    end
+    base_query.search_by_term(search_query)
+              .page(params[:page])
+              .per(15)
   end
 
   def filter_messages_with_like
     base_query = message_base_query
     base_query = apply_message_filters(base_query)
-    base_query.where('messages.content ILIKE :search', search: "%#{search_query}%")
+    base_query.joins(conversation: :contact)
+              .where(
+                "messages.content ILIKE :search OR messages.processed_message_content ILIKE :search OR
+                 conversations.custom_attributes::text ILIKE :search OR contacts.name ILIKE :search OR
+                 contacts.email ILIKE :search OR contacts.phone_number ILIKE :search OR contacts.identifier ILIKE :search OR
+                 contacts.additional_attributes::text ILIKE :search OR contacts.custom_attributes::text ILIKE :search",
+                search: "%#{search_query}%"
+              )
               .reorder('created_at DESC')
               .page(params[:page])
               .per(15)

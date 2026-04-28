@@ -700,8 +700,10 @@
         "SUBTITLE": "Add wildcard or regular domains separated by commas (leave blank to allow all), e.g. *.chatwoot.dev, chatwoot.com.",
         "PLACEHOLDER": "Enter domains separated by commas (eg: *.chatwoot.dev, chatwoot.com)"
       },
-      "INBOX_AGENTS": "Agents",
-      "INBOX_AGENTS_SUB_TEXT": "Add or remove agents from this inbox",
+      "INBOX_AGENTS": "Direct Agents",
+      "INBOX_AGENTS_SUB_TEXT": "Manage agent-specific access for this inbox. Team-based access is configured separately below.",
+      "INBOX_TEAMS": "Assign Teams",
+      "INBOX_TEAMS_SUB_TEXT": "Grant inbox access automatically to all agents who belong to the selected teams",
       "AGENT_ASSIGNMENT": "Conversation Assignment",
       "AGENT_ASSIGNMENT_SUB_TEXT": "Update conversation assignment settings",
       "UPDATE": "Update",

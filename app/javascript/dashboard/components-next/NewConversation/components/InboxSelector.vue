@@ -83,6 +83,10 @@ const targetInboxLabel = computed(() => {
       <DropdownMenu
         v-if="contactableInboxesList?.length > 0 && showInboxesDropdown"
         :menu-items="contactableInboxesList"
+        show-search
+        :search-placeholder="
+          t('COMPOSE_NEW_CONVERSATION.FORM.INBOX_SELECTOR.SEARCH_PLACEHOLDER')
+        "
         class="ltr:left-0 rtl:right-0 z-[100] top-8 overflow-y-auto max-h-56 w-fit max-w-sm dark:!outline-n-slate-5"
         @action="emit('handleInboxAction', $event)"
       />

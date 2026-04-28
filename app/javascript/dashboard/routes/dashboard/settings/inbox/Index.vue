@@ -16,6 +16,7 @@ import {
 import ChannelName from './components/ChannelName.vue';
 import ChannelIcon from 'next/icon/ChannelIcon.vue';
 import Button from 'dashboard/components-next/button/Button.vue';
+import { useSettingsSearchState } from 'dashboard/composables/useSettingsSearchState';
 
 const getters = useStoreGetters();
 const store = useStore();
@@ -24,7 +25,6 @@ const { isAdmin } = useAdmin();
 
 const showDeletePopup = ref(false);
 const selectedInbox = ref({});
-const searchQuery = ref('');
 
 const inboxes = useMapGetter('inboxes/getInboxes');
 
@@ -57,10 +57,11 @@ const inboxesList = computed(() => {
     getInboxSearchFields(inbox).includes(normalizedSearch)
   );
 });
-const hasInboxes = computed(() => inboxes.value?.length > 0);
-const showEmptySearchResults = computed(
-  () => hasInboxes.value && !inboxesList.value.length
-);
+const { searchQuery, showNoRecordsFound, showEmptySearchResults } =
+  useSettingsSearchState({
+    sourceRecords: inboxes,
+    filteredRecords: inboxesList,
+  });
 
 const uiFlags = computed(() => getters['inboxes/getUIFlags'].value);
 
@@ -107,7 +108,7 @@ const openDelete = inbox => {
 
 <template>
   <SettingsLayout
-    :no-records-found="!hasInboxes"
+    :no-records-found="showNoRecordsFound"
     :no-records-message="$t('INBOX_MGMT.LIST.404')"
     :is-loading="uiFlags.isFetching"
   >

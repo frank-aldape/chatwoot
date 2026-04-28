@@ -65,6 +65,8 @@ class Inbox < ApplicationRecord
 
   has_many :inbox_members, dependent: :destroy_async
   has_many :members, through: :inbox_members, source: :user
+  has_many :team_inboxes, dependent: :destroy
+  has_many :teams, through: :team_inboxes
   has_many :conversations, dependent: :destroy_async
   has_many :messages, dependent: :destroy_async
 
@@ -87,16 +89,24 @@ class Inbox < ApplicationRecord
   # Adds multiple members to the inbox
   # @param user_ids [Array<Integer>] Array of user IDs to add as members
   # @return [void]
-  def add_members(user_ids)
-    inbox_members.create!(user_ids.map { |user_id| { user_id: user_id } })
+  def add_members(user_ids, access_type: 'manual')
+    users = account.users.where(id: user_ids)
+    users.each do |user|
+      service = ::InboxMembers::AccessService.new(inbox: self, user: user)
+      access_type == 'team' ? service.grant_team_access! : service.grant_manual_access!
+    end
     update_account_cache
   end
 
   # Removes multiple members from the inbox
   # @param user_ids [Array<Integer>] Array of user IDs to remove
   # @return [void]
-  def remove_members(user_ids)
-    inbox_members.where(user_id: user_ids).destroy_all
+  def remove_members(user_ids, access_type: 'manual')
+    users = account.users.where(id: user_ids)
+    users.each do |user|
+      service = ::InboxMembers::AccessService.new(inbox: self, user: user)
+      access_type == 'team' ? service.revoke_team_access! : service.revoke_manual_access!
+    end
     update_account_cache
   end
 
