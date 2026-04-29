@@ -1,13 +1,12 @@
-version: '3'
-
-services:
-  base: &base
+x-base: &base
     image: ghcr.io/frank-aldape/chatwoot:prod
     env_file: .env
     volumes:
       - app_storage:/app/storage
     networks:
       - chatwoot_network
+
+services:
 
   rails:
     <<: *base
