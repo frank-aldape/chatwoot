@@ -2,18 +2,19 @@ version: '3'
 
 services:
   base: &base
-    image: chatwoot/chatwoot:latest
-    env_file: .env ## Change this file for customized env variables
+    image: ghcr.io/frank-aldape/chatwoot:prod
+    env_file: .env
     volumes:
-      - storage_data:/app/storage
+      - app_storage:/app/storage
+    networks:
+      - chatwoot_network
 
   rails:
     <<: *base
     depends_on:
-      - postgres
       - redis
     ports:
-      - '127.0.0.1:3000:3000'
+      - '3005:3000'
     environment:
       - NODE_ENV=production
       - RAILS_ENV=production
@@ -25,39 +26,38 @@ services:
   sidekiq:
     <<: *base
     depends_on:
-      - postgres
       - redis
     environment:
       - NODE_ENV=production
       - RAILS_ENV=production
       - INSTALLATION_ENV=docker
+      - SIDEKIQ_CONCURRENCY=25
     command: ['bundle', 'exec', 'sidekiq', '-C', 'config/sidekiq.yml']
     restart: always
-
-  postgres:
-    image: pgvector/pgvector:pg16
-    restart: always
-    ports:
-      - '127.0.0.1:5432:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=chatwoot
-      - POSTGRES_USER=postgres
-      # Please provide your own password.
-      - POSTGRES_PASSWORD=
+    extra_hosts:
+      - 'mail.mastercode.com.mx:host-gateway'
+      - 'chat.mastercode.com.mx:host-gateway'
 
   redis:
-    image: redis:alpine
+    image: redis:7.0-alpine
     restart: always
-    command: ["sh", "-c", "redis-server --requirepass \"$REDIS_PASSWORD\""]
+    command: ["sh", "-c", "redis-server --appendonly yes --requirepass \"$REDIS_PASSWORD\""]
     env_file: .env
     volumes:
       - redis_data:/data
     ports:
       - '127.0.0.1:6379:6379'
+    networks:
+      - chatwoot_network
+
+networks:
+  chatwoot_network:
+    external: true
 
 volumes:
-  storage_data:
-  postgres_data:
+  app_storage:
+    external: true
+    name: chatwoot_storage_data
   redis_data:
+    external: true
+    name: chatwoot_redis_data
