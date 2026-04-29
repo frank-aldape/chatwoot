@@ -23,7 +23,7 @@ class Webhooks::InboundEvents::IngestService
   def create_event(attributes)
     process_after = attributes.delete(:process_after)
     event = find_or_create_event(attributes)
-    enqueue_processing(event, process_after) if event.previously_new_record? && event.received?
+    enqueue_processing(event, process_after) if event.previously_new_record? && event.status_received?
     event
   end
 

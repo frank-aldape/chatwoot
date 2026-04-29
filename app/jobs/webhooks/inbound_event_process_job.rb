@@ -3,11 +3,11 @@ class Webhooks::InboundEventProcessJob < ApplicationJob
 
   def perform(event_id)
     event = InboundWebhookEvent.find(event_id)
-    return if event.processed? || event.discarded? || event.invalid?
+    return if event.status_processed? || event.status_discarded? || event.status_invalid?
 
     event.mark_processing!
     process_event(event)
-    return if event.invalid?
+    return if event.status_invalid?
 
     event.mark_processed!
   rescue StandardError => e

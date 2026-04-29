@@ -28,14 +28,14 @@ class InboundWebhookEvent < ApplicationRecord
   belongs_to :account, optional: true
   belongs_to :inbox, optional: true
 
-  enum status: {
+  enum :status, {
     received: 0,
     processing: 1,
     processed: 2,
     failed: 3,
     invalid: 4,
     discarded: 5
-  }
+  }, prefix: true
 
   validates :source, presence: true
   validates :event_type, presence: true

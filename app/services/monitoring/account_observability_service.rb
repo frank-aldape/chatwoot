@@ -20,7 +20,7 @@ class Monitoring::AccountObservabilityService
 
   def summary_metrics
     received_24h = account_events.where(created_at: 24.hours.ago..Time.current).count
-    failed_24h = account_events.failed.where(updated_at: 24.hours.ago..Time.current).count
+    failed_24h = account_events.status_failed.where(updated_at: 24.hours.ago..Time.current).count
     failure_rate_24h = received_24h.positive? ? (failed_24h.to_f / received_24h) : 0
 
     {
@@ -36,8 +36,8 @@ class Monitoring::AccountObservabilityService
       'Contacts total' => account.contacts.count,
       'Inbound webhook events total' => account_events.count,
       'Inbound webhook backlog' => account_events.where(status: %i[received processing]).count,
-      'Inbound webhook failed' => account_events.failed.count,
-      'Inbound webhook invalid' => account_events.invalid.count,
+      'Inbound webhook failed' => account_events.status_failed.count,
+      'Inbound webhook invalid' => account_events.status_invalid.count,
       'Inbound webhook received (24h)' => received_24h,
       'Inbound webhook failed (24h)' => failed_24h,
       'Inbound webhook failure rate (24h)' => format('%.2f%%', failure_rate_24h * 100),
@@ -49,7 +49,7 @@ class Monitoring::AccountObservabilityService
     inbox_message_counts = account.messages.group(:inbox_id).count
     inbox_recent_message_counts = account.messages.where(created_at: 30.days.ago..Time.current).group(:inbox_id).count
     inbox_backlog_counts = account_events.where(status: %i[received processing]).group(:inbox_id).count
-    inbox_failed_counts = account_events.failed.group(:inbox_id).count
+    inbox_failed_counts = account_events.status_failed.group(:inbox_id).count
 
     account.inboxes.map do |inbox|
       {
@@ -65,7 +65,7 @@ class Monitoring::AccountObservabilityService
   end
 
   def recent_failed_events
-    account_events.failed.recent_first.limit(25)
+    account_events.status_failed.recent_first.limit(25)
   end
 
   def monthly_growth

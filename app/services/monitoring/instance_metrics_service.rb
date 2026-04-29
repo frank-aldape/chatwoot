@@ -54,11 +54,11 @@ class Monitoring::InstanceMetricsService
   def add_webhook_metrics(metrics)
     metrics['Inbound webhook events total'] = InboundWebhookEvent.count
     metrics['Inbound webhook backlog'] = InboundWebhookEvent.where(status: %i[received processing]).count
-    metrics['Inbound webhook failed'] = InboundWebhookEvent.failed.count
-    metrics['Inbound webhook invalid'] = InboundWebhookEvent.invalid.count
+    metrics['Inbound webhook failed'] = InboundWebhookEvent.status_failed.count
+    metrics['Inbound webhook invalid'] = InboundWebhookEvent.status_invalid.count
     metrics['Inbound webhook received (24h)'] = InboundWebhookEvent.where(created_at: 24.hours.ago..Time.current).count
-    metrics['Inbound webhook processed (24h)'] = InboundWebhookEvent.processed.where(processed_at: 24.hours.ago..Time.current).count
-    metrics['Inbound webhook failed (24h)'] = InboundWebhookEvent.failed.where(updated_at: 24.hours.ago..Time.current).count
+    metrics['Inbound webhook processed (24h)'] = InboundWebhookEvent.status_processed.where(processed_at: 24.hours.ago..Time.current).count
+    metrics['Inbound webhook failed (24h)'] = InboundWebhookEvent.status_failed.where(updated_at: 24.hours.ago..Time.current).count
     metrics['Inbound webhook oldest backlog age'] = oldest_backlog_age
 
     WEBHOOK_SOURCES.each do |source|
