@@ -1,5 +1,5 @@
 class Webhooks::InstagramEventsJob < MutexApplicationJob
-  queue_as :default
+  queue_as :webhooks
   retry_on LockAcquisitionError, wait: 1.second, attempts: 8
 
   # @return [Array] We will support further events like reaction or seen in future

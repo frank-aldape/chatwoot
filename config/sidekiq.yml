@@ -17,6 +17,8 @@
 :queues:
   - critical
   - high
+  - webhooks
+  - media
   - medium
   - default
   - mailers

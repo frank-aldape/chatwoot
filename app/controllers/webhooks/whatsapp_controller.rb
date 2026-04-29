@@ -8,7 +8,7 @@ class Webhooks::WhatsappController < ActionController::API
       return
     end
 
-    Webhooks::WhatsappEventsJob.perform_later(params.to_unsafe_hash)
+    Webhooks::InboundEvents::IngestService.new(source: 'whatsapp', payload: params.to_unsafe_hash).perform
     head :ok
   end
 

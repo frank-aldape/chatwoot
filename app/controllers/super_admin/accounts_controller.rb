@@ -65,6 +65,24 @@ class SuperAdmin::AccountsController < SuperAdmin::ApplicationController
     redirect_back(fallback_location: [namespace, requested_resource], notice: 'Account deletion is in progress.')
     # rubocop:enable Rails/I18nLocaleTexts
   end
+
+  def observability
+    @account = requested_resource
+    @observability = Monitoring::AccountObservabilityService.new(@account).perform
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: {
+          account: {
+            id: @account.id,
+            name: @account.name
+          },
+          observability: @observability
+        }
+      end
+    end
+  end
 end
 
 SuperAdmin::AccountsController.prepend_mod_with('SuperAdmin::AccountsController')

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_01_14_201315) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_28_133000) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -882,6 +882,26 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_14_201315) do
     t.index ["portal_id"], name: "index_inboxes_on_portal_id"
   end
 
+  create_table "inbound_webhook_events", force: :cascade do |t|
+    t.bigint "account_id"
+    t.bigint "inbox_id"
+    t.string "source", null: false
+    t.string "event_type", null: false
+    t.string "external_id"
+    t.string "event_key", null: false
+    t.jsonb "payload", default: {}, null: false
+    t.integer "status", default: 0, null: false
+    t.text "error_message"
+    t.datetime "processed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "status", "created_at"], name: "idx_inbound_webhook_events_account_status"
+    t.index ["account_id"], name: "index_inbound_webhook_events_on_account_id"
+    t.index ["event_key"], name: "index_inbound_webhook_events_on_event_key", unique: true
+    t.index ["inbox_id"], name: "index_inbound_webhook_events_on_inbox_id"
+    t.index ["source", "external_id"], name: "index_inbound_webhook_events_on_external_id"
+  end
+
   create_table "installation_configs", force: :cascade do |t|
     t.string "name", null: false
     t.jsonb "serialized_value", default: {}, null: false
@@ -1270,6 +1290,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_14_201315) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "inbound_webhook_events", "accounts"
+  add_foreign_key "inbound_webhook_events", "inboxes"
   add_foreign_key "inboxes", "portals"
   create_trigger("accounts_after_insert_row_tr", :generated => true, :compatibility => 1).
       on("accounts").

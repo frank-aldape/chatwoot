@@ -75,9 +75,13 @@ class Whatsapp::IncomingMessageBaseService
 
   def create_regular_message(message)
     create_message(message)
-    attach_files
-    attach_location if message_type == 'location'
-    @message.save!
+    if should_defer_attachment_processing?
+      enqueue_attachment_processing
+    else
+      attach_files
+      attach_location if message_type == 'location'
+      @message.save!
+    end
   end
 
   def set_contact
@@ -129,6 +133,23 @@ class Whatsapp::IncomingMessageBaseService
         filename: attachment_file.original_filename,
         content_type: attachment_file.content_type
       }
+    )
+  end
+
+  def should_defer_attachment_processing?
+    !%w[text button interactive location contacts].include?(message_type)
+  end
+
+  def enqueue_attachment_processing
+    attachment_payload = @processed_params[:messages].first[message_type.to_sym]
+    @message.content ||= attachment_payload[:caption]
+    @message.save!
+
+    Webhooks::InboundMediaJob.set(wait: 2.seconds).perform_later(
+      @message.id,
+      @inbox.id,
+      message_type,
+      attachment_payload
     )
   end
 
