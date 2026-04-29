@@ -4,7 +4,25 @@ on:
   push:
     branches:
       - master
+    paths:
+      - '.github/workflows/build-and-push.yml'
+      - 'app/**'
+      - 'config/**'
+      - 'db/**'
+      - 'docker/**'
+      - 'enterprise/**'
+      - 'lib/**'
+      - 'public/**'
+      - 'Gemfile'
+      - 'Gemfile.lock'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'Rakefile'
   workflow_dispatch:
+
+concurrency:
+  group: build-and-push-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
