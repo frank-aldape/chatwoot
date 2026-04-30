@@ -1,0 +1,3 @@
+.husky/** text eol=lf
+bin/validate_push text eol=lf
+bin/sync_i18n_file_change text eol=lf
