@@ -1,14 +1,14 @@
 {
   "MANAGED_COMPANIES_SETTINGS": {
-    "HEADER": "Managed Companies",
+    "HEADER": "Compañías",
     "DESCRIPTION": "Group inboxes under an operational company, use the company record as the source of truth for domain validation, and then grant visibility to teams only on the inboxes they should handle.",
-    "LOADING": "Loading managed companies...",
-    "EMPTY": "There are no managed companies configured on this account yet.",
+    "LOADING": "Cargando compañías...",
+    "EMPTY": "Todavía no hay compañías configuradas en esta cuenta.",
     "FORM": {
-      "CREATE_TITLE": "Create managed company",
-      "EDIT_TITLE": "Edit managed company",
-      "DESCRIPTION": "Define the company, its allowed email domain, and the verification data that should be trusted for that domain.",
-      "NAME_LABEL": "Managed company name",
+      "CREATE_TITLE": "Crear compañía",
+      "EDIT_TITLE": "Editar compañía",
+      "DESCRIPTION": "Define la compañía, su dominio de correo autorizado y los datos de validación que deben tomarse como fuente de verdad para ese dominio.",
+      "NAME_LABEL": "Nombre de la compañía",
       "NAME_PLACEHOLDER": "Example: ACME",
       "DOMAIN_LABEL": "Authorized domain",
       "DOMAIN_PLACEHOLDER": "example.com",
@@ -21,13 +21,13 @@
       "DNS_STATUS_INVALID": "Invalid",
       "SPF_VALID": "SPF has already been validated in company configuration",
       "DKIM_VALID": "DKIM has already been validated in company configuration",
-      "CREATE": "Create managed company",
-      "UPDATE": "Update managed company",
-      "CANCEL": "Cancel"
+      "CREATE": "Crear compañía",
+      "UPDATE": "Actualizar compañía",
+      "CANCEL": "Cancelar"
     },
     "LIST": {
       "EDIT": "Edit",
-      "DELETE": "Delete",
+      "DELETE": "Eliminar",
       "INBOX_COUNT": "{count} inboxes",
       "TEAM_COUNT": "{count} teams",
       "INBOXES_LABEL": "Linked inboxes",
@@ -41,20 +41,20 @@
       "PENDING": "pending"
     },
     "DELETE": {
-      "TITLE": "Delete managed company",
-      "MESSAGE": "Deleting this managed company will unlink it from inboxes and teams. Team-to-inbox permissions that depend on it will be cleaned up automatically.",
-      "PLACEHOLDER": "Please type {name} to confirm",
-      "CONFIRM": "Delete managed company",
-      "CANCEL": "Cancel"
+      "TITLE": "Eliminar compañía",
+      "MESSAGE": "Eliminar esta compañía la desvinculará de los inboxes y equipos. Los permisos de equipo a inbox que dependan de ella se limpiarán automáticamente.",
+      "PLACEHOLDER": "Escribe {name} para confirmar",
+      "CONFIRM": "Eliminar compañía",
+      "CANCEL": "Cancelar"
     },
     "API": {
-      "LIST_ERROR": "Couldn't load managed companies. Try again.",
-      "CREATE_SUCCESS": "Managed company created successfully.",
-      "CREATE_ERROR": "Couldn't create the managed company. Try again.",
-      "UPDATE_SUCCESS": "Managed company updated successfully.",
-      "UPDATE_ERROR": "Couldn't update the managed company. Try again.",
-      "DELETE_SUCCESS": "Managed company deleted successfully.",
-      "DELETE_ERROR": "Couldn't delete the managed company. Try again."
+      "LIST_ERROR": "No se pudieron cargar las compañías. Intenta de nuevo.",
+      "CREATE_SUCCESS": "La compañía se creó correctamente.",
+      "CREATE_ERROR": "No se pudo crear la compañía. Intenta de nuevo.",
+      "UPDATE_SUCCESS": "La compañía se actualizó correctamente.",
+      "UPDATE_ERROR": "No se pudo actualizar la compañía. Intenta de nuevo.",
+      "DELETE_SUCCESS": "La compañía se eliminó correctamente.",
+      "DELETE_ERROR": "No se pudo eliminar la compañía. Intenta de nuevo."
     }
   }
 }
