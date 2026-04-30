@@ -39,6 +39,14 @@ const filterTypes = [
     attributeModel: 'standard',
   },
   {
+    attributeKey: 'managed_company_id',
+    attributeI18nKey: 'MANAGED_COMPANY',
+    inputType: 'search_select',
+    dataType: 'number',
+    filterOperators: OPERATOR_TYPES_2,
+    attributeModel: 'standard',
+  },
+  {
     attributeKey: 'team_id',
     attributeI18nKey: 'TEAM_NAME',
     inputType: 'search_select',
@@ -128,6 +136,10 @@ export const filterAttributeGroups = [
       {
         key: 'inbox_id',
         i18nKey: 'INBOX_NAME',
+      },
+      {
+        key: 'managed_company_id',
+        i18nKey: 'MANAGED_COMPANY',
       },
       {
         key: 'team_id',

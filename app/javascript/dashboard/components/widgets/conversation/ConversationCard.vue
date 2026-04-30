@@ -21,6 +21,7 @@ const props = defineProps({
   hideInboxName: { type: Boolean, default: false },
   hideThumbnail: { type: Boolean, default: false },
   teamId: { type: [String, Number], default: 0 },
+  managedCompanyId: { type: [String, Number], default: 0 },
   foldersId: { type: [String, Number], default: 0 },
   showAssignee: { type: Boolean, default: false },
   conversationType: { type: String, default: '' },
@@ -94,6 +95,8 @@ const inbox = computed(() => {
   return inboxId.value ? store.getters['inboxes/getInbox'](inboxId.value) : {};
 });
 
+const managedCompany = computed(() => inbox.value?.managed_company || null);
+
 const showInboxName = computed(() => {
   return (
     !props.hideInboxName &&
@@ -105,6 +108,7 @@ const showInboxName = computed(() => {
 const showMetaSection = computed(() => {
   return (
     showInboxName.value ||
+    managedCompany.value?.name ||
     (props.showAssignee && assignee.value.name) ||
     props.chat.priority
   );
@@ -132,6 +136,7 @@ const conversationPath = computed(() => {
       id: props.chat.id,
       label: props.activeLabel,
       teamId: props.teamId,
+      managedCompanyId: props.managedCompanyId,
       conversationType: props.conversationType,
       foldersId: props.foldersId,
     })
@@ -289,6 +294,13 @@ const deleteConversation = () => {
           'mx-2': compact,
         }"
       >
+        <span
+          v-if="managedCompany"
+          class="inline-flex items-center gap-1 max-w-full px-2 py-0.5 rounded-full bg-n-alpha-2 text-n-slate-11 text-xs font-medium"
+        >
+          <fluent-icon icon="building-bank" size="12" class="flex-shrink-0" />
+          <span class="truncate">{{ managedCompany.name }}</span>
+        </span>
         <InboxName v-if="showInboxName" :inbox="inbox" class="flex-1 min-w-0" />
         <div
           class="flex items-center gap-2 flex-shrink-0"

@@ -66,7 +66,7 @@ export default {
       <TeamForm
         v-if="showTeamForm"
         :on-submit="updateTeam"
-        :submit-in-progress="false"
+        :submit-in-progress="uiFlags.isUpdating"
         :submit-button-text="$t('TEAMS_SETTINGS.EDIT_FLOW.CREATE.BUTTON_TEXT')"
         :form-data="teamData"
       />

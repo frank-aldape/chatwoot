@@ -14,6 +14,16 @@
       "PLACEHOLDER": "Search by name, email, or business",
       "NO_RESULTS": "No inboxes matched your search."
     },
+    "FILTER": {
+      "MANAGED_COMPANY_LABEL": "Managed company",
+      "ALL_MANAGED_COMPANIES": "All managed companies",
+      "UNASSIGNED": "Unassigned inboxes"
+    },
+    "GROUPS": {
+      "UNASSIGNED_TITLE": "Unassigned inboxes",
+      "UNASSIGNED_SUBTITLE": "These inboxes are not linked to any managed company yet.",
+      "INBOX_COUNT": "{count} inboxes"
+    },
     "CREATE_FLOW": {
       "CHANNEL": {
         "TITLE": "Choose Channel",
@@ -702,6 +712,9 @@
       },
       "INBOX_AGENTS": "Direct Agents",
       "INBOX_AGENTS_SUB_TEXT": "Manage agent-specific access for this inbox. Team-based access is configured separately below.",
+      "MANAGED_COMPANY": "Managed Company",
+      "MANAGED_COMPANY_SUB_TEXT": "Attach this inbox to the managed company it belongs to. Teams can only be granted access to inboxes inside the companies they operate.",
+      "MANAGED_COMPANY_PLACEHOLDER": "No managed company selected",
       "INBOX_TEAMS": "Assign Teams",
       "INBOX_TEAMS_SUB_TEXT": "Grant inbox access automatically to all agents who belong to the selected teams",
       "AGENT_ASSIGNMENT": "Conversation Assignment",

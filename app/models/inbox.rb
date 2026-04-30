@@ -53,9 +53,13 @@ class Inbox < ApplicationRecord
   validates :out_of_office_message, length: { maximum: Limits::OUT_OF_OFFICE_MESSAGE_MAX_LENGTH }
   validates :greeting_message, length: { maximum: Limits::GREETING_MESSAGE_MAX_LENGTH }
   validate :ensure_valid_max_assignment_limit
+  validate :ensure_managed_company_account_integrity
+  validate :ensure_managed_company_email_domain_match
+  validate :ensure_managed_company_domain_configuration_ready
 
   belongs_to :account
   belongs_to :portal, optional: true
+  belongs_to :managed_company, optional: true
 
   belongs_to :channel, polymorphic: true, dependent: :destroy
 
@@ -245,6 +249,31 @@ class Inbox < ApplicationRecord
 
   def ensure_valid_max_assignment_limit
     # overridden in enterprise/app/models/enterprise/inbox.rb
+  end
+
+  def ensure_managed_company_account_integrity
+    return if managed_company.blank? || account_id.blank?
+
+    errors.add(:managed_company_id, :invalid) if managed_company.account_id != account_id
+  end
+
+  def ensure_managed_company_email_domain_match
+    return if managed_company.blank? || !email?
+
+    channel_email = channel.try(:email).presence || email_address
+    return if channel_email.blank?
+
+    email_domain = channel_email.split('@').last.to_s.downcase
+    return if email_domain == managed_company.authorized_domain
+
+    errors.add(:managed_company_id, 'authorized domain must match the inbox email domain')
+  end
+
+  def ensure_managed_company_domain_configuration_ready
+    return if managed_company.blank? || !email?
+    return if managed_company.dns_status_valid? && managed_company.spf_valid? && managed_company.dkim_valid?
+
+    errors.add(:managed_company_id, 'domain configuration must be marked as valid in the managed company settings')
   end
 
   def delete_round_robin_agents

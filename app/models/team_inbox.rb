@@ -20,6 +20,10 @@ class TeamInbox < ApplicationRecord
     return if account_id.blank? || team.blank? || inbox.blank?
 
     errors.add(:account_id, :invalid) if team.account_id != account_id || inbox.account_id != account_id
+    return if inbox.managed_company_id.blank?
+    return if team.team_managed_companies.where(managed_company_id: inbox.managed_company_id).exists?
+
+    errors.add(:team_id, 'must be linked to the inbox managed company')
   end
 
   def grant_team_members_access

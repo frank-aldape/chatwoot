@@ -6,6 +6,8 @@ import { useAlert } from 'dashboard/composables';
 import { useConfig } from 'dashboard/composables/useConfig';
 import SettingsSection from '../../../../../components/SettingsSection.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import ManagedCompaniesAPI from 'dashboard/api/managedCompanies';
+import { parseAPIErrorResponse } from 'dashboard/store/utils/api';
 
 export default {
   components: {
@@ -27,6 +29,9 @@ export default {
     return {
       selectedAgents: [],
       selectedTeams: [],
+      managedCompanies: [],
+      selectedManagedCompanyId: null,
+      isManagedCompanyUpdating: false,
       isAgentListUpdating: false,
       isTeamListUpdating: false,
       enableAutoAssignment: false,
@@ -58,6 +63,7 @@ export default {
     },
   },
   mounted() {
+    this.fetchManagedCompanies();
     this.setDefaults();
   },
   methods: {
@@ -65,10 +71,19 @@ export default {
       this.enableAutoAssignment = this.inbox.enable_auto_assignment;
       this.maxAssignmentLimit =
         this.inbox?.auto_assignment_config?.max_assignment_limit || null;
+      this.selectedManagedCompanyId = this.inbox.managed_company_id || null;
       this.selectedTeams = this.teamList.filter(team =>
         (this.inbox.team_ids || []).includes(team.id)
       );
       this.fetchAttachedAgents();
+    },
+    async fetchManagedCompanies() {
+      try {
+        const response = await ManagedCompaniesAPI.get();
+        this.managedCompanies = response.data || [];
+      } catch (error) {
+        this.managedCompanies = [];
+      }
     },
     async fetchAttachedAgents() {
       try {
@@ -99,6 +114,23 @@ export default {
         useAlert(this.$t('AGENT_MGMT.EDIT.API.ERROR_MESSAGE'));
       }
       this.isAgentListUpdating = false;
+    },
+    async updateManagedCompany() {
+      this.isManagedCompanyUpdating = true;
+      try {
+        await this.$store.dispatch('inboxes/updateInbox', {
+          id: this.inbox.id,
+          formData: false,
+          managed_company_id: this.selectedManagedCompanyId,
+        });
+        useAlert(this.$t('INBOX_MGMT.EDIT.API.SUCCESS_MESSAGE'));
+      } catch (error) {
+        useAlert(
+          parseAPIErrorResponse(error) ||
+            this.$t('INBOX_MGMT.EDIT.API.ERROR_MESSAGE')
+        );
+      }
+      this.isManagedCompanyUpdating = false;
     },
     async updateTeams() {
       this.isTeamListUpdating = true;
@@ -146,6 +178,33 @@ export default {
 
 <template>
   <div>
+    <SettingsSection
+      :title="$t('INBOX_MGMT.SETTINGS_POPUP.MANAGED_COMPANY')"
+      :sub-title="$t('INBOX_MGMT.SETTINGS_POPUP.MANAGED_COMPANY_SUB_TEXT')"
+    >
+      <select
+        v-model="selectedManagedCompanyId"
+        class="w-full h-10 rounded-lg border border-n-weak bg-n-background px-3 text-sm text-n-slate-12"
+      >
+        <option :value="null">
+          {{ $t('INBOX_MGMT.SETTINGS_POPUP.MANAGED_COMPANY_PLACEHOLDER') }}
+        </option>
+        <option
+          v-for="managedCompany in managedCompanies"
+          :key="managedCompany.id"
+          :value="managedCompany.id"
+        >
+          {{ managedCompany.name }} ({{ managedCompany.authorized_domain }})
+        </option>
+      </select>
+
+      <NextButton
+        :label="$t('INBOX_MGMT.SETTINGS_POPUP.UPDATE')"
+        :is-loading="isManagedCompanyUpdating"
+        @click="updateManagedCompany"
+      />
+    </SettingsSection>
+
     <SettingsSection
       :title="$t('INBOX_MGMT.SETTINGS_POPUP.INBOX_AGENTS')"
       :sub-title="$t('INBOX_MGMT.SETTINGS_POPUP.INBOX_AGENTS_SUB_TEXT')"

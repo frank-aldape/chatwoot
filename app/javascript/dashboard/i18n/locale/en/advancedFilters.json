@@ -48,6 +48,7 @@
       "STATUS": "Status",
       "ASSIGNEE_NAME": "Assignee name",
       "INBOX_NAME": "Inbox name",
+      "MANAGED_COMPANY": "Managed company",
       "TEAM_NAME": "Team name",
       "CONVERSATION_IDENTIFIER": "Conversation identifier",
       "CAMPAIGN_NAME": "Campaign name",

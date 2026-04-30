@@ -60,6 +60,26 @@ export function useConversationFilterContext() {
   const teams = useMapGetter('teams/getTeams');
   const campaigns = useMapGetter('campaigns/getAllCampaigns');
 
+  const managedCompanies = computed(() => {
+    const companiesById = new Map();
+
+    inboxes.value.forEach(inbox => {
+      const company = inbox.managed_company;
+      if (!company?.id || companiesById.has(company.id)) {
+        return;
+      }
+
+      companiesById.set(company.id, {
+        id: company.id,
+        name: company.name,
+      });
+    });
+
+    return Array.from(companiesById.values()).sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+  });
+
   const {
     equalityOperators,
     presenceOperators,
@@ -144,6 +164,17 @@ export function useConversationFilterContext() {
         };
       }),
       dataType: 'text',
+      filterOperators: presenceOperators.value,
+      attributeModel: 'standard',
+    },
+    {
+      attributeKey: CONVERSATION_ATTRIBUTES.MANAGED_COMPANY_ID,
+      value: CONVERSATION_ATTRIBUTES.MANAGED_COMPANY_ID,
+      attributeName: t('FILTER.ATTRIBUTES.MANAGED_COMPANY'),
+      label: t('FILTER.ATTRIBUTES.MANAGED_COMPANY'),
+      inputType: 'searchSelect',
+      options: managedCompanies.value,
+      dataType: 'number',
       filterOperators: presenceOperators.value,
       attributeModel: 'standard',
     },

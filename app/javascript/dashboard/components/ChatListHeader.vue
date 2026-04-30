@@ -10,6 +10,7 @@ import NextButton from 'dashboard/components-next/button/Button.vue';
 
 const props = defineProps({
   pageTitle: { type: String, required: true },
+  pageSubtitle: { type: String, default: '' },
   hasAppliedFilters: { type: Boolean, required: true },
   hasActiveFolders: { type: Boolean, required: true },
   activeStatus: { type: String, required: true },
@@ -62,28 +63,39 @@ const toggleConversationLayout = () => {
       'border-b border-n-strong': hasAppliedFiltersOrActiveFolders,
     }"
   >
-    <div class="flex items-center justify-center min-w-0">
-      <h1
-        class="text-base font-medium truncate text-n-slate-12"
-        :title="pageTitle"
-      >
-        {{ pageTitle }}
-      </h1>
-      <span
-        v-if="
-          allCount > 0 && hasAppliedFiltersOrActiveFolders && !isListLoading
-        "
-        class="px-2 py-1 my-0.5 mx-1 rounded-md capitalize bg-n-slate-3 text-xxs text-n-slate-12 shrink-0"
-        :title="allCount"
-      >
-        {{ formattedAllCount }}
-      </span>
-      <span
-        v-if="!hasAppliedFiltersOrActiveFolders"
-        class="px-2 py-1 my-0.5 mx-1 rounded-md capitalize bg-n-slate-3 text-xxs text-n-slate-12 shrink-0"
-      >
-        {{ $t(`CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.${activeStatus}.TEXT`) }}
-      </span>
+    <div class="flex items-center min-w-0">
+      <div class="min-w-0">
+        <div class="flex items-center min-w-0">
+          <h1
+            class="text-base font-medium truncate text-n-slate-12"
+            :title="pageTitle"
+          >
+            {{ pageTitle }}
+          </h1>
+          <span
+            v-if="
+              allCount > 0 && hasAppliedFiltersOrActiveFolders && !isListLoading
+            "
+            class="px-2 py-1 my-0.5 mx-1 rounded-md capitalize bg-n-slate-3 text-xxs text-n-slate-12 shrink-0"
+            :title="allCount"
+          >
+            {{ formattedAllCount }}
+          </span>
+          <span
+            v-if="!hasAppliedFiltersOrActiveFolders"
+            class="px-2 py-1 my-0.5 mx-1 rounded-md capitalize bg-n-slate-3 text-xxs text-n-slate-12 shrink-0"
+          >
+            {{ $t(`CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.${activeStatus}.TEXT`) }}
+          </span>
+        </div>
+        <p
+          v-if="pageSubtitle"
+          class="text-xs text-n-slate-11 truncate mt-0.5"
+          :title="pageSubtitle"
+        >
+          {{ pageSubtitle }}
+        </p>
+      </div>
     </div>
     <div class="flex items-center gap-1">
       <template v-if="hasAppliedFilters && !hasActiveFolders">

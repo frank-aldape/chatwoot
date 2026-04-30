@@ -115,6 +115,18 @@
       "AUTO_ASSIGN": {
         "LABEL": "Allow auto assign for this team."
       },
+      "MANAGED_COMPANIES": {
+        "TITLE": "Managed company access",
+        "DESCRIPTION": "Choose which managed companies this team works with, and then select the exact inboxes it is allowed to see inside each company.",
+        "ADD": "Add company",
+        "REMOVE": "Remove",
+        "LOADING": "Loading managed companies...",
+        "EMPTY": "Create a managed company first, then come back here to grant inbox access.",
+        "COMPANY_LABEL": "Managed company",
+        "COMPANY_PLACEHOLDER": "Select a managed company",
+        "INBOXES_LABEL": "Allowed inboxes",
+        "INBOXES_PLACEHOLDER": "Hold Ctrl/Cmd to select one or more inboxes."
+      },
       "SUBMIT_CREATE": "Create team"
     }
   }

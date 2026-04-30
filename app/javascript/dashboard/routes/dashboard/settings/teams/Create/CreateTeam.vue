@@ -1,4 +1,5 @@
 <script>
+import { mapGetters } from 'vuex';
 import { useAlert } from 'dashboard/composables';
 import TeamForm from '../TeamForm.vue';
 import router from '../../../../index';
@@ -13,6 +14,11 @@ export default {
     return {
       enabledFeatures: {},
     };
+  },
+  computed: {
+    ...mapGetters({
+      uiFlags: 'teams/getUIFlags',
+    }),
   },
   methods: {
     async createTeam(data) {
@@ -45,7 +51,7 @@ export default {
     <div class="flex flex-wrap">
       <TeamForm
         :on-submit="createTeam"
-        :submit-in-progress="false"
+        :submit-in-progress="uiFlags.isCreating"
         :submit-button-text="$t('TEAMS_SETTINGS.FORM.SUBMIT_CREATE')"
       />
     </div>

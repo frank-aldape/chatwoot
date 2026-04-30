@@ -152,6 +152,15 @@ describe('customViewsHelper', () => {
       });
     });
 
+    it('should return id and name if attribute_key is managed_company_id', () => {
+      const filter = { attribute_key: 'managed_company_id', values: [1] };
+      const params = { managedCompanies: [{ id: 1, name: 'ACME' }] };
+      expect(getValuesForFilter(filter, params)).toEqual({
+        id: 1,
+        name: 'ACME',
+      });
+    });
+
     it('should return id and name if attribute_key is team_id', () => {
       const filter = { attribute_key: 'team_id', values: [1] };
       const params = { teams: [{ id: 1, name: 'test' }] };

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_28_133000) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_29_230000) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -825,6 +825,26 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_133000) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "inbound_webhook_events", force: :cascade do |t|
+    t.bigint "account_id"
+    t.bigint "inbox_id"
+    t.string "source", null: false
+    t.string "event_type", null: false
+    t.string "external_id"
+    t.string "event_key", null: false
+    t.jsonb "payload", default: {}, null: false
+    t.integer "status", default: 0, null: false
+    t.text "error_message"
+    t.datetime "processed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "status", "created_at"], name: "idx_inbound_webhook_events_account_status"
+    t.index ["account_id"], name: "index_inbound_webhook_events_on_account_id"
+    t.index ["event_key"], name: "index_inbound_webhook_events_on_event_key", unique: true
+    t.index ["inbox_id"], name: "index_inbound_webhook_events_on_inbox_id"
+    t.index ["source", "external_id"], name: "index_inbound_webhook_events_on_external_id"
+  end
+
   create_table "inbox_assignment_policies", force: :cascade do |t|
     t.bigint "inbox_id", null: false
     t.bigint "assignment_policy_id", null: false
@@ -850,6 +870,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_133000) do
     t.integer "inbox_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.string "access_type", default: "manual", null: false
     t.index ["inbox_id", "user_id"], name: "index_inbox_members_on_inbox_id_and_user_id", unique: true
     t.index ["inbox_id"], name: "index_inbox_members_on_inbox_id"
   end
@@ -877,29 +898,11 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_133000) do
     t.integer "sender_name_type", default: 0, null: false
     t.string "business_name"
     t.jsonb "csat_config", default: {}, null: false
+    t.bigint "managed_company_id"
     t.index ["account_id"], name: "index_inboxes_on_account_id"
     t.index ["channel_id", "channel_type"], name: "index_inboxes_on_channel_id_and_channel_type"
+    t.index ["managed_company_id"], name: "index_inboxes_on_managed_company_id"
     t.index ["portal_id"], name: "index_inboxes_on_portal_id"
-  end
-
-  create_table "inbound_webhook_events", force: :cascade do |t|
-    t.bigint "account_id"
-    t.bigint "inbox_id"
-    t.string "source", null: false
-    t.string "event_type", null: false
-    t.string "external_id"
-    t.string "event_key", null: false
-    t.jsonb "payload", default: {}, null: false
-    t.integer "status", default: 0, null: false
-    t.text "error_message"
-    t.datetime "processed_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id", "status", "created_at"], name: "idx_inbound_webhook_events_account_status"
-    t.index ["account_id"], name: "index_inbound_webhook_events_on_account_id"
-    t.index ["event_key"], name: "index_inbound_webhook_events_on_event_key", unique: true
-    t.index ["inbox_id"], name: "index_inbound_webhook_events_on_inbox_id"
-    t.index ["source", "external_id"], name: "index_inbound_webhook_events_on_external_id"
   end
 
   create_table "installation_configs", force: :cascade do |t|
@@ -965,6 +968,22 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_133000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_macros_on_account_id"
+  end
+
+  create_table "managed_companies", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.string "authorized_domain", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "dns_status", default: 0, null: false
+    t.boolean "spf_valid", default: false, null: false
+    t.boolean "dkim_valid", default: false, null: false
+    t.datetime "last_dns_check_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "authorized_domain"], name: "index_managed_companies_on_account_id_and_authorized_domain", unique: true
+    t.index ["account_id", "name"], name: "index_managed_companies_on_account_id_and_name", unique: true
+    t.index ["account_id"], name: "index_managed_companies_on_account_id"
   end
 
   create_table "mentions", force: :cascade do |t|
@@ -1199,6 +1218,32 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_133000) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  create_table "team_inboxes", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.integer "inbox_id", null: false
+    t.integer "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "inbox_id"], name: "index_team_inboxes_on_account_id_and_inbox_id"
+    t.index ["account_id", "team_id"], name: "index_team_inboxes_on_account_id_and_team_id"
+    t.index ["account_id"], name: "index_team_inboxes_on_account_id"
+    t.index ["inbox_id"], name: "index_team_inboxes_on_inbox_id"
+    t.index ["team_id", "inbox_id"], name: "index_team_inboxes_on_team_id_and_inbox_id", unique: true
+    t.index ["team_id"], name: "index_team_inboxes_on_team_id"
+  end
+
+  create_table "team_managed_companies", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "team_id", null: false
+    t.bigint "managed_company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_team_managed_companies_on_account_id"
+    t.index ["managed_company_id"], name: "index_team_managed_companies_on_managed_company_id"
+    t.index ["team_id", "managed_company_id"], name: "index_team_managed_companies_on_team_id_and_managed_company_id", unique: true
+    t.index ["team_id"], name: "index_team_managed_companies_on_team_id"
+  end
+
   create_table "team_members", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.bigint "user_id", null: false
@@ -1292,7 +1337,15 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_28_133000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "inbound_webhook_events", "accounts"
   add_foreign_key "inbound_webhook_events", "inboxes"
+  add_foreign_key "inboxes", "managed_companies"
   add_foreign_key "inboxes", "portals"
+  add_foreign_key "managed_companies", "accounts"
+  add_foreign_key "team_inboxes", "accounts"
+  add_foreign_key "team_inboxes", "inboxes"
+  add_foreign_key "team_inboxes", "teams"
+  add_foreign_key "team_managed_companies", "accounts"
+  add_foreign_key "team_managed_companies", "managed_companies"
+  add_foreign_key "team_managed_companies", "teams"
   create_trigger("accounts_after_insert_row_tr", :generated => true, :compatibility => 1).
       on("accounts").
       after(:insert).

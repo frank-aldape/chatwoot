@@ -27,6 +27,10 @@ export default {
       type: [String, Number],
       default: 0,
     },
+    managedCompanyId: {
+      type: [String, Number],
+      default: 0,
+    },
     label: {
       type: String,
       default: '',
@@ -52,6 +56,7 @@ export default {
     :key="source.id"
     :active-label="label"
     :team-id="teamId"
+    :managed-company-id="managedCompanyId"
     :folders-id="foldersId"
     :chat="source"
     :conversation-type="conversationType"

@@ -57,6 +57,10 @@ import countries from 'shared/constants/countries';
 import { generateValuesForEditCustomViews } from 'dashboard/helper/customViewsHelper';
 import { conversationListPageURL } from '../helper/URLHelper';
 import {
+  buildManagedCompanyInboxSummary,
+  getManagedCompanyInboxes,
+} from '../helper/managedCompanyHelper';
+import {
   isOnMentionsView,
   isOnUnattendedView,
 } from '../store/modules/conversations/helpers/actionHelpers';
@@ -73,6 +77,7 @@ import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 const props = defineProps({
   conversationInbox: { type: [String, Number], default: 0 },
   teamId: { type: [String, Number], default: 0 },
+  managedCompanyId: { type: [String, Number], default: 0 },
   label: { type: String, default: '' },
   conversationType: { type: String, default: '' },
   foldersId: { type: [String, Number], default: 0 },
@@ -277,6 +282,7 @@ const conversationFilters = computed(() => {
     page: conversationListPagination.value,
     labels: props.label ? [props.label] : undefined,
     teamId: props.teamId || undefined,
+    managedCompanyId: props.managedCompanyId || undefined,
     conversationType: props.conversationType || undefined,
   };
 });
@@ -288,6 +294,30 @@ const activeTeam = computed(() => {
   return {};
 });
 
+const activeManagedCompany = computed(() => {
+  if (!props.managedCompanyId) {
+    return null;
+  }
+
+  return (
+    inboxesList.value
+      .map(inboxRecord => inboxRecord.managed_company)
+      .filter(company => company?.id)
+      .find(company => String(company.id) === String(props.managedCompanyId)) ||
+    null
+  );
+});
+
+const hasManagedCompanyScope = computed(() => Boolean(props.managedCompanyId));
+
+const activeManagedCompanyInboxes = computed(() =>
+  getManagedCompanyInboxes(props.managedCompanyId, inboxesList.value)
+);
+
+const managedCompanyInboxSummary = computed(() =>
+  buildManagedCompanyInboxSummary(activeManagedCompanyInboxes.value)
+);
+
 const pageTitle = computed(() => {
   if (hasAppliedFilters.value) {
     return t('CHAT_LIST.TAB_HEADING');
@@ -297,6 +327,12 @@ const pageTitle = computed(() => {
   }
   if (activeTeam.value.name) {
     return activeTeam.value.name;
+  }
+  if (activeManagedCompany.value?.name) {
+    return activeManagedCompany.value.name;
+  }
+  if (hasManagedCompanyScope.value) {
+    return t('CHAT_LIST.MANAGED_COMPANY.FALLBACK_TITLE');
   }
   if (props.label) {
     return `#${props.label}`;
@@ -314,6 +350,41 @@ const pageTitle = computed(() => {
     return activeFolder.value.name;
   }
   return t('CHAT_LIST.TAB_HEADING');
+});
+
+const pageSubtitle = computed(() => {
+  if (!hasManagedCompanyScope.value || hasAppliedFilters.value) {
+    return '';
+  }
+
+  if (!managedCompanyInboxSummary.value.totalCount) {
+    return t('CHAT_LIST.MANAGED_COMPANY.NO_VISIBLE_CHANNELS');
+  }
+
+  if (managedCompanyInboxSummary.value.remainingCount > 0) {
+    return t('CHAT_LIST.MANAGED_COMPANY.VISIBLE_CHANNELS_MORE', {
+      count: managedCompanyInboxSummary.value.totalCount,
+      inboxes: managedCompanyInboxSummary.value.names,
+      remaining: managedCompanyInboxSummary.value.remainingCount,
+    });
+  }
+
+  return t('CHAT_LIST.MANAGED_COMPANY.VISIBLE_CHANNELS', {
+    count: managedCompanyInboxSummary.value.totalCount,
+    inboxes: managedCompanyInboxSummary.value.names,
+  });
+});
+
+const emptyStateMessage = computed(() => {
+  if (hasManagedCompanyScope.value) {
+    if (!activeManagedCompanyInboxes.value.length) {
+      return t('CHAT_LIST.MANAGED_COMPANY.NO_VISIBLE_CHANNELS');
+    }
+
+    return t('CHAT_LIST.MANAGED_COMPANY.EMPTY');
+  }
+
+  return t('CHAT_LIST.LIST.404');
 });
 
 const conversationList = computed(() => {
@@ -457,6 +528,19 @@ function onCloseDeleteFoldersModal() {
 }
 
 function setParamsForEditFolderModal() {
+  const managedCompanies = inboxesList.value
+    .map(inboxRecord => inboxRecord.managed_company)
+    .filter(company => company?.id)
+    .filter(
+      (company, index, companies) =>
+        companies.findIndex(({ id }) => id === company.id) === index
+    )
+    .map(company => ({
+      id: company.id,
+      name: company.name,
+    }))
+    .sort((left, right) => left.name.localeCompare(right.name));
+
   // Here we are setting the params for edit folder modal to show the existing values.
 
   // For agent, team, inboxes,and campaigns we get only the id's from the query.
@@ -471,6 +555,7 @@ function setParamsForEditFolderModal() {
     agents: agentList.value,
     teams: teamsList.value,
     inboxes: inboxesList.value,
+    managedCompanies,
     labels: labels.value,
     campaigns: campaigns.value,
     languages: languages,
@@ -651,7 +736,7 @@ function openLastItemAfterDeleteInFolder() {
 
 function redirectToConversationList() {
   const {
-    params: { accountId, inbox_id: inboxId, label, teamId },
+    params: { accountId, inbox_id: inboxId, label, teamId, managedCompanyId },
     name,
   } = route;
 
@@ -669,6 +754,7 @@ function redirectToConversationList() {
       inboxId,
       label,
       teamId,
+      managedCompanyId,
     })
   );
 }
@@ -808,9 +894,14 @@ provide('isConversationSelected', isConversationSelected);
 provide('deleteConversation', handleDelete);
 
 watch(activeTeam, () => resetAndFetchData());
+watch(activeManagedCompany, () => resetAndFetchData());
 
 watch(
   computed(() => props.conversationInbox),
+  () => resetAndFetchData()
+);
+watch(
+  computed(() => props.managedCompanyId),
   () => resetAndFetchData()
 );
 watch(
@@ -851,6 +942,7 @@ watch(conversationFilters, (newVal, oldVal) => {
     <slot />
     <ChatListHeader
       :page-title="pageTitle"
+      :page-subtitle="pageSubtitle"
       :has-applied-filters="hasAppliedFilters"
       :has-active-folders="hasActiveFolders"
       :active-status="activeStatus"
@@ -897,7 +989,7 @@ watch(conversationFilters, (newVal, oldVal) => {
       v-if="!chatListLoading && !conversationList.length"
       class="flex items-center justify-center p-4 overflow-auto"
     >
-      {{ $t('CHAT_LIST.LIST.404') }}
+      {{ emptyStateMessage }}
     </p>
     <ConversationBulkActions
       v-if="selectedConversations.length"
@@ -945,6 +1037,7 @@ watch(conversationFilters, (newVal, oldVal) => {
               :source="item"
               :label="label"
               :team-id="teamId"
+              :managed-company-id="managedCompanyId"
               :folders-id="foldersId"
               :conversation-type="conversationType"
               :show-assignee="showAssigneeInConversationCard"

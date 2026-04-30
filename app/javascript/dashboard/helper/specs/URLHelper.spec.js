@@ -35,6 +35,12 @@ describe('#URL Helpers', () => {
       );
     });
 
+    it('should return url to managed company', () => {
+      expect(
+        conversationListPageURL({ accountId: 1, managedCompanyId: 7 })
+      ).toBe('/app/accounts/1/managed_companies/7');
+    });
+
     it('should return url to custom view', () => {
       expect(conversationListPageURL({ accountId: 1, customViewId: 1 })).toBe(
         '/app/accounts/1/custom_view/1'
@@ -61,6 +67,11 @@ describe('#URL Helpers', () => {
       expect(conversationUrl({ accountId: 1, teamId: 1, id: 1 })).toBe(
         'accounts/1/team/1/conversations/1'
       );
+    });
+    it('should return correct conversation URL if managed company Id is available', () => {
+      expect(
+        conversationUrl({ accountId: 1, managedCompanyId: 7, id: 1 })
+      ).toBe('accounts/1/managed_companies/7/conversations/1');
     });
   });
 

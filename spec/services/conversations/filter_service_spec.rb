@@ -242,6 +242,28 @@ describe Conversations::FilterService do
         expect(result[:conversations].pluck(:campaign_id).sort).to eq [campaign_2.id, campaign_1.id].sort
       end
 
+      it 'filters conversations by managed company id through inboxes' do
+        managed_company = create(:managed_company, account: account)
+        managed_inbox = create(:inbox, account: account, managed_company: managed_company)
+        create(:inbox_member, user: user_1, inbox: managed_inbox)
+        matching_conversation = create(:conversation, account: account, inbox: managed_inbox, assignee: user_1)
+        create(:conversation, account: account, inbox: inbox, assignee: user_1)
+
+        params[:payload] = [
+          {
+            attribute_key: 'managed_company_id',
+            filter_operator: 'equal_to',
+            values: [managed_company.id],
+            query_operator: nil,
+            custom_attribute_type: ''
+          }.with_indifferent_access
+        ]
+
+        result = filter_service.new(params, user_1, account).perform
+
+        expect(result[:conversations].pluck(:id)).to contain_exactly(matching_conversation.id)
+      end
+
       it 'handles invalid query conditions' do
         params[:payload] = [
           {

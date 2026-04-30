@@ -10,6 +10,13 @@
     "TAB_HEADING": "Conversations",
     "MENTION_HEADING": "Mentions",
     "UNATTENDED_HEADING": "Unattended",
+    "MANAGED_COMPANY": {
+      "FALLBACK_TITLE": "Managed company",
+      "VISIBLE_CHANNELS": "Visible channels ({count}): {inboxes}",
+      "VISIBLE_CHANNELS_MORE": "Visible channels ({count}): {inboxes} +{remaining} more",
+      "NO_VISIBLE_CHANNELS": "This company does not have any inboxes visible to your current team assignments.",
+      "EMPTY": "There are no conversations in the visible inboxes for this company."
+    },
     "SEARCH": {
       "INPUT": "Search for People, Chats, Saved Replies .."
     },

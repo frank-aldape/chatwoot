@@ -85,6 +85,56 @@ const sortedInboxes = computed(() =>
   inboxes.value.slice().sort((a, b) => a.name.localeCompare(b.name))
 );
 
+const managedCompanies = computed(() =>
+  sortedInboxes.value
+    .map(inbox => inbox.managed_company)
+    .filter(company => company?.id)
+    .filter(
+      (company, index, companies) =>
+        companies.findIndex(({ id }) => id === company.id) === index
+    )
+    .sort((left, right) => left.name.localeCompare(right.name))
+);
+
+const managedCompanySidebarGroups = computed(() =>
+  managedCompanies.value.map(company => {
+    const companyInboxes = sortedInboxes.value.filter(
+      inbox => inbox.managed_company?.id === company.id
+    );
+
+    return {
+      name: `managed-company-${company.id}`,
+      label: company.name,
+      icon: 'i-lucide-building-2',
+      children: [
+        {
+          name: `${company.name}-${company.id}-overview`,
+          label: t('SIDEBAR.ALL_COMPANY_CONVERSATIONS'),
+          to: accountScopedRoute('managed_company_conversations', {
+            managedCompanyId: company.id,
+          }),
+          activeOn: [
+            'managed_company_conversations',
+            'conversations_through_managed_company',
+          ],
+        },
+        ...companyInboxes.map(inbox => ({
+          name: `${company.name}-${inbox.name}-${inbox.id}`,
+          label: inbox.name,
+          to: accountScopedRoute('inbox_dashboard', { inbox_id: inbox.id }),
+          activeOn: ['conversation_through_inbox'],
+          component: leafProps =>
+            h(ChannelLeaf, {
+              label: leafProps.label,
+              active: leafProps.active,
+              inbox,
+            }),
+        })),
+      ],
+    };
+  })
+);
+
 const closeMobileSidebar = () => {
   if (!props.isMobileSidebarOpen) return;
   emit('closeMobileSidebar');
@@ -184,6 +234,20 @@ const menuItems = computed(() => {
             to: accountScopedRoute('team_conversations', { teamId: team.id }),
           })),
         },
+        ...(managedCompanies.value.length
+          ? [
+              {
+                name: 'Managed Companies',
+                label: t('SIDEBAR.MANAGED_COMPANIES'),
+                icon: 'i-lucide-building-2',
+                activeOn: [
+                  'managed_company_conversations',
+                  'conversations_through_managed_company',
+                ],
+                children: managedCompanySidebarGroups.value,
+              },
+            ]
+          : []),
         {
           name: 'Channels',
           label: t('SIDEBAR.CHANNELS'),
@@ -501,6 +565,12 @@ const menuItems = computed(() => {
           label: t('SIDEBAR.TEAMS'),
           icon: 'i-lucide-users',
           to: accountScopedRoute('settings_teams_list'),
+        },
+        {
+          name: 'Settings Managed Companies',
+          label: t('SIDEBAR.MANAGED_COMPANIES'),
+          icon: 'i-lucide-building-2',
+          to: accountScopedRoute('settings_managed_companies_list'),
         },
         {
           name: 'Settings Agent Assignment',

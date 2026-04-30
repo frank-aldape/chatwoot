@@ -12,6 +12,7 @@ class Inboxes::TeamAssignmentsService
       existing_team_ids = inbox.team_inboxes.where(team_id: team_ids_to_assign).pluck(:team_id)
 
       (team_ids_to_assign - existing_team_ids).each do |team_id|
+        ensure_team_managed_company!(team_id)
         inbox.team_inboxes.create!(account_id: inbox.account_id, team_id: team_id)
       end
     end
@@ -28,5 +29,15 @@ class Inboxes::TeamAssignmentsService
 
     inbox.errors.add(:team_ids, 'contains invalid team ids')
     raise ActiveRecord::RecordInvalid, inbox
+  end
+
+  def ensure_team_managed_company!(team_id)
+    return if inbox.managed_company_id.blank?
+
+    TeamManagedCompany.find_or_create_by!(
+      account_id: inbox.account_id,
+      team_id: team_id,
+      managed_company_id: inbox.managed_company_id
+    )
   end
 end

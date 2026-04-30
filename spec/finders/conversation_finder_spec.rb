@@ -126,6 +126,25 @@ describe ConversationFinder do
       end
     end
 
+    context 'with managed company' do
+      let(:managed_company) { create(:managed_company, account: account) }
+      let(:managed_inbox) { create(:inbox, account: account, managed_company: managed_company) }
+      let(:params) { { managed_company_id: managed_company.id } }
+
+      before do
+        create(:inbox_member, user: user_1, inbox: managed_inbox)
+      end
+
+      it 'filters conversations by managed company through inboxes' do
+        matching_conversation = create(:conversation, account: account, inbox: managed_inbox)
+        create(:conversation, account: account, inbox: inbox)
+
+        result = conversation_finder.perform
+
+        expect(result[:conversations].map(&:id)).to contain_exactly(matching_conversation.id)
+      end
+    end
+
     context 'with labels' do
       let(:params) { { labels: ['resolved'] } }
 

@@ -39,7 +39,13 @@ const chatMetadata = computed(() => props.chat.meta);
 
 const backButtonUrl = computed(() => {
   const {
-    params: { inbox_id: inboxId, label, teamId, id: customViewId },
+    params: {
+      inbox_id: inboxId,
+      label,
+      teamId,
+      managedCompanyId,
+      id: customViewId,
+    },
     name,
   } = route;
 
@@ -52,6 +58,7 @@ const backButtonUrl = computed(() => {
     inboxId,
     label,
     teamId,
+    managedCompanyId,
     conversationType: conversationTypeMap[name],
     customViewId,
   });
@@ -84,6 +91,8 @@ const inbox = computed(() => {
   const { inbox_id: inboxId } = props.chat;
   return store.getters['inboxes/getInbox'](inboxId);
 });
+
+const managedCompany = computed(() => inbox.value?.managed_company || null);
 
 const hasMultipleInboxes = computed(
   () => store.getters['inboxes/getInboxes'].length > 1
@@ -134,6 +143,17 @@ const hasSlaPolicyId = computed(() => props.chat?.sla_policy_id);
         <div
           class="flex items-center gap-2 overflow-hidden text-xs conversation--header--actions text-ellipsis whitespace-nowrap"
         >
+          <span
+            v-if="managedCompany"
+            class="inline-flex items-center max-w-full px-2 py-0.5 rounded-full bg-n-alpha-2 text-n-slate-11"
+          >
+            <fluent-icon
+              icon="building-bank"
+              size="12"
+              class="flex-shrink-0 ltr:mr-1 rtl:ml-1"
+            />
+            <span class="truncate">{{ managedCompany.name }}</span>
+          </span>
           <InboxName v-if="hasMultipleInboxes" :inbox="inbox" class="!mx-0" />
           <span v-if="isSnoozed" class="font-medium text-n-amber-10">
             {{ snoozedDisplayText }}

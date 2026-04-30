@@ -163,6 +163,7 @@ Rails.application.routes.draw do
               get :search
             end
           end
+          resources :managed_companies, only: [:index, :show, :create, :update, :destroy]
           resources :contacts, only: [:index, :show, :update, :create, :destroy] do
             collection do
               get :active

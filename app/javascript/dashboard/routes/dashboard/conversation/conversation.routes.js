@@ -108,6 +108,33 @@ export default {
       }),
     },
     {
+      path: frontendURL(
+        'accounts/:accountId/managed_companies/:managedCompanyId'
+      ),
+      name: 'managed_company_conversations',
+      meta: {
+        permissions: CONVERSATION_PERMISSIONS,
+      },
+      component: ConversationView,
+      props: route => ({
+        managedCompanyId: route.params.managedCompanyId,
+      }),
+    },
+    {
+      path: frontendURL(
+        'accounts/:accountId/managed_companies/:managedCompanyId/conversations/:conversationId'
+      ),
+      name: 'conversations_through_managed_company',
+      meta: {
+        permissions: CONVERSATION_PERMISSIONS,
+      },
+      component: ConversationView,
+      props: route => ({
+        conversationId: route.params.conversationId,
+        managedCompanyId: route.params.managedCompanyId,
+      }),
+    },
+    {
       path: frontendURL('accounts/:accountId/custom_view/:id'),
       name: 'folder_conversations',
       meta: {

@@ -12,6 +12,7 @@ json.csat_config resource.csat_config
 json.enable_auto_assignment resource.enable_auto_assignment
 json.auto_assignment_config resource.auto_assignment_config
 json.team_ids resource.team_ids
+json.managed_company_id resource.managed_company_id
 json.out_of_office_message resource.out_of_office_message
 json.working_hours resource.weekly_schedule
 json.timezone resource.timezone
@@ -20,6 +21,14 @@ json.allow_messages_after_resolved resource.allow_messages_after_resolved
 json.lock_to_single_conversation resource.lock_to_single_conversation
 json.sender_name_type resource.sender_name_type
 json.business_name resource.business_name
+
+if resource.managed_company.present?
+  json.managed_company do
+    json.id resource.managed_company.id
+    json.name resource.managed_company.name
+    json.authorized_domain resource.managed_company.authorized_domain
+  end
+end
 
 if resource.portal.present?
   json.help_center do
