@@ -28,6 +28,6 @@ class Api::V1::Accounts::ManagedCompaniesController < Api::V1::Accounts::BaseCon
   end
 
   def managed_company_params
-    params.require(:managed_company).permit(:name, :authorized_domain, :status, :dns_status, :spf_valid, :dkim_valid, :last_dns_check_at)
+    params.require(:managed_company).permit(:name, :authorized_domain, :status)
   end
 end

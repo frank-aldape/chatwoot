@@ -55,7 +55,6 @@ class Inbox < ApplicationRecord
   validate :ensure_valid_max_assignment_limit
   validate :ensure_managed_company_account_integrity
   validate :ensure_managed_company_email_domain_match
-  validate :ensure_managed_company_domain_configuration_ready
 
   belongs_to :account
   belongs_to :portal, optional: true
@@ -267,13 +266,6 @@ class Inbox < ApplicationRecord
     return if email_domain == managed_company.authorized_domain
 
     errors.add(:managed_company_id, 'authorized domain must match the inbox email domain')
-  end
-
-  def ensure_managed_company_domain_configuration_ready
-    return if managed_company.blank? || !email?
-    return if managed_company.dns_status_valid? && managed_company.spf_valid? && managed_company.dkim_valid?
-
-    errors.add(:managed_company_id, 'domain configuration must be marked as valid in the managed company settings')
   end
 
   def delete_round_robin_agents

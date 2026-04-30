@@ -59,7 +59,7 @@ useEventListener(scrollableContainer, 'scroll', () => {
     >
       <SidebarGroupLeaf
         v-for="child in children"
-        v-show="isExpanded || activeChild?.name === child.name"
+        v-show="isExpanded"
         v-bind="child"
         :key="child.name"
         :active="activeChild?.name === child.name"

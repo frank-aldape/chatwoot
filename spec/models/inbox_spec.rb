@@ -198,7 +198,7 @@ RSpec.describe Inbox do
     let(:email_channel) { build(:channel_email, account: account, email: 'support@acme.com') }
     let(:inbox) { build(:inbox, :with_email, account: account, channel: email_channel, managed_company: managed_company) }
 
-    it 'is valid when the email domain matches and company configuration is marked as valid' do
+    it 'is valid when the email domain matches the managed company domain' do
       expect(inbox).to be_valid
     end
 
@@ -207,13 +207,6 @@ RSpec.describe Inbox do
 
       expect(inbox).not_to be_valid
       expect(inbox.errors[:managed_company_id]).to include('authorized domain must match the inbox email domain')
-    end
-
-    it 'is invalid when the managed company configuration is not marked as ready' do
-      managed_company.update!(dns_status: :invalid, spf_valid: false, dkim_valid: false)
-
-      expect(inbox).not_to be_valid
-      expect(inbox.errors[:managed_company_id]).to include('domain configuration must be marked as valid in the managed company settings')
     end
   end
 

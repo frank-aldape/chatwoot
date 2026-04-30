@@ -24,9 +24,6 @@ const form = reactive({
   name: '',
   authorizedDomain: '',
   status: 'active',
-  dnsStatus: 'unchecked',
-  spfValid: false,
-  dkimValid: false,
 });
 
 const isEditing = computed(() => Boolean(form.id));
@@ -59,14 +56,21 @@ const resolvedManagedCompanies = computed(() =>
   }))
 );
 
+const statusLabel = status => {
+  switch (status) {
+    case 'inactive':
+      return t('MANAGED_COMPANIES_SETTINGS.LIST.STATUS_INACTIVE');
+    case 'active':
+    default:
+      return t('MANAGED_COMPANIES_SETTINGS.LIST.STATUS_ACTIVE');
+  }
+};
+
 const resetForm = () => {
   form.id = null;
   form.name = '';
   form.authorizedDomain = '';
   form.status = 'active';
-  form.dnsStatus = 'unchecked';
-  form.spfValid = false;
-  form.dkimValid = false;
 };
 
 const fetchManagedCompanies = async () => {
@@ -88,9 +92,6 @@ const submitForm = async () => {
       name: form.name,
       authorized_domain: form.authorizedDomain,
       status: form.status,
-      dns_status: form.dnsStatus,
-      spf_valid: form.spfValid,
-      dkim_valid: form.dkimValid,
     },
   };
 
@@ -121,9 +122,6 @@ const editManagedCompany = managedCompany => {
   form.name = managedCompany.name;
   form.authorizedDomain = managedCompany.authorized_domain;
   form.status = managedCompany.status;
-  form.dnsStatus = managedCompany.dns_status;
-  form.spfValid = managedCompany.spf_valid;
-  form.dkimValid = managedCompany.dkim_valid;
 };
 
 const openDelete = managedCompany => {
@@ -215,37 +213,6 @@ onMounted(() => {
             </select>
           </label>
 
-          <label class="grid gap-2 text-sm font-medium text-n-slate-12">
-            {{ $t('MANAGED_COMPANIES_SETTINGS.FORM.DNS_STATUS_LABEL') }}
-            <select
-              v-model="form.dnsStatus"
-              class="h-10 rounded-lg border border-n-weak bg-n-background px-3 text-sm text-n-slate-12"
-            >
-              <option value="unchecked">
-                {{ $t('MANAGED_COMPANIES_SETTINGS.FORM.DNS_STATUS_UNCHECKED') }}
-              </option>
-              <option value="valid">
-                {{ $t('MANAGED_COMPANIES_SETTINGS.FORM.DNS_STATUS_VALID') }}
-              </option>
-              <option value="invalid">
-                {{ $t('MANAGED_COMPANIES_SETTINGS.FORM.DNS_STATUS_INVALID') }}
-              </option>
-            </select>
-          </label>
-
-          <div class="grid gap-3 rounded-lg border border-n-weak p-3">
-            <label class="flex items-center gap-2 text-sm text-n-slate-12">
-              <input v-model="form.spfValid" type="checkbox" />
-              <span>{{ $t('MANAGED_COMPANIES_SETTINGS.FORM.SPF_VALID') }}</span>
-            </label>
-            <label class="flex items-center gap-2 text-sm text-n-slate-12">
-              <input v-model="form.dkimValid" type="checkbox" />
-              <span>{{
-                $t('MANAGED_COMPANIES_SETTINGS.FORM.DKIM_VALID')
-              }}</span>
-            </label>
-          </div>
-
           <div class="flex gap-2">
             <NextButton
               type="submit"
@@ -310,26 +277,8 @@ onMounted(() => {
                     </span>
                     <span>
                       {{
-                        $t('MANAGED_COMPANIES_SETTINGS.LIST.DNS_STATUS', {
-                          status: managedCompany.dns_status,
-                        })
-                      }}
-                    </span>
-                    <span>
-                      {{
-                        $t('MANAGED_COMPANIES_SETTINGS.LIST.SPF_STATUS', {
-                          status: managedCompany.spf_valid
-                            ? $t('MANAGED_COMPANIES_SETTINGS.LIST.VERIFIED')
-                            : $t('MANAGED_COMPANIES_SETTINGS.LIST.PENDING'),
-                        })
-                      }}
-                    </span>
-                    <span>
-                      {{
-                        $t('MANAGED_COMPANIES_SETTINGS.LIST.DKIM_STATUS', {
-                          status: managedCompany.dkim_valid
-                            ? $t('MANAGED_COMPANIES_SETTINGS.LIST.VERIFIED')
-                            : $t('MANAGED_COMPANIES_SETTINGS.LIST.PENDING'),
+                        $t('MANAGED_COMPANIES_SETTINGS.LIST.STATUS', {
+                          status: statusLabel(managedCompany.status),
                         })
                       }}
                     </span>

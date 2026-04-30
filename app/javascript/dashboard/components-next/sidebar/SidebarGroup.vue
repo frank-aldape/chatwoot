@@ -1,7 +1,7 @@
 <script setup>
-import { computed, onMounted, watch, nextTick } from 'vue';
+import { computed } from 'vue';
 import { useSidebarContext } from './provider';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import Policy from 'dashboard/components/policy.vue';
 import SidebarGroupHeader from './SidebarGroupHeader.vue';
 import SidebarGroupLeaf from './SidebarGroupLeaf.vue';
@@ -32,7 +32,6 @@ const navigableChildren = computed(() => {
 });
 
 const route = useRoute();
-const router = useRouter();
 const isExpanded = computed(() => expandedItem.value === props.name);
 const isExpandable = computed(() => props.children);
 const hasChildren = computed(
@@ -108,34 +107,8 @@ const hasActiveChild = computed(() => {
 });
 
 const toggleTrigger = () => {
-  if (
-    hasAccessibleChildren.value &&
-    !isExpanded.value &&
-    !hasActiveChild.value
-  ) {
-    // if not already expanded, navigate to the first child
-    const firstItem = accessibleItems.value[0];
-    router.push(firstItem.to);
-  }
   setExpandedItem(props.name);
 };
-
-onMounted(async () => {
-  await nextTick();
-  if (hasActiveChild.value) {
-    setExpandedItem(props.name);
-  }
-});
-
-watch(
-  hasActiveChild,
-  hasNewActiveChild => {
-    if (hasNewActiveChild && !isExpanded.value) {
-      setExpandedItem(props.name);
-    }
-  },
-  { once: true }
-);
 </script>
 
 <!-- eslint-disable-next-line vue/no-root-v-if -->
@@ -161,7 +134,7 @@ watch(
     />
     <ul
       v-if="hasChildren"
-      v-show="isExpanded || hasActiveChild"
+      v-show="isExpanded"
       class="grid m-0 list-none sidebar-group-children"
     >
       <template v-for="child in children" :key="child.name">
@@ -175,7 +148,7 @@ watch(
         />
         <SidebarGroupLeaf
           v-else-if="isAllowed(child.to)"
-          v-show="isExpanded || activeChild?.name === child.name"
+          v-show="isExpanded"
           v-bind="child"
           :active="activeChild?.name === child.name"
         />

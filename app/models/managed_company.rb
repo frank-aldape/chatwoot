@@ -8,7 +8,6 @@ class ManagedCompany < ApplicationRecord
   has_many :teams, through: :team_managed_companies
 
   enum :status, { active: 0, inactive: 1 }, prefix: true
-  enum :dns_status, { unchecked: 0, valid: 1, invalid: 2 }, prefix: true
 
   validates :name, presence: true, uniqueness: { scope: :account_id }
   validates :authorized_domain,

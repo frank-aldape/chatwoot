@@ -3,9 +3,5 @@ json.account_id resource.account_id
 json.name resource.name
 json.authorized_domain resource.authorized_domain
 json.status resource.status
-json.dns_status resource.dns_status
-json.spf_valid resource.spf_valid
-json.dkim_valid resource.dkim_valid
-json.last_dns_check_at resource.last_dns_check_at
 json.inbox_ids resource.inbox_ids
 json.team_ids resource.team_ids

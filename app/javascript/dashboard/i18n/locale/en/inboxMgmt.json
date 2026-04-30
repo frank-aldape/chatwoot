@@ -15,13 +15,13 @@
       "NO_RESULTS": "No inboxes matched your search."
     },
     "FILTER": {
-      "MANAGED_COMPANY_LABEL": "Managed company",
-      "ALL_MANAGED_COMPANIES": "All managed companies",
-      "UNASSIGNED": "Unassigned inboxes"
+      "MANAGED_COMPANY_LABEL": "Compañía",
+      "ALL_MANAGED_COMPANIES": "Todas las compañías",
+      "UNASSIGNED": "Inboxes sin compañía"
     },
     "GROUPS": {
-      "UNASSIGNED_TITLE": "Unassigned inboxes",
-      "UNASSIGNED_SUBTITLE": "These inboxes are not linked to any managed company yet.",
+      "UNASSIGNED_TITLE": "Inboxes sin compañía",
+      "UNASSIGNED_SUBTITLE": "Estos inboxes todavía no están vinculados a ninguna compañía.",
       "INBOX_COUNT": "{count} inboxes"
     },
     "CREATE_FLOW": {
@@ -712,9 +712,9 @@
       },
       "INBOX_AGENTS": "Direct Agents",
       "INBOX_AGENTS_SUB_TEXT": "Manage agent-specific access for this inbox. Team-based access is configured separately below.",
-      "MANAGED_COMPANY": "Managed Company",
-      "MANAGED_COMPANY_SUB_TEXT": "Attach this inbox to the managed company it belongs to. Teams can only be granted access to inboxes inside the companies they operate.",
-      "MANAGED_COMPANY_PLACEHOLDER": "No managed company selected",
+      "MANAGED_COMPANY": "Compañía",
+      "MANAGED_COMPANY_SUB_TEXT": "Vincula este inbox con la compañía a la que pertenece. Los equipos solo pueden recibir acceso a inboxes dentro de las compañías que operan.",
+      "MANAGED_COMPANY_PLACEHOLDER": "Ninguna compañía seleccionada",
       "INBOX_TEAMS": "Assign Teams",
       "INBOX_TEAMS_SUB_TEXT": "Grant inbox access automatically to all agents who belong to the selected teams",
       "AGENT_ASSIGNMENT": "Conversation Assignment",
