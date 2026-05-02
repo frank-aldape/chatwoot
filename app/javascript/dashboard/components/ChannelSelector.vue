@@ -18,6 +18,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  badgeLabel: {
+    type: String,
+    default: '',
+  },
 });
 </script>
 
@@ -37,9 +41,17 @@ defineProps({
     </div>
 
     <div class="flex flex-col items-start gap-1.5">
-      <h3 class="text-n-slate-12 text-sm text-start font-medium capitalize">
-        {{ title }}
-      </h3>
+      <div class="flex items-center gap-2">
+        <h3 class="text-n-slate-12 text-sm text-start font-medium capitalize">
+          {{ title }}
+        </h3>
+        <span
+          v-if="badgeLabel"
+          class="px-2 py-0.5 text-xs font-medium rounded-full bg-n-alpha-2 text-n-slate-11"
+        >
+          {{ badgeLabel }}
+        </span>
+      </div>
       <p class="text-n-slate-11 text-start text-sm">
         {{ description }}
       </p>
@@ -50,7 +62,7 @@ defineProps({
       class="absolute inset-0 flex items-center justify-center backdrop-blur-[2px] rounded-2xl bg-gradient-to-br from-n-background/90 via-n-background/70 to-n-background/95 cursor-not-allowed"
     >
       <span class="text-n-slate-12 font-medium text-sm">
-        {{ $t('CHANNEL_SELECTOR.COMING_SOON') }} 🚀
+        {{ $t('CHANNEL_SELECTOR.COMING_SOON') }}
       </span>
     </div>
   </button>

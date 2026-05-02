@@ -23,11 +23,20 @@ export default {
       type: String,
       default: '',
     },
+    integrationSlot: {
+      type: String,
+      default: '',
+    },
+    hasSlotConflict: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: [
     'update:managedCompanyId',
     'update:inboxName',
     'update:functionLabel',
+    'update:hasSlotConflict',
   ],
   data() {
     return {
@@ -40,6 +49,9 @@ export default {
       return this.managedCompanies.find(
         company => company.id === this.managedCompanyId
       );
+    },
+    inboxes() {
+      return this.$store.getters['inboxes/getInboxes'] || [];
     },
     suggestedInboxName() {
       if (!this.selectedManagedCompany) {
@@ -60,11 +72,59 @@ export default {
         this.suggestedInboxName !== this.inboxName?.trim()
       );
     },
+    conflictingInbox() {
+      if (!this.selectedManagedCompany || !this.integrationSlot) {
+        return null;
+      }
+
+      return this.inboxes.find(inbox => {
+        return (
+          inbox.managed_company_id === this.selectedManagedCompany.id &&
+          this.resolveInboxIntegrationSlot(inbox) === this.integrationSlot
+        );
+      });
+    },
+    conflictMessage() {
+      if (!this.conflictingInbox) {
+        return '';
+      }
+
+      return this.$t('INBOX_MGMT.ADD.MANAGED_COMPANY.SLOT_CONFLICT_MESSAGE', {
+        company: this.selectedManagedCompany?.name,
+        channel: this.channelLabel,
+        inbox: this.conflictingInbox.name,
+      });
+    },
+  },
+  watch: {
+    conflictingInbox: {
+      immediate: true,
+      handler(value) {
+        const nextValue = !!value;
+        if (nextValue === this.hasSlotConflict) {
+          return;
+        }
+
+        this.$emit('update:hasSlotConflict', nextValue);
+      },
+    },
   },
   mounted() {
     this.fetchManagedCompanies();
+    this.ensureInboxesLoaded();
   },
   methods: {
+    async ensureInboxesLoaded() {
+      if (this.inboxes.length) {
+        return;
+      }
+
+      try {
+        await this.$store.dispatch('inboxes/get');
+      } catch (error) {
+        // no-op
+      }
+    },
     async fetchManagedCompanies() {
       this.isManagedCompaniesLoading = true;
       try {
@@ -85,6 +145,39 @@ export default {
     },
     applySuggestedName() {
       this.$emit('update:inboxName', this.suggestedInboxName);
+    },
+    resolveInboxIntegrationSlot(inbox) {
+      if (!inbox) {
+        return '';
+      }
+
+      if (
+        inbox.channel_type === 'Channel::Instagram' ||
+        (inbox.channel_type === 'Channel::FacebookPage' && inbox.instagram_id)
+      ) {
+        return 'instagram';
+      }
+
+      if (inbox.channel_type === 'Channel::FacebookPage') {
+        return 'facebook';
+      }
+
+      if (
+        inbox.channel_type === 'Channel::Whatsapp' ||
+        (inbox.channel_type === 'Channel::TwilioSms' &&
+          inbox.medium === 'whatsapp')
+      ) {
+        return 'whatsapp';
+      }
+
+      if (
+        inbox.channel_type === 'Channel::Api' &&
+        inbox.additional_attributes?.provider_type === 'linkedin'
+      ) {
+        return 'linkedin';
+      }
+
+      return '';
     },
   },
 };
@@ -124,6 +217,18 @@ export default {
     <p v-if="isManagedCompaniesLoading" class="mb-0 text-sm text-n-slate-11">
       {{ $t('INBOX_MGMT.ADD.MANAGED_COMPANY.LOADING') }}
     </p>
+
+    <div
+      v-if="conflictingInbox"
+      class="grid gap-1 rounded-xl border border-n-amber-8 bg-n-amber-3 px-3 py-2"
+    >
+      <span class="text-sm font-medium text-n-amber-11">
+        {{ $t('INBOX_MGMT.ADD.MANAGED_COMPANY.SLOT_CONFLICT_TITLE') }}
+      </span>
+      <p class="mb-0 text-sm text-n-slate-12">
+        {{ conflictMessage }}
+      </p>
+    </div>
 
     <label>
       {{ $t('INBOX_MGMT.ADD.MANAGED_COMPANY.FUNCTION_LABEL') }}

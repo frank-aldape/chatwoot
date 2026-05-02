@@ -17,6 +17,40 @@ export default {
     NextButton,
     ManagedCompanyNamingFields,
   },
+  props: {
+    pageHeaderTitle: {
+      type: String,
+      default: '',
+    },
+    pageHeaderDescription: {
+      type: String,
+      default: '',
+    },
+    channelLabel: {
+      type: String,
+      default: '',
+    },
+    submitButtonLabel: {
+      type: String,
+      default: '',
+    },
+    errorMessage: {
+      type: String,
+      default: '',
+    },
+    defaultWebhookUrl: {
+      type: String,
+      default: '',
+    },
+    additionalAttributes: {
+      type: Object,
+      default: () => ({}),
+    },
+    integrationSlot: {
+      type: String,
+      default: '',
+    },
+  },
   setup() {
     return { v$: useVuelidate() };
   },
@@ -24,14 +58,40 @@ export default {
     return {
       channelName: '',
       managedCompanyId: null,
+      hasManagedCompanySlotConflict: false,
       functionLabel: '',
-      webhookUrl: '',
+      webhookUrl: this.defaultWebhookUrl,
     };
   },
   computed: {
     ...mapGetters({
       uiFlags: 'inboxes/getUIFlags',
     }),
+    resolvedPageHeaderTitle() {
+      return (
+        this.pageHeaderTitle || this.$t('INBOX_MGMT.ADD.API_CHANNEL.TITLE')
+      );
+    },
+    resolvedPageHeaderDescription() {
+      return (
+        this.pageHeaderDescription || this.$t('INBOX_MGMT.ADD.API_CHANNEL.DESC')
+      );
+    },
+    resolvedChannelLabel() {
+      return this.channelLabel || this.$t('INBOX_MGMT.CHANNELS.API');
+    },
+    resolvedSubmitButtonLabel() {
+      return (
+        this.submitButtonLabel ||
+        this.$t('INBOX_MGMT.ADD.API_CHANNEL.SUBMIT_BUTTON')
+      );
+    },
+    resolvedErrorMessage() {
+      return (
+        this.errorMessage ||
+        this.$t('INBOX_MGMT.ADD.API_CHANNEL.API.ERROR_MESSAGE')
+      );
+    },
   },
   validations: {
     channelName: { required },
@@ -39,6 +99,11 @@ export default {
   },
   methods: {
     async createChannel() {
+      if (this.hasManagedCompanySlotConflict) {
+        useAlert(this.$t('INBOX_MGMT.ADD.MANAGED_COMPANY.SLOT_CONFLICT_TITLE'));
+        return;
+      }
+
       this.v$.$touch();
       if (this.v$.$invalid) {
         return;
@@ -51,6 +116,7 @@ export default {
           channel: {
             type: 'api',
             webhook_url: this.webhookUrl,
+            additional_attributes: this.additionalAttributes,
           },
         });
 
@@ -62,7 +128,7 @@ export default {
           },
         });
       } catch (error) {
-        useAlert(this.$t('INBOX_MGMT.ADD.API_CHANNEL.API.ERROR_MESSAGE'));
+        useAlert(this.resolvedErrorMessage);
       }
     },
   },
@@ -72,8 +138,8 @@ export default {
 <template>
   <div class="h-full w-full p-6 col-span-6">
     <PageHeader
-      :header-title="$t('INBOX_MGMT.ADD.API_CHANNEL.TITLE')"
-      :header-content="$t('INBOX_MGMT.ADD.API_CHANNEL.DESC')"
+      :header-title="resolvedPageHeaderTitle"
+      :header-content="resolvedPageHeaderDescription"
     />
     <form
       class="flex flex-wrap flex-col mx-0"
@@ -98,9 +164,11 @@ export default {
 
       <ManagedCompanyNamingFields
         v-model:managed-company-id="managedCompanyId"
+        v-model:has-slot-conflict="hasManagedCompanySlotConflict"
         v-model:function-label="functionLabel"
         v-model:inbox-name="channelName"
-        :channel-label="$t('INBOX_MGMT.CHANNELS.API')"
+        :channel-label="resolvedChannelLabel"
+        :integration-slot="integrationSlot"
         class="mb-4"
       />
 
@@ -124,10 +192,11 @@ export default {
       <div class="w-full mt-4">
         <NextButton
           :is-loading="uiFlags.isCreating"
+          :disabled="hasManagedCompanySlotConflict"
           type="submit"
           solid
           blue
-          :label="$t('INBOX_MGMT.ADD.API_CHANNEL.SUBMIT_BUTTON')"
+          :label="resolvedSubmitButtonLabel"
         />
       </div>
     </form>

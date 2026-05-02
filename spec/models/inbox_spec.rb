@@ -208,6 +208,122 @@ RSpec.describe Inbox do
       expect(inbox).not_to be_valid
       expect(inbox.errors[:managed_company_id]).to include('authorized domain must match the inbox email domain')
     end
+
+    it 'prevents duplicate WhatsApp inboxes for the same managed company' do
+      create(
+        :inbox,
+        account: account,
+        channel: build(:channel_whatsapp, account: account),
+        managed_company: managed_company,
+        name: 'ACME - WhatsApp - Ventas'
+      )
+
+      duplicate_inbox = build(
+        :inbox,
+        account: account,
+        channel: build(:channel_whatsapp, account: account),
+        managed_company: managed_company,
+        name: 'ACME - WhatsApp - Soporte'
+      )
+
+      expect(duplicate_inbox).not_to be_valid
+      expect(duplicate_inbox.errors[:managed_company_id]).to include('already has a whatsapp inbox assigned')
+    end
+
+    it 'prevents duplicate Messenger inboxes for the same managed company' do
+      create(
+        :inbox,
+        account: account,
+        channel: Channel::FacebookPage.new(
+          account: account,
+          page_access_token: SecureRandom.uuid,
+          user_access_token: SecureRandom.uuid,
+          page_id: SecureRandom.uuid
+        ),
+        managed_company: managed_company,
+        name: 'ACME - Messenger - Atención'
+      )
+
+      duplicate_inbox = build(
+        :inbox,
+        account: account,
+        channel: Channel::FacebookPage.new(
+          account: account,
+          page_access_token: SecureRandom.uuid,
+          user_access_token: SecureRandom.uuid,
+          page_id: SecureRandom.uuid
+        ),
+        managed_company: managed_company,
+        name: 'ACME - Messenger - Seguimiento'
+      )
+
+      expect(duplicate_inbox).not_to be_valid
+      expect(duplicate_inbox.errors[:managed_company_id]).to include('already has a facebook inbox assigned')
+    end
+
+    it 'prevents duplicate Instagram inboxes for the same managed company' do
+      create(
+        :inbox,
+        account: account,
+        channel: build(:channel_instagram, account: account),
+        managed_company: managed_company,
+        name: 'ACME - Instagram - Marketing'
+      )
+
+      duplicate_inbox = build(
+        :inbox,
+        account: account,
+        channel: build(:channel_instagram, account: account),
+        managed_company: managed_company,
+        name: 'ACME - Instagram - Comunidad'
+      )
+
+      expect(duplicate_inbox).not_to be_valid
+      expect(duplicate_inbox.errors[:managed_company_id]).to include('already has a instagram inbox assigned')
+    end
+
+    it 'prevents duplicate LinkedIn bridge inboxes for the same managed company' do
+      create(
+        :inbox,
+        account: account,
+        channel: build(:channel_api, account: account, additional_attributes: { provider_type: 'linkedin', provider_label: 'LinkedIn' }),
+        managed_company: managed_company,
+        name: 'ACME - LinkedIn - Prospectación'
+      )
+
+      duplicate_inbox = build(
+        :inbox,
+        account: account,
+        channel: build(:channel_api, account: account, additional_attributes: { provider_type: 'linkedin', provider_label: 'LinkedIn' }),
+        managed_company: managed_company,
+        name: 'ACME - LinkedIn - Reclutamiento'
+      )
+
+      expect(duplicate_inbox).not_to be_valid
+      expect(duplicate_inbox.errors[:managed_company_id]).to include('already has a linkedin inbox assigned')
+    end
+
+    it 'allows multiple email inboxes for the same managed company when domains match' do
+      create(
+        :inbox,
+        :with_email,
+        account: account,
+        channel: build(:channel_email, account: account, email: 'ventas@acme.com'),
+        managed_company: managed_company,
+        name: 'ACME - Email - Ventas'
+      )
+
+      second_email_inbox = build(
+        :inbox,
+        :with_email,
+        account: account,
+        channel: build(:channel_email, account: account, email: 'soporte@acme.com'),
+        managed_company: managed_company,
+        name: 'ACME - Email - Soporte'
+      )
+
+      expect(second_email_inbox).to be_valid
+    end
   end
 
   describe '#update' do

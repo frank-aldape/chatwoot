@@ -43,6 +43,7 @@ export default {
       selectedPage: { name: null, id: null },
       pageName: '',
       managedCompanyId: null,
+      hasManagedCompanySlotConflict: false,
       functionLabel: '',
       pageList: [],
       emptyStateMessage: this.$t('INBOX_MGMT.DETAILS.LOADING_FB'),
@@ -189,6 +190,11 @@ export default {
     },
 
     createChannel() {
+      if (this.hasManagedCompanySlotConflict) {
+        useAlert(this.$t('INBOX_MGMT.ADD.MANAGED_COMPANY.SLOT_CONFLICT_TITLE'));
+        return;
+      }
+
       this.v$.$touch();
       if (!this.v$.$error) {
         this.emptyStateMessage = this.$t('INBOX_MGMT.DETAILS.CREATING_CHANNEL');
@@ -287,13 +293,18 @@ export default {
           </div>
           <ManagedCompanyNamingFields
             v-model:managed-company-id="managedCompanyId"
+            v-model:has-slot-conflict="hasManagedCompanySlotConflict"
             v-model:function-label="functionLabel"
             v-model:inbox-name="pageName"
             :channel-label="$t('INBOX_MGMT.CHANNELS.MESSENGER')"
+            integration-slot="facebook"
             class="mb-4"
           />
           <div class="w-full text-right">
-            <NextButton :label="$t('INBOX_MGMT.ADD.FB.CREATE_INBOX')" />
+            <NextButton
+              :label="$t('INBOX_MGMT.ADD.FB.CREATE_INBOX')"
+              :disabled="hasManagedCompanySlotConflict"
+            />
           </div>
         </div>
       </form>

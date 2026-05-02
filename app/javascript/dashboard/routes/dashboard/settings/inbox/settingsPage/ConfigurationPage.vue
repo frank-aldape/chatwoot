@@ -53,6 +53,18 @@ export default {
     isForwardingEnabled() {
       return !!this.inbox.forwarding_enabled;
     },
+    isLinkedinBridgeInbox() {
+      return this.inbox.additional_attributes?.provider_type === 'linkedin';
+    },
+    linkedinBridgeContactEndpoint() {
+      return `${window.location.origin}/public/api/v1/inboxes/${this.inbox.inbox_identifier}/contacts`;
+    },
+    linkedinBridgeConversationEndpoint() {
+      return `${window.location.origin}/public/api/v1/inboxes/${this.inbox.inbox_identifier}/contacts/{contact_source_id}/conversations`;
+    },
+    linkedinBridgeMessageEndpoint() {
+      return `${window.location.origin}/public/api/v1/inboxes/${this.inbox.inbox_identifier}/contacts/{contact_source_id}/conversations/{conversation_id}/messages`;
+    },
   },
   watch: {
     inbox() {
@@ -269,6 +281,46 @@ export default {
     </div>
   </div>
   <div v-else-if="isAPIInbox" class="mx-8">
+    <SettingsSection
+      v-if="isLinkedinBridgeInbox"
+      :title="$t('INBOX_MGMT.SETTINGS_POPUP.LINKEDIN_BRIDGE.TITLE')"
+      :sub-title="$t('INBOX_MGMT.SETTINGS_POPUP.LINKEDIN_BRIDGE.SUBTITLE')"
+    >
+      <div class="flex flex-col gap-4">
+        <div>
+          <p class="mb-2 text-sm font-medium text-n-slate-12">
+            {{ $t('INBOX_MGMT.SETTINGS_POPUP.LINKEDIN_BRIDGE.OUTGOING_TITLE') }}
+          </p>
+          <woot-code v-if="inbox.webhook_url" :script="inbox.webhook_url" />
+          <p v-else class="text-sm text-n-slate-11">
+            {{ $t('INBOX_MGMT.SETTINGS_POPUP.LINKEDIN_BRIDGE.OUTGOING_EMPTY') }}
+          </p>
+        </div>
+        <div>
+          <p class="mb-2 text-sm font-medium text-n-slate-12">
+            {{ $t('INBOX_MGMT.SETTINGS_POPUP.LINKEDIN_BRIDGE.CONTACTS_TITLE') }}
+          </p>
+          <woot-code :script="linkedinBridgeContactEndpoint" />
+        </div>
+        <div>
+          <p class="mb-2 text-sm font-medium text-n-slate-12">
+            {{
+              $t(
+                'INBOX_MGMT.SETTINGS_POPUP.LINKEDIN_BRIDGE.CONVERSATIONS_TITLE'
+              )
+            }}
+          </p>
+          <woot-code :script="linkedinBridgeConversationEndpoint" />
+        </div>
+        <div>
+          <p class="mb-2 text-sm font-medium text-n-slate-12">
+            {{ $t('INBOX_MGMT.SETTINGS_POPUP.LINKEDIN_BRIDGE.MESSAGES_TITLE') }}
+          </p>
+          <woot-code :script="linkedinBridgeMessageEndpoint" />
+        </div>
+      </div>
+    </SettingsSection>
+
     <SettingsSection
       :title="$t('INBOX_MGMT.SETTINGS_POPUP.INBOX_IDENTIFIER')"
       :sub-title="$t('INBOX_MGMT.SETTINGS_POPUP.INBOX_IDENTIFIER_SUB_TEXT')"

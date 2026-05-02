@@ -60,6 +60,7 @@ const isActive = computed(() => {
     'website',
     'twilio',
     'api',
+    'linkedin',
     'whatsapp',
     'sms',
     'telegram',
@@ -77,6 +78,10 @@ const isComingSoon = computed(() => {
   return ['voice'].includes(key) && !isActive.value;
 });
 
+const badgeLabel = computed(() => {
+  return props.channel.badgeLabel || '';
+});
+
 const onItemClick = () => {
   if (isActive.value) {
     emit('channelItemClick', props.channel.key);
@@ -89,6 +94,7 @@ const onItemClick = () => {
     :title="channel.title"
     :description="channel.description"
     :icon="channel.icon"
+    :badge-label="badgeLabel"
     :is-coming-soon="isComingSoon"
     :disabled="!isActive"
     @click="onItemClick"

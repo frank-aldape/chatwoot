@@ -21,6 +21,7 @@ export default {
     return {
       inboxName: '',
       managedCompanyId: null,
+      hasManagedCompanySlotConflict: false,
       functionLabel: '',
       phoneNumber: '',
       apiKey: '',
@@ -40,6 +41,11 @@ export default {
   },
   methods: {
     async createChannel() {
+      if (this.hasManagedCompanySlotConflict) {
+        useAlert(this.$t('INBOX_MGMT.ADD.MANAGED_COMPANY.SLOT_CONFLICT_TITLE'));
+        return;
+      }
+
       this.v$.$touch();
       if (this.v$.$invalid) {
         return;
@@ -100,9 +106,11 @@ export default {
 
     <ManagedCompanyNamingFields
       v-model:managed-company-id="managedCompanyId"
+      v-model:has-slot-conflict="hasManagedCompanySlotConflict"
       v-model:function-label="functionLabel"
       v-model:inbox-name="inboxName"
       :channel-label="$t('INBOX_MGMT.CHANNELS.WHATSAPP')"
+      integration-slot="whatsapp"
       class="mb-4"
     />
 
@@ -179,6 +187,7 @@ export default {
     <div class="w-full mt-4">
       <NextButton
         :is-loading="uiFlags.isCreating"
+        :disabled="hasManagedCompanySlotConflict"
         type="submit"
         solid
         blue

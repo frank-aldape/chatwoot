@@ -4,6 +4,7 @@ import Facebook from './channels/Facebook.vue';
 import Website from './channels/Website.vue';
 import Twitter from './channels/Twitter.vue';
 import Api from './channels/Api.vue';
+import Linkedin from './channels/Linkedin.vue';
 import Email from './channels/Email.vue';
 import Sms from './channels/Sms.vue';
 import Whatsapp from './channels/Whatsapp.vue';
@@ -18,6 +19,7 @@ const channelViewList = {
   website: Website,
   twitter: Twitter,
   api: Api,
+  linkedin: Linkedin,
   email: Email,
   sms: Sms,
   whatsapp: Whatsapp,

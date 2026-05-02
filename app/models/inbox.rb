@@ -55,6 +55,7 @@ class Inbox < ApplicationRecord
   validate :ensure_valid_max_assignment_limit
   validate :ensure_managed_company_account_integrity
   validate :ensure_managed_company_email_domain_match
+  validate :ensure_unique_managed_company_channel_slot
 
   belongs_to :account
   belongs_to :portal, optional: true
@@ -266,6 +267,32 @@ class Inbox < ApplicationRecord
     return if email_domain == managed_company.authorized_domain
 
     errors.add(:managed_company_id, 'authorized domain must match the inbox email domain')
+  end
+
+  def ensure_unique_managed_company_channel_slot
+    return if managed_company.blank?
+
+    integration_slot = managed_company_integration_slot
+    return if integration_slot.blank?
+
+    return unless account.inboxes.where(managed_company_id: managed_company_id).where.not(id: id).any? do |existing_inbox|
+      existing_inbox.managed_company_integration_slot == integration_slot
+    end
+
+    errors.add(:managed_company_id, "already has a #{integration_slot.humanize(capitalize: false)} inbox assigned")
+  end
+
+  def managed_company_integration_slot
+    return 'instagram' if instagram?
+    return 'facebook' if facebook?
+    return 'whatsapp' if whatsapp? || twilio_whatsapp?
+    return 'linkedin' if linkedin_bridge?
+
+    nil
+  end
+
+  def linkedin_bridge?
+    api? && channel.try(:additional_attributes).to_h['provider_type'] == 'linkedin'
   end
 
   def delete_round_robin_agents

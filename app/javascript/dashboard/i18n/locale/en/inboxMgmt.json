@@ -49,6 +49,8 @@
         "COMPANY_LABEL": "Compañía",
         "COMPANY_PLACEHOLDER": "Selecciona una compañía",
         "LOADING": "Cargando compañías...",
+        "SLOT_CONFLICT_TITLE": "Esta compañía ya tiene este canal asignado",
+        "SLOT_CONFLICT_MESSAGE": "{company} ya tiene un inbox de {channel}: {inbox}. Usa ese inbox existente o cambia de compañía.",
         "FUNCTION_LABEL": "Función o propósito",
         "FUNCTION_PLACEHOLDER": "Ejemplo: Ventas, Soporte, Dirección",
         "PREVIEW_LABEL": "Vista previa",
@@ -81,6 +83,14 @@
         "ERROR_AUTH": "There was an error connecting to Instagram, please try again",
         "NEW_INBOX_SUGGESTION": "This Instagram account was previously linked to a different inbox and has now been migrated here. All new messages will appear here. The old inbox will no longer be able to send or receive messages for this account.",
         "DUPLICATE_INBOX_BANNER": "This Instagram account was migrated to the new Instagram channel inbox. You won’t be able to send/receive Instagram messages from this inbox anymore."
+      },
+      "LINKEDIN": {
+        "TITLE": "LinkedIn channel",
+        "DESC": "Create a LinkedIn inbox using the API channel flow. Use this when a company needs a dedicated LinkedIn inbox managed through your own middleware or provider.",
+        "SUBMIT_BUTTON": "Create LinkedIn inbox",
+        "API": {
+          "ERROR_MESSAGE": "We were not able to create the LinkedIn inbox"
+        }
       },
       "TIKTOK": {
         "CONTINUE_WITH_TIKTOK": "Continue with TikTok",
@@ -463,53 +473,71 @@
       },
       "AUTH": {
         "TITLE": "Choose a channel",
-        "DESC": "Chatwoot supports live-chat widgets, Facebook Messenger, WhatsApp, Emails, etc., as channels. If you want to build a custom channel, you can create it using the API channel. To get started, choose one of the channels below.",
+        "DESC": "Create one inbox per active channel and link it to a company from the start. Native channels connect directly in Chatwoot, while API channels are meant for your own middleware.",
         "TITLE_NEXT": "Complete the setup",
         "TITLE_FINISH": "Voilà!",
+        "BADGES": {
+          "NATIVE": "Nativo",
+          "API": "API"
+        },
+        "SECTIONS": {
+          "NATIVE": {
+            "TITLE": "Canales nativos",
+            "DESCRIPTION": "Conecta estos canales directamente en Chatwoot y ligalos a una compañía desde el alta."
+          },
+          "API": {
+            "TITLE": "Canales API / middleware",
+            "DESCRIPTION": "Usa estos canales cuando la mensajería real depende de tu middleware o de un proveedor externo."
+          }
+        },
         "CHANNEL": {
           "WEBSITE": {
             "TITLE": "Website",
-            "DESCRIPTION": "Create a live-chat widget"
+            "DESCRIPTION": "Web widget for a specific company"
           },
           "FACEBOOK": {
             "TITLE": "Facebook",
-            "DESCRIPTION": "Connect your Facebook page"
+            "DESCRIPTION": "Messenger inbox linked directly to a company page"
           },
           "WHATSAPP": {
             "TITLE": "WhatsApp",
-            "DESCRIPTION": "Support your customers on WhatsApp"
+            "DESCRIPTION": "Native WhatsApp inbox for a company phone number"
           },
           "EMAIL": {
             "TITLE": "Email",
-            "DESCRIPTION": "Connect with Gmail, Outlook, or other providers"
+            "DESCRIPTION": "Email inbox restricted by the company domain rule"
           },
           "SMS": {
             "TITLE": "SMS",
-            "DESCRIPTION": "Integrate SMS channel with Twilio or bandwidth"
+            "DESCRIPTION": "SMS inbox for a company number or provider"
           },
           "API": {
             "TITLE": "API",
-            "DESCRIPTION": "Make a custom channel using our API"
+            "DESCRIPTION": "Custom inbox backed by your own middleware"
+          },
+          "LINKEDIN": {
+            "TITLE": "LinkedIn",
+            "DESCRIPTION": "LinkedIn inbox using your own middleware over API"
           },
           "TELEGRAM": {
             "TITLE": "Telegram",
-            "DESCRIPTION": "Configure Telegram channel using Bot token"
+            "DESCRIPTION": "Telegram inbox for a specific bot"
           },
           "LINE": {
             "TITLE": "Line",
-            "DESCRIPTION": "Integrate your Line channel"
+            "DESCRIPTION": "LINE inbox for a company account"
           },
           "INSTAGRAM": {
             "TITLE": "Instagram",
-            "DESCRIPTION": "Connect your instagram account"
+            "DESCRIPTION": "Native Instagram inbox linked to a company"
           },
           "TIKTOK": {
             "TITLE": "TikTok",
-            "DESCRIPTION": "Connect your TikTok account"
+            "DESCRIPTION": "Native TikTok inbox linked to a company"
           },
           "VOICE": {
             "TITLE": "Voice",
-            "DESCRIPTION": "Integrate with Twilio Voice"
+            "DESCRIPTION": "Voice inbox for a company phone line"
           }
         }
       },
@@ -756,6 +784,15 @@
       "HMAC_LINK_TO_DOCS": "You can read more here.",
       "HMAC_MANDATORY_VERIFICATION": "Enforce User Identity Validation",
       "HMAC_MANDATORY_DESCRIPTION": "If enabled, requests that cannot be verified will be rejected.",
+      "LINKEDIN_BRIDGE": {
+        "TITLE": "LinkedIn bridge setup",
+        "SUBTITLE": "This inbox uses the API channel as a LinkedIn bridge. Your middleware should receive outgoing agent events on the configured webhook URL and push inbound LinkedIn traffic into the public inbox APIs shown below.",
+        "OUTGOING_TITLE": "Outgoing webhook URL",
+        "OUTGOING_EMPTY": "Set a webhook URL on this API inbox so Chatwoot can notify your LinkedIn bridge about agent activity.",
+        "CONTACTS_TITLE": "Create or update contact endpoint",
+        "CONVERSATIONS_TITLE": "Create conversation endpoint",
+        "MESSAGES_TITLE": "Create incoming message endpoint"
+      },
       "INBOX_IDENTIFIER": "Inbox Identifier",
       "INBOX_IDENTIFIER_SUB_TEXT": "Use the `inbox_identifier` token shown here to authentication your API clients.",
       "FORWARD_EMAIL_TITLE": "Forward to Email",
@@ -1087,6 +1124,7 @@
       "TELEGRAM": "Telegram",
       "LINE": "Line",
       "API": "API Channel",
+      "LINKEDIN": "LinkedIn",
       "INSTAGRAM": "Instagram",
       "TIKTOK": "TikTok",
       "VOICE": "Voice"

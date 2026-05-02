@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import instagramClient from 'dashboard/api/channel/instagramClient';
 import Button from 'dashboard/components-next/button/Button.vue';
 import ManagedCompanyNamingFields from '../components/ManagedCompanyNamingFields.vue';
+import { useAlert } from 'dashboard/composables';
 
 const { t } = useI18n();
 
@@ -12,6 +13,7 @@ const errorStateMessage = ref('');
 const errorStateDescription = ref('');
 const isRequestingAuthorization = ref(false);
 const managedCompanyId = ref(null);
+const hasManagedCompanySlotConflict = ref(false);
 const functionLabel = ref('');
 const inboxName = ref('');
 
@@ -38,6 +40,11 @@ onMounted(() => {
 });
 
 const requestAuthorization = async () => {
+  if (hasManagedCompanySlotConflict.value) {
+    useAlert(t('INBOX_MGMT.ADD.MANAGED_COMPANY.SLOT_CONFLICT_TITLE'));
+    return;
+  }
+
   isRequestingAuthorization.value = true;
   const response = await instagramClient.generateAuthorization({
     managed_company_id: managedCompanyId.value,
@@ -86,16 +93,18 @@ const requestAuthorization = async () => {
 
           <ManagedCompanyNamingFields
             v-model:managed-company-id="managedCompanyId"
+            v-model:has-slot-conflict="hasManagedCompanySlotConflict"
             v-model:function-label="functionLabel"
             v-model:inbox-name="inboxName"
             :channel-label="$t('INBOX_MGMT.CHANNELS.INSTAGRAM')"
+            integration-slot="instagram"
           />
         </div>
         <Button
           class="text-white !rounded-full !px-6 bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCAF45]"
           lg
           icon="i-ri-instagram-line"
-          :disabled="isRequestingAuthorization"
+          :disabled="isRequestingAuthorization || hasManagedCompanySlotConflict"
           :is-loading="isRequestingAuthorization"
           :label="$t('INBOX_MGMT.ADD.INSTAGRAM.CONTINUE_WITH_INSTAGRAM')"
           @click="requestAuthorization()"
