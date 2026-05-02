@@ -17,8 +17,9 @@
       "EMAIL": "EMAIL",
       "STATUS": "Status",
       "ACTIONS": "Actions",
-      "VERIFIED": "Verified",
-      "VERIFICATION_PENDING": "Verification Pending",
+      "VERIFIED": "Verificado",
+      "VERIFICATION_PENDING": "Invitación pendiente",
+      "INVITATION_SENT_AT": "Último envío: {date}",
       "AVAILABLE_CUSTOM_ROLE": "Available custom role permissions"
     },
     "ADD": {
@@ -58,6 +59,13 @@
         "MESSAGE": "Are you sure to delete ",
         "YES": "Yes, Delete ",
         "NO": "No, Keep "
+      }
+    },
+    "RESEND_INVITATION": {
+      "BUTTON_TEXT": "Resend invitation",
+      "API": {
+        "SUCCESS_MESSAGE": "Invitation resent successfully",
+        "ERROR_MESSAGE": "Could not resend the invitation. Please try again later"
       }
     },
     "EDIT": {

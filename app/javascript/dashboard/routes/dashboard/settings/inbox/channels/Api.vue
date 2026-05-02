@@ -6,6 +6,7 @@ import { required } from '@vuelidate/validators';
 import router from '../../../../index';
 import PageHeader from '../../SettingsSubPageHeader.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import ManagedCompanyNamingFields from '../components/ManagedCompanyNamingFields.vue';
 
 const shouldBeWebhookUrl = (value = '') =>
   value ? value.startsWith('http') : true;
@@ -14,6 +15,7 @@ export default {
   components: {
     PageHeader,
     NextButton,
+    ManagedCompanyNamingFields,
   },
   setup() {
     return { v$: useVuelidate() };
@@ -21,6 +23,8 @@ export default {
   data() {
     return {
       channelName: '',
+      managedCompanyId: null,
+      functionLabel: '',
       webhookUrl: '',
     };
   },
@@ -43,6 +47,7 @@ export default {
       try {
         const apiChannel = await this.$store.dispatch('inboxes/createChannel', {
           name: this.channelName?.trim(),
+          managed_company_id: this.managedCompanyId,
           channel: {
             type: 'api',
             webhook_url: this.webhookUrl,
@@ -90,6 +95,14 @@ export default {
           }}</span>
         </label>
       </div>
+
+      <ManagedCompanyNamingFields
+        v-model:managed-company-id="managedCompanyId"
+        v-model:function-label="functionLabel"
+        v-model:inbox-name="channelName"
+        :channel-label="$t('INBOX_MGMT.CHANNELS.API')"
+        class="mb-4"
+      />
 
       <div class="flex-shrink-0 flex-grow-0">
         <label :class="{ error: v$.webhookUrl.$error }">

@@ -1,9 +1,29 @@
 {
   "MANAGED_COMPANIES_SETTINGS": {
     "HEADER": "Compañías",
+    "HEADER_BUTTON": "Crear compañía",
     "DESCRIPTION": "Agrupa inboxes bajo una compañía operativa, usa su dominio autorizado como referencia para vincular correos y concede visibilidad a los equipos solo sobre los inboxes que deben atender.",
     "LOADING": "Cargando compañías...",
     "EMPTY": "Todavía no hay compañías configuradas en esta cuenta.",
+    "SEARCH": {
+      "PLACEHOLDER": "Buscar por nombre o dominio",
+      "NO_RESULTS": "No encontramos compañías con ese nombre o dominio.",
+      "NO_RESULTS_WITH_FILTER": "No encontramos compañías con ese nombre o dominio dentro del filtro seleccionado."
+    },
+    "FILTER": {
+      "LABEL": "Estado",
+      "ALL": "Todas",
+      "ACTIVE": "Activas",
+      "INACTIVE": "Inactivas",
+      "NO_RESULTS": "No hay compañías para el filtro seleccionado."
+    },
+    "TABLE": {
+      "COMPANY": "Compañía",
+      "STATUS": "Estado",
+      "INBOXES": "Inboxes",
+      "TEAMS": "Equipos",
+      "ACTIONS": "Acciones"
+    },
     "FORM": {
       "CREATE_TITLE": "Crear compañía",
       "EDIT_TITLE": "Editar compañía",
@@ -20,6 +40,7 @@
       "CANCEL": "Cancelar"
     },
     "LIST": {
+      "VIEW": "Ver detalle",
       "EDIT": "Editar",
       "DELETE": "Eliminar",
       "INBOX_COUNT": "{count} inboxes",
@@ -31,6 +52,10 @@
       "STATUS": "Estado: {status}",
       "STATUS_ACTIVE": "activa",
       "STATUS_INACTIVE": "inactiva"
+    },
+    "DETAILS": {
+      "TITLE": "Detalle de la compañía",
+      "CLOSE": "Cerrar"
     },
     "DELETE": {
       "TITLE": "Eliminar compañía",

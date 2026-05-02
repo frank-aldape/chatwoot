@@ -6,11 +6,13 @@ import { required, email } from '@vuelidate/validators';
 import router from '../../../../../index';
 import PageHeader from '../../../SettingsSubPageHeader.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import ManagedCompanyNamingFields from '../../components/ManagedCompanyNamingFields.vue';
 
 export default {
   components: {
     PageHeader,
     NextButton,
+    ManagedCompanyNamingFields,
   },
   setup() {
     return { v$: useVuelidate() };
@@ -18,6 +20,8 @@ export default {
   data() {
     return {
       channelName: '',
+      managedCompanyId: null,
+      functionLabel: '',
       email: '',
       alertMessage: '',
     };
@@ -43,6 +47,7 @@ export default {
           'inboxes/createChannel',
           {
             name: this.channelName?.trim(),
+            managed_company_id: this.managedCompanyId,
             channel: {
               type: 'email',
               email: this.email,
@@ -95,6 +100,14 @@ export default {
           }}</span>
         </label>
       </div>
+
+      <ManagedCompanyNamingFields
+        v-model:managed-company-id="managedCompanyId"
+        v-model:function-label="functionLabel"
+        v-model:inbox-name="channelName"
+        :channel-label="$t('INBOX_MGMT.CHANNELS.EMAIL')"
+        class="mb-4"
+      />
 
       <div class="flex-shrink-0 flex-grow-0 mb-4">
         <label :class="{ error: v$.email.$error }">

@@ -43,6 +43,17 @@
       }
     },
     "ADD": {
+      "MANAGED_COMPANY": {
+        "TITLE": "Compañía y nombre sugerido",
+        "SUBTITLE": "Vincula este canal con una compañía desde el alta y usa la convención estándar para nombrarlo.",
+        "COMPANY_LABEL": "Compañía",
+        "COMPANY_PLACEHOLDER": "Selecciona una compañía",
+        "LOADING": "Cargando compañías...",
+        "FUNCTION_LABEL": "Función o propósito",
+        "FUNCTION_PLACEHOLDER": "Ejemplo: Ventas, Soporte, Dirección",
+        "PREVIEW_LABEL": "Vista previa",
+        "APPLY_SUGGESTION": "Aplicar nombre sugerido"
+      },
       "CHANNEL_NAME": {
         "LABEL": "Inbox Name",
         "PLACEHOLDER": "Enter your inbox name (eg: Acme Inc)",
@@ -731,6 +742,14 @@
       "LOCK_TO_SINGLE_CONVERSATION_SUB_TEXT": "Enable or disable multiple conversations for the same contact in this inbox",
       "INBOX_UPDATE_TITLE": "Inbox Settings",
       "INBOX_UPDATE_SUB_TEXT": "Update your inbox settings",
+      "NAMING_HELPER": {
+        "TITLE": "Nombre sugerido del inbox",
+        "SUBTITLE": "Usa la convención {company} - {channel} - función para mantener ordenados los canales de la compañía.",
+        "FUNCTION_LABEL": "Función o propósito",
+        "FUNCTION_PLACEHOLDER": "Ejemplo: Ventas, Soporte, Dirección",
+        "PREVIEW_LABEL": "Vista previa",
+        "APPLY": "Aplicar nombre sugerido"
+      },
       "AUTO_ASSIGNMENT_SUB_TEXT": "Enable or disable the automatic assignment of new conversations to the agents added to this inbox.",
       "HMAC_VERIFICATION": "User Identity Validation",
       "HMAC_DESCRIPTION": "With this key you can generate a secret token that can be used to verify the identity of your users.",

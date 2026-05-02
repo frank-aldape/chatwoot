@@ -12,6 +12,7 @@ import PageHeader from '../../SettingsSubPageHeader.vue';
 import router from '../../../../index';
 import { useBranding } from 'shared/composables/useBranding';
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import ManagedCompanyNamingFields from '../components/ManagedCompanyNamingFields.vue';
 
 import { loadScript } from 'dashboard/helper/DOMHelpers';
 import * as Sentry from '@sentry/vue';
@@ -21,6 +22,7 @@ export default {
     LoadingState,
     PageHeader,
     NextButton,
+    ManagedCompanyNamingFields,
   },
   setup() {
     const { accountId } = useAccount();
@@ -40,6 +42,8 @@ export default {
       channel: 'facebook',
       selectedPage: { name: null, id: null },
       pageName: '',
+      managedCompanyId: null,
+      functionLabel: '',
       pageList: [],
       emptyStateMessage: this.$t('INBOX_MGMT.DETAILS.LOADING_FB'),
       errorStateMessage: '',
@@ -179,7 +183,8 @@ export default {
         user_access_token: this.user_access_token,
         page_access_token: this.selectedPage.access_token,
         page_id: this.selectedPage.id,
-        inbox_name: this.selectedPage.name?.trim(),
+        inbox_name: this.pageName?.trim(),
+        managed_company_id: this.managedCompanyId,
       };
     },
 
@@ -280,6 +285,13 @@ export default {
               </span>
             </label>
           </div>
+          <ManagedCompanyNamingFields
+            v-model:managed-company-id="managedCompanyId"
+            v-model:function-label="functionLabel"
+            v-model:inbox-name="pageName"
+            :channel-label="$t('INBOX_MGMT.CHANNELS.MESSENGER')"
+            class="mb-4"
+          />
           <div class="w-full text-right">
             <NextButton :label="$t('INBOX_MGMT.ADD.FB.CREATE_INBOX')" />
           </div>

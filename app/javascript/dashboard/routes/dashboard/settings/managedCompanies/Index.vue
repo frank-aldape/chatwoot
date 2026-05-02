@@ -1,14 +1,22 @@
 <script setup>
-import { computed, reactive, ref, onMounted } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
+
+import { useAlert } from 'dashboard/composables';
+import { LOCAL_STORAGE_KEYS } from 'dashboard/constants/localStorage';
+import { useMapGetter, useStore } from 'dashboard/composables/store';
 import { useI18n } from 'vue-i18n';
+import { LocalStorage } from 'shared/helpers/localStorage';
+
+import Icon from 'dashboard/components-next/icon/Icon.vue';
+import Input from 'dashboard/components-next/input/Input.vue';
+import Button from 'dashboard/components-next/button/Button.vue';
+import PaginationFooter from 'dashboard/components-next/pagination/PaginationFooter.vue';
+import ManagedCompaniesAPI from 'dashboard/api/managedCompanies';
 
 import BaseSettingsHeader from '../components/BaseSettingsHeader.vue';
-import Button from 'dashboard/components-next/button/Button.vue';
-import FormInput from 'v3/components/Form/Input.vue';
-import NextButton from 'dashboard/components-next/button/Button.vue';
-import { useAlert } from 'dashboard/composables';
-import { useMapGetter, useStore } from 'dashboard/composables/store';
-import ManagedCompaniesAPI from 'dashboard/api/managedCompanies';
+import SettingsLayout from '../SettingsLayout.vue';
+import ManagedCompanyFormModal from './ManagedCompanyFormModal.vue';
+import ManagedCompanyDetailsModal from './ManagedCompanyDetailsModal.vue';
 
 const { t } = useI18n();
 const store = useStore();
@@ -16,17 +24,41 @@ const store = useStore();
 const managedCompanies = ref([]);
 const isLoading = ref(false);
 const isSubmitting = ref(false);
+const searchQuery = ref('');
+const statusFilter = ref('all');
+const sortBy = ref('name');
+const sortOrder = ref('asc');
+const currentPage = ref(1);
 const showDeletePopup = ref(false);
+const showFormModal = ref(false);
+const showDetailsModal = ref(false);
 const selectedManagedCompany = ref({});
 
-const form = reactive({
-  id: null,
-  name: '',
-  authorizedDomain: '',
-  status: 'active',
-});
+const restorePreferences = () => {
+  const storedPreferences =
+    LocalStorage.get(LOCAL_STORAGE_KEYS.MANAGED_COMPANIES_PREFERENCES) || {};
 
-const isEditing = computed(() => Boolean(form.id));
+  if (storedPreferences.statusFilter) {
+    statusFilter.value = storedPreferences.statusFilter;
+  }
+
+  if (storedPreferences.sortBy) {
+    sortBy.value = storedPreferences.sortBy;
+  }
+
+  if (storedPreferences.sortOrder) {
+    sortOrder.value = storedPreferences.sortOrder;
+  }
+};
+
+const persistPreferences = () => {
+  LocalStorage.set(LOCAL_STORAGE_KEYS.MANAGED_COMPANIES_PREFERENCES, {
+    statusFilter: statusFilter.value,
+    sortBy: sortBy.value,
+    sortOrder: sortOrder.value,
+  });
+};
+
 const inboxes = useMapGetter('inboxes/getInboxes');
 const teams = useMapGetter('teams/getTeams');
 
@@ -44,6 +76,16 @@ const inboxNamesById = computed(() =>
   }, {})
 );
 
+const statusLabel = status => {
+  switch (status) {
+    case 'inactive':
+      return t('MANAGED_COMPANIES_SETTINGS.LIST.STATUS_INACTIVE');
+    case 'active':
+    default:
+      return t('MANAGED_COMPANIES_SETTINGS.LIST.STATUS_ACTIVE');
+  }
+};
+
 const resolvedManagedCompanies = computed(() =>
   managedCompanies.value.map(managedCompany => ({
     ...managedCompany,
@@ -56,21 +98,112 @@ const resolvedManagedCompanies = computed(() =>
   }))
 );
 
-const statusLabel = status => {
-  switch (status) {
-    case 'inactive':
-      return t('MANAGED_COMPANIES_SETTINGS.LIST.STATUS_INACTIVE');
-    case 'active':
-    default:
-      return t('MANAGED_COMPANIES_SETTINGS.LIST.STATUS_ACTIVE');
+const normalizedSearchQuery = computed(() =>
+  searchQuery.value.trim().toLowerCase()
+);
+const hasActiveSearch = computed(() => normalizedSearchQuery.value.length > 0);
+
+const filteredManagedCompanies = computed(() => {
+  const filteredBySearch = resolvedManagedCompanies.value.filter(
+    ({ name, authorized_domain: authorizedDomain, status }) => {
+      const matchesSearch =
+        !normalizedSearchQuery.value ||
+        [name, authorizedDomain]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+          .includes(normalizedSearchQuery.value);
+
+      const matchesStatus =
+        statusFilter.value === 'all' || status === statusFilter.value;
+
+      return matchesSearch && matchesStatus;
+    }
+  );
+
+  return [...filteredBySearch].sort((left, right) => {
+    const direction = sortOrder.value === 'asc' ? 1 : -1;
+
+    if (sortBy.value === 'status') {
+      return left.status.localeCompare(right.status) * direction;
+    }
+
+    return left.name.localeCompare(right.name) * direction;
+  });
+});
+
+const ITEMS_PER_PAGE = 10;
+
+const paginatedManagedCompanies = computed(() => {
+  const startIndex = (currentPage.value - 1) * ITEMS_PER_PAGE;
+  return filteredManagedCompanies.value.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
+});
+
+const toggleSort = field => {
+  if (sortBy.value === field) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+    return;
   }
+
+  sortBy.value = field;
+  sortOrder.value = 'asc';
 };
 
-const resetForm = () => {
-  form.id = null;
-  form.name = '';
-  form.authorizedDomain = '';
-  form.status = 'active';
+const sortIcon = field => {
+  if (sortBy.value !== field) {
+    return 'i-lucide-arrow-up-down';
+  }
+
+  return sortOrder.value === 'asc'
+    ? 'i-lucide-arrow-up-az'
+    : 'i-lucide-arrow-down-az';
+};
+
+const filterOptions = computed(() => [
+  {
+    value: 'all',
+    label: t('MANAGED_COMPANIES_SETTINGS.FILTER.ALL'),
+  },
+  {
+    value: 'active',
+    label: t('MANAGED_COMPANIES_SETTINGS.FILTER.ACTIVE'),
+  },
+  {
+    value: 'inactive',
+    label: t('MANAGED_COMPANIES_SETTINGS.FILTER.INACTIVE'),
+  },
+]);
+
+const showEmptySearchResults = computed(() => {
+  if (!hasActiveSearch.value && statusFilter.value === 'all') {
+    return false;
+  }
+
+  return filteredManagedCompanies.value.length === 0;
+});
+
+const emptySearchMessage = computed(() => {
+  if (hasActiveSearch.value && statusFilter.value !== 'all') {
+    return t('MANAGED_COMPANIES_SETTINGS.SEARCH.NO_RESULTS_WITH_FILTER');
+  }
+
+  if (hasActiveSearch.value) {
+    return t('MANAGED_COMPANIES_SETTINGS.SEARCH.NO_RESULTS');
+  }
+
+  return t('MANAGED_COMPANIES_SETTINGS.FILTER.NO_RESULTS');
+});
+
+const hasRecords = computed(() => resolvedManagedCompanies.value.length > 0);
+const showNoRecordsFound = computed(
+  () => !hasRecords.value && !hasActiveSearch.value
+);
+
+const resetSelection = () => {
+  selectedManagedCompany.value = {};
 };
 
 const fetchManagedCompanies = async () => {
@@ -85,30 +218,54 @@ const fetchManagedCompanies = async () => {
   }
 };
 
-const submitForm = async () => {
+const closeFormModal = () => {
+  showFormModal.value = false;
+  resetSelection();
+};
+
+const openCreateModal = () => {
+  resetSelection();
+  showFormModal.value = true;
+};
+
+const openEditModal = managedCompany => {
+  selectedManagedCompany.value = managedCompany;
+  showFormModal.value = true;
+};
+
+const openDetailsModal = managedCompany => {
+  selectedManagedCompany.value = managedCompany;
+  showDetailsModal.value = true;
+};
+
+const submitForm = async formData => {
   isSubmitting.value = true;
+
   const payload = {
     managed_company: {
-      name: form.name,
-      authorized_domain: form.authorizedDomain,
-      status: form.status,
+      name: formData.name,
+      authorized_domain: formData.authorizedDomain,
+      status: formData.status,
     },
   };
 
   try {
-    if (isEditing.value) {
-      await ManagedCompaniesAPI.update(form.id, payload);
+    if (selectedManagedCompany.value.id) {
+      await ManagedCompaniesAPI.update(
+        selectedManagedCompany.value.id,
+        payload
+      );
       useAlert(t('MANAGED_COMPANIES_SETTINGS.API.UPDATE_SUCCESS'));
     } else {
       await ManagedCompaniesAPI.create(payload);
       useAlert(t('MANAGED_COMPANIES_SETTINGS.API.CREATE_SUCCESS'));
     }
 
-    resetForm();
+    closeFormModal();
     fetchManagedCompanies();
   } catch (error) {
     useAlert(
-      isEditing.value
+      selectedManagedCompany.value.id
         ? t('MANAGED_COMPANIES_SETTINGS.API.UPDATE_ERROR')
         : t('MANAGED_COMPANIES_SETTINGS.API.CREATE_ERROR')
     );
@@ -117,30 +274,25 @@ const submitForm = async () => {
   }
 };
 
-const editManagedCompany = managedCompany => {
-  form.id = managedCompany.id;
-  form.name = managedCompany.name;
-  form.authorizedDomain = managedCompany.authorized_domain;
-  form.status = managedCompany.status;
-};
-
 const openDelete = managedCompany => {
   selectedManagedCompany.value = managedCompany;
   showDeletePopup.value = true;
 };
 
+const closeDetailsModal = () => {
+  showDetailsModal.value = false;
+  resetSelection();
+};
+
 const closeDelete = () => {
-  selectedManagedCompany.value = {};
   showDeletePopup.value = false;
+  resetSelection();
 };
 
 const confirmDeletion = async () => {
   try {
     await ManagedCompaniesAPI.delete(selectedManagedCompany.value.id);
     useAlert(t('MANAGED_COMPANIES_SETTINGS.API.DELETE_SUCCESS'));
-    if (form.id === selectedManagedCompany.value.id) {
-      resetForm();
-    }
     fetchManagedCompanies();
   } catch (error) {
     useAlert(t('MANAGED_COMPANIES_SETTINGS.API.DELETE_ERROR'));
@@ -150,210 +302,192 @@ const confirmDeletion = async () => {
 };
 
 onMounted(() => {
+  restorePreferences();
   fetchManagedCompanies();
   store.dispatch('inboxes/get');
   store.dispatch('teams/get');
 });
+
+watch([statusFilter, sortBy, sortOrder], persistPreferences);
+watch([searchQuery, statusFilter], () => {
+  currentPage.value = 1;
+});
+watch(filteredManagedCompanies, companies => {
+  const totalPages = Math.max(1, Math.ceil(companies.length / ITEMS_PER_PAGE));
+  if (currentPage.value > totalPages) {
+    currentPage.value = totalPages;
+  }
+});
 </script>
 
 <template>
-  <div class="flex-1 overflow-auto">
-    <BaseSettingsHeader
-      :title="$t('MANAGED_COMPANIES_SETTINGS.HEADER')"
-      :description="$t('MANAGED_COMPANIES_SETTINGS.DESCRIPTION')"
-    />
+  <SettingsLayout
+    :is-loading="isLoading"
+    :loading-message="$t('MANAGED_COMPANIES_SETTINGS.LOADING')"
+    :no-records-found="showNoRecordsFound"
+    :no-records-message="$t('MANAGED_COMPANIES_SETTINGS.EMPTY')"
+  >
+    <template #header>
+      <BaseSettingsHeader
+        :title="$t('MANAGED_COMPANIES_SETTINGS.HEADER')"
+        :description="$t('MANAGED_COMPANIES_SETTINGS.DESCRIPTION')"
+      >
+        <template #actions>
+          <Button
+            icon="i-lucide-circle-plus"
+            :label="$t('MANAGED_COMPANIES_SETTINGS.HEADER_BUTTON')"
+            @click="openCreateModal"
+          />
+        </template>
+      </BaseSettingsHeader>
+    </template>
 
-    <div class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
-      <section class="rounded-xl border border-n-weak bg-n-alpha-1 p-4">
-        <div class="mb-4">
-          <h2 class="mb-1 text-base font-medium text-n-slate-12">
-            {{
-              isEditing
-                ? $t('MANAGED_COMPANIES_SETTINGS.FORM.EDIT_TITLE')
-                : $t('MANAGED_COMPANIES_SETTINGS.FORM.CREATE_TITLE')
-            }}
-          </h2>
-          <p class="mb-0 text-sm text-n-slate-11">
-            {{ $t('MANAGED_COMPANIES_SETTINGS.FORM.DESCRIPTION') }}
-          </p>
+    <template #preBody>
+      <div class="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center">
+        <div class="max-w-md flex-1">
+          <Input
+            v-model="searchQuery"
+            type="search"
+            :placeholder="$t('MANAGED_COMPANIES_SETTINGS.SEARCH.PLACEHOLDER')"
+            :custom-input-class="[
+              'h-10 [&:not(.focus)]:!border-transparent bg-n-alpha-2 ltr:!pl-9 rtl:!pr-9',
+            ]"
+          >
+            <template #prefix>
+              <Icon
+                icon="i-lucide-search"
+                class="absolute -translate-y-1/2 text-n-slate-11 size-4 top-1/2 ltr:left-3 rtl:right-3"
+              />
+            </template>
+          </Input>
         </div>
 
-        <form class="grid gap-4" @submit.prevent="submitForm">
-          <FormInput
-            v-model="form.name"
-            name="managed-company-name"
-            spacing="compact"
-            :label="$t('MANAGED_COMPANIES_SETTINGS.FORM.NAME_LABEL')"
-            :placeholder="
-              $t('MANAGED_COMPANIES_SETTINGS.FORM.NAME_PLACEHOLDER')
-            "
-          />
-          <FormInput
-            v-model="form.authorizedDomain"
-            name="managed-company-domain"
-            spacing="compact"
-            :label="$t('MANAGED_COMPANIES_SETTINGS.FORM.DOMAIN_LABEL')"
-            :placeholder="
-              $t('MANAGED_COMPANIES_SETTINGS.FORM.DOMAIN_PLACEHOLDER')
-            "
-          />
-
-          <label class="grid gap-2 text-sm font-medium text-n-slate-12">
-            {{ $t('MANAGED_COMPANIES_SETTINGS.FORM.STATUS_LABEL') }}
-            <select
-              v-model="form.status"
-              class="h-10 rounded-lg border border-n-weak bg-n-background px-3 text-sm text-n-slate-12"
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-n-slate-11">
+            {{ $t('MANAGED_COMPANIES_SETTINGS.FILTER.LABEL') }}
+          </span>
+          <select
+            v-model="statusFilter"
+            class="h-10 rounded-lg border border-n-weak bg-n-alpha-2 px-3 text-sm text-n-slate-12"
+          >
+            <option
+              v-for="option in filterOptions"
+              :key="option.value"
+              :value="option.value"
             >
-              <option value="active">
-                {{ $t('MANAGED_COMPANIES_SETTINGS.FORM.STATUS_ACTIVE') }}
-              </option>
-              <option value="inactive">
-                {{ $t('MANAGED_COMPANIES_SETTINGS.FORM.STATUS_INACTIVE') }}
-              </option>
-            </select>
-          </label>
-
-          <div class="flex gap-2">
-            <NextButton
-              type="submit"
-              :label="
-                isEditing
-                  ? $t('MANAGED_COMPANIES_SETTINGS.FORM.UPDATE')
-                  : $t('MANAGED_COMPANIES_SETTINGS.FORM.CREATE')
-              "
-              :is-loading="isSubmitting"
-            />
-            <Button
-              v-if="isEditing"
-              type="button"
-              slate
-              :label="$t('MANAGED_COMPANIES_SETTINGS.FORM.CANCEL')"
-              @click="resetForm"
-            />
-          </div>
-        </form>
-      </section>
-
-      <section class="rounded-xl border border-n-weak bg-n-background">
-        <woot-loading-state
-          v-if="isLoading"
-          :message="$t('MANAGED_COMPANIES_SETTINGS.LOADING')"
-        />
-        <div
-          v-else-if="!managedCompanies.length"
-          class="p-8 text-sm text-n-slate-11"
-        >
-          {{ $t('MANAGED_COMPANIES_SETTINGS.EMPTY') }}
+              {{ option.label }}
+            </option>
+          </select>
         </div>
-        <table v-else class="min-w-full divide-y divide-n-weak">
-          <tbody class="divide-y divide-n-weak">
+      </div>
+    </template>
+
+    <template #body>
+      <p
+        v-if="showEmptySearchResults"
+        class="flex items-center justify-center py-16 text-base text-n-slate-11"
+      >
+        {{ emptySearchMessage }}
+      </p>
+      <div v-else class="grid gap-4">
+        <table class="min-w-full divide-y divide-n-weak">
+          <thead>
+            <tr class="text-left text-sm font-medium text-n-slate-11">
+              <th class="py-4 ltr:pr-4 rtl:pl-4">
+                <button
+                  class="flex items-center gap-2 p-0 text-left font-medium text-n-slate-11"
+                  @click="toggleSort('name')"
+                >
+                  <span>
+                    {{ $t('MANAGED_COMPANIES_SETTINGS.TABLE.COMPANY') }}
+                  </span>
+                  <Icon :icon="sortIcon('name')" class="size-4" />
+                </button>
+              </th>
+              <th class="py-4 ltr:pr-4 rtl:pl-4">
+                <button
+                  class="flex items-center gap-2 p-0 text-left font-medium text-n-slate-11"
+                  @click="toggleSort('status')"
+                >
+                  <span>
+                    {{ $t('MANAGED_COMPANIES_SETTINGS.TABLE.STATUS') }}
+                  </span>
+                  <Icon :icon="sortIcon('status')" class="size-4" />
+                </button>
+              </th>
+              <th class="py-4 ltr:pr-4 rtl:pl-4">
+                {{ $t('MANAGED_COMPANIES_SETTINGS.TABLE.INBOXES') }}
+              </th>
+              <th class="py-4 ltr:pr-4 rtl:pl-4">
+                {{ $t('MANAGED_COMPANIES_SETTINGS.TABLE.TEAMS') }}
+              </th>
+              <th class="py-4 text-right">
+                {{ $t('MANAGED_COMPANIES_SETTINGS.TABLE.ACTIONS') }}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-n-weak text-n-slate-11">
             <tr
-              v-for="managedCompany in resolvedManagedCompanies"
+              v-for="managedCompany in paginatedManagedCompanies"
               :key="managedCompany.id"
-              class="align-top"
             >
-              <td class="px-4 py-4">
+              <td class="py-4 ltr:pr-4 rtl:pl-4">
                 <div class="flex flex-col gap-1">
                   <span class="font-medium text-n-slate-12">
                     {{ managedCompany.name }}
                   </span>
-                  <span class="text-sm text-n-slate-11">
-                    {{ managedCompany.authorized_domain }}
-                  </span>
-                  <div class="flex flex-wrap gap-2 text-xs text-n-slate-11">
-                    <span>
-                      {{
-                        $t('MANAGED_COMPANIES_SETTINGS.LIST.INBOX_COUNT', {
-                          count: managedCompany.inbox_ids.length,
-                        })
-                      }}
-                    </span>
-                    <span>
-                      {{
-                        $t('MANAGED_COMPANIES_SETTINGS.LIST.TEAM_COUNT', {
-                          count: managedCompany.team_ids.length,
-                        })
-                      }}
-                    </span>
-                    <span>
-                      {{
-                        $t('MANAGED_COMPANIES_SETTINGS.LIST.STATUS', {
-                          status: statusLabel(managedCompany.status),
-                        })
-                      }}
-                    </span>
-                  </div>
-                  <div class="mt-3 grid gap-3 text-sm">
-                    <div class="grid gap-1">
-                      <span class="font-medium text-n-slate-12">
-                        {{
-                          $t('MANAGED_COMPANIES_SETTINGS.LIST.INBOXES_LABEL')
-                        }}
-                      </span>
-                      <div
-                        v-if="managedCompany.inboxNames.length"
-                        class="flex flex-wrap gap-2"
-                      >
-                        <span
-                          v-for="inboxName in managedCompany.inboxNames"
-                          :key="inboxName"
-                          class="rounded-full bg-n-alpha-2 px-2 py-1 text-xs text-n-slate-12"
-                        >
-                          {{ inboxName }}
-                        </span>
-                      </div>
-                      <span v-else class="text-xs text-n-slate-11">
-                        {{
-                          $t(
-                            'MANAGED_COMPANIES_SETTINGS.LIST.NO_INBOXES_ASSIGNED'
-                          )
-                        }}
-                      </span>
-                    </div>
-
-                    <div class="grid gap-1">
-                      <span class="font-medium text-n-slate-12">
-                        {{ $t('MANAGED_COMPANIES_SETTINGS.LIST.TEAMS_LABEL') }}
-                      </span>
-                      <div
-                        v-if="managedCompany.teamNames.length"
-                        class="flex flex-wrap gap-2"
-                      >
-                        <span
-                          v-for="teamName in managedCompany.teamNames"
-                          :key="teamName"
-                          class="rounded-full bg-n-alpha-2 px-2 py-1 text-xs text-n-slate-12"
-                        >
-                          {{ teamName }}
-                        </span>
-                      </div>
-                      <span v-else class="text-xs text-n-slate-11">
-                        {{
-                          $t(
-                            'MANAGED_COMPANIES_SETTINGS.LIST.NO_TEAMS_ASSIGNED'
-                          )
-                        }}
-                      </span>
-                    </div>
-                  </div>
+                  <span>{{ managedCompany.authorized_domain }}</span>
                 </div>
               </td>
-              <td class="px-4 py-4 text-right">
-                <div class="flex justify-end gap-2">
+              <td class="py-4 ltr:pr-4 rtl:pl-4">
+                <span
+                  class="inline-flex rounded-full bg-n-alpha-2 px-2.5 py-1 text-xs font-medium text-n-slate-12"
+                >
+                  {{ statusLabel(managedCompany.status) }}
+                </span>
+              </td>
+              <td class="py-4 ltr:pr-4 rtl:pl-4">
+                <span class="text-sm">
+                  {{
+                    $t('MANAGED_COMPANIES_SETTINGS.LIST.INBOX_COUNT', {
+                      count: managedCompany.inbox_ids.length,
+                    })
+                  }}
+                </span>
+              </td>
+              <td class="py-4 ltr:pr-4 rtl:pl-4">
+                <span class="text-sm">
+                  {{
+                    $t('MANAGED_COMPANIES_SETTINGS.LIST.TEAM_COUNT', {
+                      count: managedCompany.team_ids.length,
+                    })
+                  }}
+                </span>
+              </td>
+              <td class="py-4">
+                <div class="flex justify-end gap-1">
                   <Button
-                    xs
+                    v-tooltip.top="$t('MANAGED_COMPANIES_SETTINGS.LIST.VIEW')"
+                    icon="i-lucide-eye"
                     slate
+                    xs
                     faded
-                    icon="i-lucide-pencil"
-                    :label="$t('MANAGED_COMPANIES_SETTINGS.LIST.EDIT')"
-                    @click="editManagedCompany(managedCompany)"
+                    @click="openDetailsModal(managedCompany)"
                   />
                   <Button
+                    v-tooltip.top="$t('MANAGED_COMPANIES_SETTINGS.LIST.EDIT')"
+                    icon="i-lucide-pen"
+                    slate
+                    xs
+                    faded
+                    @click="openEditModal(managedCompany)"
+                  />
+                  <Button
+                    v-tooltip.top="$t('MANAGED_COMPANIES_SETTINGS.LIST.DELETE')"
+                    icon="i-lucide-trash-2"
                     xs
                     ruby
                     faded
-                    icon="i-lucide-trash-2"
-                    :label="$t('MANAGED_COMPANIES_SETTINGS.LIST.DELETE')"
                     @click="openDelete(managedCompany)"
                   />
                 </div>
@@ -361,8 +495,30 @@ onMounted(() => {
             </tr>
           </tbody>
         </table>
-      </section>
-    </div>
+
+        <PaginationFooter
+          v-if="filteredManagedCompanies.length > ITEMS_PER_PAGE"
+          v-model:current-page="currentPage"
+          :total-items="filteredManagedCompanies.length"
+          :items-per-page="ITEMS_PER_PAGE"
+        />
+      </div>
+    </template>
+
+    <ManagedCompanyFormModal
+      :show="showFormModal"
+      :is-editing="Boolean(selectedManagedCompany.id)"
+      :is-submitting="isSubmitting"
+      :managed-company="selectedManagedCompany"
+      @close="closeFormModal"
+      @submit="submitForm"
+    />
+
+    <ManagedCompanyDetailsModal
+      :show="showDetailsModal"
+      :managed-company="selectedManagedCompany"
+      @close="closeDetailsModal"
+    />
 
     <woot-confirm-delete-modal
       v-if="showDeletePopup"
@@ -380,5 +536,5 @@ onMounted(() => {
       @on-confirm="confirmDeletion"
       @on-close="closeDelete"
     />
-  </div>
+  </SettingsLayout>
 </template>

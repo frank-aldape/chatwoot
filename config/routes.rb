@@ -52,6 +52,7 @@ Rails.application.routes.draw do
           end
           resource :bulk_actions, only: [:create]
           resources :agents, only: [:index, :create, :update, :destroy] do
+            post :resend_invitation, on: :member
             post :bulk_create, on: :collection
           end
           namespace :captain do

@@ -6,12 +6,17 @@ class Api::V1::Accounts::CallbacksController < Api::V1::Accounts::BaseController
     page_access_token = params[:page_access_token]
     page_id = params[:page_id]
     inbox_name = params[:inbox_name]
+    managed_company_id = params[:managed_company_id]
     ActiveRecord::Base.transaction do
       facebook_channel = Current.account.facebook_pages.create!(
         page_id: page_id, user_access_token: user_access_token,
         page_access_token: page_access_token
       )
-      @facebook_inbox = Current.account.inboxes.create!(name: inbox_name, channel: facebook_channel)
+      @facebook_inbox = Current.account.inboxes.create!(
+        name: inbox_name,
+        channel: facebook_channel,
+        managed_company_id: managed_company_id
+      )
       set_instagram_id(page_access_token, facebook_channel)
       set_avatar(@facebook_inbox, page_id)
     end
@@ -25,7 +30,7 @@ class Api::V1::Accounts::CallbacksController < Api::V1::Accounts::BaseController
   def log_additional_info
     Rails.logger.debug do
       "user_access_token: #{params[:user_access_token]} , page_access_token: #{params[:page_access_token]} ,
-      page_id: #{params[:page_id]}, inbox_name: #{params[:inbox_name]}"
+      page_id: #{params[:page_id]}, inbox_name: #{params[:inbox_name]}, managed_company_id: #{params[:managed_company_id]}"
     end
   end
 

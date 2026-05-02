@@ -117,8 +117,10 @@ class Instagram::CallbacksController < ApplicationController
       expires_at: expires_at
     )
 
-    # Update inbox name if username changed
-    channel_instagram.inbox.update!(name: user_details['username'])
+    inbox_attributes = { name: pending_inbox_name || user_details['username'] }
+    inbox_attributes[:managed_company_id] = pending_managed_company_id if pending_managed_company_id.present?
+
+    channel_instagram.inbox.update!(inbox_attributes)
     channel_instagram
   end
 
@@ -136,7 +138,8 @@ class Instagram::CallbacksController < ApplicationController
       account.inboxes.create!(
         account: account,
         channel: channel_instagram,
-        name: user_details['username']
+        managed_company_id: pending_managed_company_id,
+        name: pending_inbox_name || user_details['username']
       )
 
       channel_instagram
@@ -144,9 +147,7 @@ class Instagram::CallbacksController < ApplicationController
   end
 
   def account_id
-    return unless params[:state]
-
-    verify_instagram_token(params[:state])
+    state_payload&.dig('sub')
   end
 
   def oauth_code
@@ -159,5 +160,20 @@ class Instagram::CallbacksController < ApplicationController
 
   def provider_name
     'instagram'
+  end
+
+  def pending_managed_company_id
+    managed_company_id = state_payload&.dig('managed_company_id')
+    managed_company_id.presence
+  end
+
+  def pending_inbox_name
+    state_payload&.dig('inbox_name')&.strip&.presence
+  end
+
+  def state_payload
+    return @state_payload if defined?(@state_payload)
+
+    @state_payload = decode_instagram_token(params[:state])
   end
 end

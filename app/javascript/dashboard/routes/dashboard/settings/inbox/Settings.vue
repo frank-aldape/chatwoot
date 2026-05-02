@@ -73,6 +73,7 @@ export default {
       allowMessagesAfterResolved: true,
       continuityViaEmail: true,
       selectedInboxName: '',
+      namingFunctionLabel: '',
       channelWebsiteUrl: '',
       webhookUrl: '',
       channelWelcomeTitle: '',
@@ -238,6 +239,66 @@ export default {
       }
       return this.$t('INBOX_MGMT.ADD.CHANNEL_NAME.PLACEHOLDER');
     },
+    managedCompanyName() {
+      return this.inbox.managed_company?.name || '';
+    },
+    hasManagedCompanyAssigned() {
+      return !!this.managedCompanyName;
+    },
+    channelNamingLabel() {
+      if (this.isATwilioWhatsAppChannel || this.isAWhatsAppChannel) {
+        return this.$t('INBOX_MGMT.CHANNELS.WHATSAPP');
+      }
+      if (this.isAnInstagramChannel) {
+        return this.$t('INBOX_MGMT.CHANNELS.INSTAGRAM');
+      }
+      if (this.isAFacebookInbox) {
+        return this.$t('INBOX_MGMT.CHANNELS.MESSENGER');
+      }
+      if (this.isAnEmailChannel) {
+        return this.$t('INBOX_MGMT.CHANNELS.EMAIL');
+      }
+      if (this.isAWebWidgetInbox) {
+        return this.$t('INBOX_MGMT.CHANNELS.WEB_WIDGET');
+      }
+      if (this.isATelegramChannel) {
+        return this.$t('INBOX_MGMT.CHANNELS.TELEGRAM');
+      }
+      if (this.isALineChannel) {
+        return this.$t('INBOX_MGMT.CHANNELS.LINE');
+      }
+      if (this.isATiktokChannel) {
+        return this.$t('INBOX_MGMT.CHANNELS.TIKTOK');
+      }
+      if (this.isAVoiceChannel) {
+        return this.$t('INBOX_MGMT.CHANNELS.VOICE');
+      }
+      if (this.isASmsInbox) {
+        return this.$t('INBOX_MGMT.CHANNELS.SMS');
+      }
+      if (this.isAPIInbox) {
+        return this.$t('INBOX_MGMT.CHANNELS.API');
+      }
+      return this.$t('INBOX_MGMT.ADD.CHANNEL_NAME.LABEL');
+    },
+    suggestedInboxName() {
+      if (!this.hasManagedCompanyAssigned) {
+        return '';
+      }
+
+      const parts = [this.managedCompanyName, this.channelNamingLabel];
+      if (this.namingFunctionLabel.trim()) {
+        parts.push(this.namingFunctionLabel.trim());
+      }
+      return parts.filter(Boolean).join(' - ');
+    },
+    canApplySuggestedInboxName() {
+      return (
+        this.hasManagedCompanyAssigned &&
+        !!this.suggestedInboxName &&
+        this.suggestedInboxName !== this.selectedInboxName?.trim()
+      );
+    },
     textAreaChannels() {
       if (
         this.isATwilioChannel ||
@@ -398,6 +459,9 @@ export default {
       this.$store.dispatch('inboxes/get').then(() => {
         this.avatarUrl = this.inbox.avatar_url;
         this.selectedInboxName = this.inbox.name;
+        this.namingFunctionLabel = this.extractOperationalLabel(
+          this.inbox.name
+        );
         this.webhookUrl = this.inbox.webhook_url;
         this.greetingEnabled = this.inbox.greeting_enabled || false;
         this.greetingMessage = this.inbox.greeting_message || '';
@@ -490,6 +554,29 @@ export default {
         });
       }
     },
+    extractOperationalLabel(currentName) {
+      const normalizedName = currentName?.trim() || '';
+      if (!normalizedName) {
+        return '';
+      }
+
+      const prefix = [this.managedCompanyName, this.channelNamingLabel]
+        .filter(Boolean)
+        .join(' - ');
+
+      if (prefix && normalizedName.startsWith(`${prefix} - `)) {
+        return normalizedName.slice(prefix.length + 3).trim();
+      }
+
+      if (prefix && normalizedName === prefix) {
+        return '';
+      }
+
+      return normalizedName;
+    },
+    applySuggestedInboxName() {
+      this.selectedInboxName = this.suggestedInboxName;
+    },
   },
   validations: {
     webhookUrl: {
@@ -574,6 +661,59 @@ export default {
             "
             @blur="v$.selectedInboxName.$touch"
           />
+          <div
+            v-if="hasManagedCompanyAssigned"
+            class="mb-4 grid gap-3 rounded-xl border border-n-weak bg-n-alpha-1 p-4"
+          >
+            <div class="grid gap-1">
+              <span class="text-sm font-medium text-n-slate-12">
+                {{ $t('INBOX_MGMT.SETTINGS_POPUP.NAMING_HELPER.TITLE') }}
+              </span>
+              <p class="mb-0 text-sm text-n-slate-11">
+                {{
+                  $t('INBOX_MGMT.SETTINGS_POPUP.NAMING_HELPER.SUBTITLE', {
+                    company: managedCompanyName,
+                    channel: channelNamingLabel,
+                  })
+                }}
+              </p>
+            </div>
+
+            <woot-input
+              v-model="namingFunctionLabel"
+              :label="
+                $t('INBOX_MGMT.SETTINGS_POPUP.NAMING_HELPER.FUNCTION_LABEL')
+              "
+              :placeholder="
+                $t(
+                  'INBOX_MGMT.SETTINGS_POPUP.NAMING_HELPER.FUNCTION_PLACEHOLDER'
+                )
+              "
+            />
+
+            <div class="grid gap-1">
+              <span
+                class="text-xs font-medium uppercase tracking-wide text-n-slate-10"
+              >
+                {{
+                  $t('INBOX_MGMT.SETTINGS_POPUP.NAMING_HELPER.PREVIEW_LABEL')
+                }}
+              </span>
+              <span class="text-sm text-n-slate-12">
+                {{ suggestedInboxName }}
+              </span>
+            </div>
+
+            <div class="flex justify-start">
+              <NextButton
+                ghost
+                blue
+                :disabled="!canApplySuggestedInboxName"
+                :label="$t('INBOX_MGMT.SETTINGS_POPUP.NAMING_HELPER.APPLY')"
+                @click="applySuggestedInboxName"
+              />
+            </div>
+          </div>
           <woot-input
             v-if="isAPIInbox"
             v-model="webhookUrl"

@@ -6,6 +6,7 @@ import NextButton from 'dashboard/components-next/button/Button.vue';
 import PageHeader from '../../SettingsSubPageHeader.vue';
 import GreetingsEditor from 'shared/components/GreetingsEditor.vue';
 import Editor from 'dashboard/components-next/Editor/Editor.vue';
+import ManagedCompanyNamingFields from '../components/ManagedCompanyNamingFields.vue';
 
 export default {
   components: {
@@ -13,10 +14,13 @@ export default {
     GreetingsEditor,
     NextButton,
     Editor,
+    ManagedCompanyNamingFields,
   },
   data() {
     return {
       inboxName: '',
+      managedCompanyId: null,
+      functionLabel: '',
       channelWebsiteUrl: '',
       channelWidgetColor: '#009CE0',
       channelWelcomeTitle: '',
@@ -46,6 +50,7 @@ export default {
           'inboxes/createWebsiteChannel',
           {
             name: this.inboxName?.trim(),
+            managed_company_id: this.managedCompanyId,
             greeting_enabled: this.greetingEnabled,
             greeting_message: this.greetingMessage,
             channel: {
@@ -100,6 +105,13 @@ export default {
           />
         </label>
       </div>
+      <ManagedCompanyNamingFields
+        v-model:managed-company-id="managedCompanyId"
+        v-model:function-label="functionLabel"
+        v-model:inbox-name="inboxName"
+        :channel-label="$t('INBOX_MGMT.CHANNELS.WEB_WIDGET')"
+        class="mb-4"
+      />
       <div class="w-full">
         <label>
           {{ $t('INBOX_MGMT.ADD.WEBSITE_CHANNEL.CHANNEL_DOMAIN.LABEL') }}

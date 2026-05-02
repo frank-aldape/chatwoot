@@ -33,6 +33,11 @@ class Api::V1::Accounts::AgentsController < Api::V1::Accounts::BaseController
     head :ok
   end
 
+  def resend_invitation
+    @agent.send_confirmation_instructions unless @agent.confirmed?
+    head :ok
+  end
+
   def bulk_create
     emails = params[:emails]
 

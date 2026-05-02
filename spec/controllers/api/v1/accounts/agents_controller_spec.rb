@@ -210,4 +210,48 @@ RSpec.describe 'Agents API', type: :request do
       end
     end
   end
+
+  describe 'POST /api/v1/accounts/{account.id}/agents/:id/resend_invitation' do
+    let(:unconfirmed_agent) do
+      create(:user, account: account, role: :agent, confirmed_at: nil, unconfirmed_email: 'pending@example.com')
+    end
+
+    context 'when it is an unauthenticated user' do
+      it 'returns unauthorized' do
+        post "/api/v1/accounts/#{account.id}/agents/#{unconfirmed_agent.id}/resend_invitation"
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when it is an authenticated user' do
+      it 'returns unauthorized for agents' do
+        post "/api/v1/accounts/#{account.id}/agents/#{unconfirmed_agent.id}/resend_invitation",
+             headers: agent.create_new_auth_token,
+             as: :json
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'resends the invitation for unconfirmed agents' do
+        expect do
+          post "/api/v1/accounts/#{account.id}/agents/#{unconfirmed_agent.id}/resend_invitation",
+               headers: admin.create_new_auth_token,
+               as: :json
+        end.to have_enqueued_mail(Devise::Mailer, :confirmation_instructions)
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'does not enqueue a confirmation email for confirmed agents' do
+        expect do
+          post "/api/v1/accounts/#{account.id}/agents/#{agent.id}/resend_invitation",
+               headers: admin.create_new_auth_token,
+               as: :json
+        end.not_to have_enqueued_mail(Devise::Mailer, :confirmation_instructions)
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
 end

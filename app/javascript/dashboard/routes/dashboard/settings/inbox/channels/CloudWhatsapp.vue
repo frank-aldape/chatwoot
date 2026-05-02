@@ -7,10 +7,12 @@ import router from '../../../../index';
 import { isPhoneE164OrEmpty, isNumber } from 'shared/helpers/Validators';
 
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import ManagedCompanyNamingFields from '../components/ManagedCompanyNamingFields.vue';
 
 export default {
   components: {
     NextButton,
+    ManagedCompanyNamingFields,
   },
   setup() {
     return { v$: useVuelidate() };
@@ -18,6 +20,8 @@ export default {
   data() {
     return {
       inboxName: '',
+      managedCompanyId: null,
+      functionLabel: '',
       phoneNumber: '',
       apiKey: '',
       phoneNumberId: '',
@@ -46,6 +50,7 @@ export default {
           'inboxes/createChannel',
           {
             name: this.inboxName?.trim(),
+            managed_company_id: this.managedCompanyId,
             channel: {
               type: 'whatsapp',
               phone_number: this.phoneNumber,
@@ -92,6 +97,14 @@ export default {
         </span>
       </label>
     </div>
+
+    <ManagedCompanyNamingFields
+      v-model:managed-company-id="managedCompanyId"
+      v-model:function-label="functionLabel"
+      v-model:inbox-name="inboxName"
+      :channel-label="$t('INBOX_MGMT.CHANNELS.WHATSAPP')"
+      class="mb-4"
+    />
 
     <div class="flex-shrink-0 flex-grow-0">
       <label :class="{ error: v$.phoneNumber.$error }">

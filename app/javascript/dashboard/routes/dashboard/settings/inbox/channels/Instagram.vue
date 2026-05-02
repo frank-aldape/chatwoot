@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import instagramClient from 'dashboard/api/channel/instagramClient';
 import Button from 'dashboard/components-next/button/Button.vue';
+import ManagedCompanyNamingFields from '../components/ManagedCompanyNamingFields.vue';
 
 const { t } = useI18n();
 
@@ -10,6 +11,9 @@ const hasError = ref(false);
 const errorStateMessage = ref('');
 const errorStateDescription = ref('');
 const isRequestingAuthorization = ref(false);
+const managedCompanyId = ref(null);
+const functionLabel = ref('');
+const inboxName = ref('');
 
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -35,7 +39,10 @@ onMounted(() => {
 
 const requestAuthorization = async () => {
   isRequestingAuthorization.value = true;
-  const response = await instagramClient.generateAuthorization();
+  const response = await instagramClient.generateAuthorization({
+    managed_company_id: managedCompanyId.value,
+    inbox_name: inboxName.value?.trim(),
+  });
   const {
     data: { url },
   } = response;
@@ -56,7 +63,7 @@ const requestAuthorization = async () => {
       </div>
       <div
         v-else
-        class="flex flex-col items-center justify-center px-8 py-10 text-center rounded-2xl outline outline-1 outline-n-weak"
+        class="flex flex-col items-center justify-center w-full max-w-2xl px-8 py-10 text-center rounded-2xl outline outline-1 outline-n-weak"
       >
         <h6 class="text-2xl font-medium">
           {{ $t('INBOX_MGMT.ADD.INSTAGRAM.CONNECT_YOUR_INSTAGRAM_PROFILE') }}
@@ -64,6 +71,26 @@ const requestAuthorization = async () => {
         <p class="py-6 text-sm text-n-slate-11">
           {{ $t('INBOX_MGMT.ADD.INSTAGRAM.HELP') }}
         </p>
+        <div class="w-full max-w-xl mb-6 text-left">
+          <label class="block mb-4">
+            <span class="block mb-2 text-sm font-medium text-n-slate-12">
+              {{ $t('INBOX_MGMT.ADD.CHANNEL_NAME.LABEL') }}
+            </span>
+            <input
+              v-model="inboxName"
+              type="text"
+              class="w-full"
+              :placeholder="$t('INBOX_MGMT.ADD.CHANNEL_NAME.PLACEHOLDER')"
+            />
+          </label>
+
+          <ManagedCompanyNamingFields
+            v-model:managed-company-id="managedCompanyId"
+            v-model:function-label="functionLabel"
+            v-model:inbox-name="inboxName"
+            :channel-label="$t('INBOX_MGMT.CHANNELS.INSTAGRAM')"
+          />
+        </div>
         <Button
           class="text-white !rounded-full !px-6 bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCAF45]"
           lg

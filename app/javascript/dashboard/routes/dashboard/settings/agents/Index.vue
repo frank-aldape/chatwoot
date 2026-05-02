@@ -16,18 +16,20 @@ import SettingsLayout from '../SettingsLayout.vue';
 import Button from 'dashboard/components-next/button/Button.vue';
 import Input from 'dashboard/components-next/input/Input.vue';
 import Icon from 'dashboard/components-next/icon/Icon.vue';
-import { useSettingsSearchState } from 'dashboard/composables/useSettingsSearchState';
+import AgentAPI from 'dashboard/api/agents';
 
 const getters = useStoreGetters();
 const store = useStore();
 const { t } = useI18n();
 
 const loading = ref({});
+const resendLoading = ref({});
 const showAddPopup = ref(false);
 const showDeletePopup = ref(false);
 const showEditPopup = ref(false);
 const agentAPI = ref({ message: '' });
 const currentAgent = ref({});
+const searchQuery = ref('');
 
 const deleteConfirmText = computed(
   () => `${t('AGENT_MGMT.DELETE.CONFIRM.YES')} ${currentAgent.value.name}`
@@ -74,6 +76,16 @@ const getAgentVerificationLabel = agent => {
     : t('AGENT_MGMT.LIST.VERIFICATION_PENDING');
 };
 
+const getAgentInvitationMeta = agent => {
+  if (agent.confirmed || !agent.confirmation_sent_at) {
+    return '';
+  }
+
+  return t('AGENT_MGMT.LIST.INVITATION_SENT_AT', {
+    date: new Date(agent.confirmation_sent_at).toLocaleString(),
+  });
+};
+
 const getAgentSearchFields = agent => {
   return [
     agent.name,
@@ -98,11 +110,15 @@ const filteredAgentList = computed(() => {
     getAgentSearchFields(agent).includes(normalizedSearch)
   );
 });
-const { searchQuery, showNoRecordsFound, showEmptySearchResults } =
-  useSettingsSearchState({
-    sourceRecords: agentList,
-    filteredRecords: filteredAgentList,
-  });
+
+const hasActiveSearch = computed(() => searchQuery.value.trim().length > 0);
+const hasRecords = computed(() => (agentList.value || []).length > 0);
+const showNoRecordsFound = computed(
+  () => !hasRecords.value && !hasActiveSearch.value
+);
+const showEmptySearchResults = computed(
+  () => hasActiveSearch.value && (filteredAgentList.value || []).length === 0
+);
 
 const verifiedAdministrators = computed(() => {
   return agentList.value.filter(
@@ -129,11 +145,28 @@ const showDeleteAction = agent => {
   return true;
 };
 
+const showResendInvitationAction = agent => {
+  return !agent.confirmed;
+};
+
 const showAlertMessage = message => {
   loading.value[currentAgent.value.id] = false;
   currentAgent.value = {};
   agentAPI.value.message = message;
   useAlert(message);
+};
+
+const resendInvitation = async agent => {
+  resendLoading.value[agent.id] = true;
+
+  try {
+    await AgentAPI.resendInvitation(agent.id);
+    useAlert(t('AGENT_MGMT.RESEND_INVITATION.API.SUCCESS_MESSAGE'));
+  } catch (error) {
+    useAlert(t('AGENT_MGMT.RESEND_INVITATION.API.ERROR_MESSAGE'));
+  } finally {
+    resendLoading.value[agent.id] = false;
+  }
 };
 
 const openAddPopup = () => {
@@ -281,12 +314,28 @@ const confirmDeletion = () => {
               </span>
             </td>
             <td class="py-4 ltr:pr-4 rtl:pl-4">
-              <span>
+              <span class="block">
                 {{ getAgentVerificationLabel(agent) }}
+              </span>
+              <span
+                v-if="getAgentInvitationMeta(agent)"
+                class="block mt-1 text-xs text-n-slate-10"
+              >
+                {{ getAgentInvitationMeta(agent) }}
               </span>
             </td>
             <td class="py-4">
               <div class="flex justify-end gap-1">
+                <Button
+                  v-if="showResendInvitationAction(agent)"
+                  v-tooltip.top="$t('AGENT_MGMT.RESEND_INVITATION.BUTTON_TEXT')"
+                  icon="i-lucide-mail"
+                  slate
+                  xs
+                  faded
+                  :is-loading="resendLoading[agent.id]"
+                  @click="resendInvitation(agent)"
+                />
                 <Button
                   v-if="showEditAction(agent)"
                   v-tooltip.top="$t('AGENT_MGMT.EDIT.BUTTON_TEXT')"
