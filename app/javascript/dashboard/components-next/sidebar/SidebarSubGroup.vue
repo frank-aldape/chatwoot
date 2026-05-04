@@ -1,7 +1,7 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import SidebarGroupLeaf from './SidebarGroupLeaf.vue';
-import SidebarGroupSeparator from './SidebarGroupSeparator.vue';
+import Icon from 'next/icon/Icon.vue';
 
 import { useSidebarContext } from './provider';
 import { useEventListener } from '@vueuse/core';
@@ -27,6 +27,32 @@ const hasAccessibleItems = computed(() => {
   return accessibleItems.value.length > 0;
 });
 
+const containsActiveChild = computed(() =>
+  accessibleItems.value.some(child => child.name === props.activeChild?.name)
+);
+
+const isSubGroupExpanded = ref(false);
+
+watch(
+  () => props.isExpanded,
+  isParentExpanded => {
+    if (isParentExpanded && containsActiveChild.value) {
+      isSubGroupExpanded.value = true;
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  containsActiveChild,
+  hasActiveChild => {
+    if (props.isExpanded && hasActiveChild) {
+      isSubGroupExpanded.value = true;
+    }
+  },
+  { immediate: true }
+);
+
 const isScrollable = computed(() => {
   return accessibleItems.value.length > 7;
 });
@@ -38,20 +64,36 @@ useEventListener(scrollableContainer, 'scroll', () => {
   const { scrollHeight, scrollTop, clientHeight } = scrollableContainer.value;
   scrollEnd.value = scrollHeight - scrollTop === clientHeight;
 });
+
+const toggleSubGroup = () => {
+  isSubGroupExpanded.value = !isSubGroupExpanded.value;
+};
 </script>
 
 <template>
-  <SidebarGroupSeparator
+  <button
     v-if="hasAccessibleItems"
     v-show="isExpanded"
-    :label
-    :icon
-    class="my-1"
-  />
+    type="button"
+    class="flex items-center gap-2 px-2 py-1.5 rounded-lg h-8 text-n-slate-10 hover:bg-n-alpha-2 select-none w-full"
+    @click="toggleSubGroup"
+  >
+    <Icon v-if="icon" :icon="icon" class="size-4 flex-shrink-0" />
+    <span class="text-sm font-medium leading-5 flex-grow text-left truncate">
+      {{ label }}
+    </span>
+    <span
+      :class="
+        isSubGroupExpanded ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'
+      "
+      class="size-3 flex-shrink-0"
+    />
+  </button>
   <ul v-if="children.length" class="m-0 list-none reset-base relative group">
     <!-- Each element has h-8, which is 32px, we will show 7 items with one hidden at the end,
     which is 14rem. Then we add 16px so that we have some text visible from the next item  -->
     <div
+      v-show="isExpanded && isSubGroupExpanded"
       ref="scrollableContainer"
       :class="{
         'max-h-[calc(14rem+16px)] overflow-y-scroll no-scrollbar': isScrollable,
@@ -59,14 +101,14 @@ useEventListener(scrollableContainer, 'scroll', () => {
     >
       <SidebarGroupLeaf
         v-for="child in children"
-        v-show="isExpanded"
+        v-show="isExpanded && isSubGroupExpanded"
         v-bind="child"
         :key="child.name"
         :active="activeChild?.name === child.name"
       />
     </div>
     <div
-      v-if="isScrollable && isExpanded"
+      v-if="isScrollable && isExpanded && isSubGroupExpanded"
       v-show="!scrollEnd"
       class="absolute bg-gradient-to-t from-n-solid-2 w-full h-12 to-transparent -bottom-1 pointer-events-none flex items-end justify-end px-2 animate-fade-in-up"
     >
