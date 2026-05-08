@@ -43,6 +43,18 @@ export default {
       agentList: 'agents/getAgents',
       teamList: 'teams/getTeams',
     }),
+    selectedManagedCompany: {
+      get() {
+        return (
+          this.managedCompanies.find(
+            c => c.id === this.selectedManagedCompanyId
+          ) || null
+        );
+      },
+      set(value) {
+        this.selectedManagedCompanyId = value?.id || null;
+      },
+    },
     maxAssignmentLimitErrors() {
       if (this.v$.maxAssignmentLimit.$error) {
         return this.$t(
@@ -146,6 +158,9 @@ export default {
       }
       this.isTeamListUpdating = false;
     },
+    companyLabel({ name, authorized_domain: domain }) {
+      return domain ? `${name} (${domain})` : name;
+    },
     async updateInbox() {
       try {
         const payload = {
@@ -182,21 +197,18 @@ export default {
       :title="$t('INBOX_MGMT.SETTINGS_POPUP.MANAGED_COMPANY')"
       :sub-title="$t('INBOX_MGMT.SETTINGS_POPUP.MANAGED_COMPANY_SUB_TEXT')"
     >
-      <select
-        v-model="selectedManagedCompanyId"
-        class="w-full h-10 rounded-lg border border-n-weak bg-n-background px-3 text-sm text-n-slate-12"
-      >
-        <option :value="null">
-          {{ $t('INBOX_MGMT.SETTINGS_POPUP.MANAGED_COMPANY_PLACEHOLDER') }}
-        </option>
-        <option
-          v-for="managedCompany in managedCompanies"
-          :key="managedCompany.id"
-          :value="managedCompany.id"
-        >
-          {{ managedCompany.name }} ({{ managedCompany.authorized_domain }})
-        </option>
-      </select>
+      <multiselect
+        v-model="selectedManagedCompany"
+        :options="managedCompanies"
+        track-by="id"
+        :custom-label="companyLabel"
+        :placeholder="
+          $t('INBOX_MGMT.SETTINGS_POPUP.MANAGED_COMPANY_PLACEHOLDER')
+        "
+        :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
+        :deselect-label="$t('FORMS.MULTISELECT.ENTER_TO_REMOVE')"
+        allow-empty
+      />
 
       <NextButton
         :label="$t('INBOX_MGMT.SETTINGS_POPUP.UPDATE')"
@@ -218,7 +230,7 @@ export default {
         :close-on-select="false"
         :clear-on-select="false"
         hide-selected
-        placeholder="Pick some"
+        :placeholder="$t('FORMS.MULTISELECT.SELECT')"
         selected-label
         :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
         :deselect-label="$t('FORMS.MULTISELECT.ENTER_TO_REMOVE')"
@@ -245,7 +257,7 @@ export default {
         :close-on-select="false"
         :clear-on-select="false"
         hide-selected
-        placeholder="Pick some"
+        :placeholder="$t('FORMS.MULTISELECT.SELECT')"
         selected-label
         :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
         :deselect-label="$t('FORMS.MULTISELECT.ENTER_TO_REMOVE')"
