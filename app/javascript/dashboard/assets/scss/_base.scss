@@ -108,6 +108,13 @@ select {
   }
 }
 
+// Force browser-native select dropdown panel to use dark theme in dark mode.
+// The <option> elements are rendered by the OS/browser and ignore regular CSS,
+// but color-scheme instructs the browser to apply its own dark palette.
+.dark select {
+  color-scheme: dark;
+}
+
 // Textarea
 textarea {
   @apply field-base h-16;
