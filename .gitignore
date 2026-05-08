@@ -101,3 +101,5 @@ CLAUDE.local.md
 .histoire
 .pnpm-store/*
 local/
+.agents
+skills-lock.json
