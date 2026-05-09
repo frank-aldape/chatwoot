@@ -46,10 +46,19 @@ class Inbox < ApplicationRecord
   include AccountCacheRevalidator
   include InboxAgentAvailability
 
+  VALID_TIMEZONES = TZInfo::Timezone.all_identifiers.freeze
+
+  SLOT_CHANNEL_TYPES = {
+    'instagram' => %w[Channel::FacebookPage Channel::Instagram],
+    'facebook'  => %w[Channel::FacebookPage],
+    'whatsapp'  => %w[Channel::Whatsapp Channel::TwilioSms],
+    'linkedin'  => %w[Channel::Api]
+  }.freeze
+
   # Not allowing characters:
   validates :name, presence: true
   validates :account_id, presence: true
-  validates :timezone, inclusion: { in: TZInfo::Timezone.all_identifiers }
+  validates :timezone, inclusion: { in: VALID_TIMEZONES }
   validates :out_of_office_message, length: { maximum: Limits::OUT_OF_OFFICE_MESSAGE_MAX_LENGTH }
   validates :greeting_message, length: { maximum: Limits::GREETING_MESSAGE_MAX_LENGTH }
   validate :ensure_valid_max_assignment_limit
@@ -82,6 +91,8 @@ class Inbox < ApplicationRecord
   has_many :hooks, dependent: :destroy_async, class_name: 'Integrations::Hook'
 
   enum sender_name_type: { friendly: 0, professional: 1 }
+
+  before_save :sync_integration_slot
 
   after_destroy :delete_round_robin_agents
 
@@ -275,11 +286,14 @@ class Inbox < ApplicationRecord
     integration_slot = managed_company_integration_slot
     return if integration_slot.blank?
 
-    return unless account.inboxes.where(managed_company_id: managed_company_id).where.not(id: id).any? do |existing_inbox|
-      existing_inbox.managed_company_integration_slot == integration_slot
-    end
+    candidate_channel_types = SLOT_CHANNEL_TYPES.fetch(integration_slot, [])
+    conflict = account.inboxes
+                      .where(managed_company_id: managed_company_id)
+                      .where.not(id: id)
+                      .where(channel_type: candidate_channel_types)
+                      .any? { |existing| existing.managed_company_integration_slot == integration_slot }
 
-    errors.add(:managed_company_id, "already has a #{integration_slot.humanize(capitalize: false)} inbox assigned")
+    errors.add(:managed_company_id, "already has a #{integration_slot.humanize(capitalize: false)} inbox assigned") if conflict
   end
 
   def managed_company_integration_slot
@@ -292,7 +306,11 @@ class Inbox < ApplicationRecord
   end
 
   def linkedin_bridge?
-    api? && channel.try(:additional_attributes).to_h['provider_type'] == 'linkedin'
+    api? && channel.try(:linkedin?)
+  end
+
+  def sync_integration_slot
+    self.integration_slot = managed_company_integration_slot
   end
 
   def delete_round_robin_agents

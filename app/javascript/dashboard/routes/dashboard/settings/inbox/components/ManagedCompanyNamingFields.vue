@@ -77,12 +77,11 @@ export default {
         return null;
       }
 
-      return this.inboxes.find(inbox => {
-        return (
+      return this.inboxes.find(
+        inbox =>
           inbox.managed_company_id === this.selectedManagedCompany.id &&
-          this.resolveInboxIntegrationSlot(inbox) === this.integrationSlot
-        );
-      });
+          inbox.integration_slot === this.integrationSlot
+      );
     },
     conflictMessage() {
       if (!this.conflictingInbox) {
@@ -115,14 +114,10 @@ export default {
   },
   methods: {
     async ensureInboxesLoaded() {
-      if (this.inboxes.length) {
-        return;
-      }
-
       try {
         await this.$store.dispatch('inboxes/get');
       } catch (error) {
-        // no-op
+        // Silently fail — existing store data will be used as fallback
       }
     },
     async fetchManagedCompanies() {
@@ -145,39 +140,6 @@ export default {
     },
     applySuggestedName() {
       this.$emit('update:inboxName', this.suggestedInboxName);
-    },
-    resolveInboxIntegrationSlot(inbox) {
-      if (!inbox) {
-        return '';
-      }
-
-      if (
-        inbox.channel_type === 'Channel::Instagram' ||
-        (inbox.channel_type === 'Channel::FacebookPage' && inbox.instagram_id)
-      ) {
-        return 'instagram';
-      }
-
-      if (inbox.channel_type === 'Channel::FacebookPage') {
-        return 'facebook';
-      }
-
-      if (
-        inbox.channel_type === 'Channel::Whatsapp' ||
-        (inbox.channel_type === 'Channel::TwilioSms' &&
-          inbox.medium === 'whatsapp')
-      ) {
-        return 'whatsapp';
-      }
-
-      if (
-        inbox.channel_type === 'Channel::Api' &&
-        inbox.additional_attributes?.provider_type === 'linkedin'
-      ) {
-        return 'linkedin';
-      }
-
-      return '';
     },
   },
 };

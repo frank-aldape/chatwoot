@@ -28,8 +28,15 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
   end
 
   def create
+    channel = nil
     ActiveRecord::Base.transaction do
       channel = create_channel
+      unless channel
+        render json: { error: I18n.t('errors.messages.invalid_channel_type', default: 'Channel type not allowed') },
+               status: :unprocessable_entity
+        raise ActiveRecord::Rollback
+      end
+
       @inbox = Current.account.inboxes.build(
         {
           name: inbox_name(channel),
@@ -41,6 +48,8 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
       @inbox.save!
       update_team_assignments if permitted_params.key?(:team_ids)
     end
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.record.errors.full_messages.join(', ') }, status: :unprocessable_entity
   end
 
   def update
@@ -51,7 +60,10 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
     update_team_assignments if permitted_params.key?(:team_ids)
     sync_existing_team_managed_companies if managed_company_changed
     update_inbox_working_hours
-    update_channel if channel_update_required?
+    if channel_update_required?
+      update_channel
+      @inbox.update_column(:integration_slot, @inbox.managed_company_integration_slot)
+    end
   end
 
   def agent_bot
@@ -216,8 +228,9 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
   def managed_company_changed?(inbox_params)
     return false unless inbox_params.key?(:managed_company_id)
 
-    requested_managed_company_id = inbox_params[:managed_company_id].presence&.to_i
-    @inbox.managed_company_id != requested_managed_company_id
+    raw = inbox_params[:managed_company_id]
+    requested = raw.present? && raw.to_i.positive? ? raw.to_i : nil
+    @inbox.managed_company_id != requested
   end
 
   def sync_existing_team_managed_companies

@@ -13,6 +13,7 @@ json.enable_auto_assignment resource.enable_auto_assignment
 json.auto_assignment_config resource.auto_assignment_config
 json.team_ids resource.team_ids
 json.managed_company_id resource.managed_company_id
+json.integration_slot resource.integration_slot
 json.out_of_office_message resource.out_of_office_message
 json.working_hours resource.weekly_schedule
 json.timezone resource.timezone
