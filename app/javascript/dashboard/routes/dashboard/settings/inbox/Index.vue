@@ -60,6 +60,22 @@ const managedCompanyOptions = computed(() => {
   );
 });
 
+const companyFilterOptions = computed(() => [
+  { id: 'all', name: t('INBOX_MGMT.FILTER.ALL_MANAGED_COMPANIES') },
+  { id: 'unassigned', name: t('INBOX_MGMT.FILTER.UNASSIGNED') },
+  ...managedCompanyOptions.value,
+]);
+
+const selectedCompanyFilter = computed({
+  get: () =>
+    companyFilterOptions.value.find(
+      o => String(o.id) === selectedManagedCompanyId.value
+    ) ?? companyFilterOptions.value[0],
+  set: value => {
+    selectedManagedCompanyId.value = value ? String(value.id) : 'all';
+  },
+});
+
 const matchesManagedCompanyFilter = inbox => {
   if (selectedManagedCompanyId.value === 'all') return true;
   if (selectedManagedCompanyId.value === 'unassigned') {
@@ -203,29 +219,21 @@ const openDelete = inbox => {
             />
           </template>
         </Input>
-        <label class="grid gap-1 text-sm text-n-slate-11 lg:min-w-64">
+        <div class="grid gap-1 text-sm text-n-slate-11 lg:min-w-64">
           <span class="font-medium text-n-slate-12">
             {{ $t('INBOX_MGMT.FILTER.MANAGED_COMPANY_LABEL') }}
           </span>
-          <select
-            v-model="selectedManagedCompanyId"
-            class="h-10 rounded-lg border border-n-weak bg-n-alpha-2 px-3 text-sm text-n-slate-12"
-          >
-            <option value="all">
-              {{ $t('INBOX_MGMT.FILTER.ALL_MANAGED_COMPANIES') }}
-            </option>
-            <option value="unassigned">
-              {{ $t('INBOX_MGMT.FILTER.UNASSIGNED') }}
-            </option>
-            <option
-              v-for="managedCompany in managedCompanyOptions"
-              :key="managedCompany.id"
-              :value="String(managedCompany.id)"
-            >
-              {{ managedCompany.name }}
-            </option>
-          </select>
-        </label>
+          <multiselect
+            v-model="selectedCompanyFilter"
+            :options="companyFilterOptions"
+            track-by="id"
+            label="name"
+            :allow-empty="false"
+            :searchable="companyFilterOptions.length > 7"
+            :show-labels="false"
+            :placeholder="$t('INBOX_MGMT.FILTER.ALL_MANAGED_COMPANIES')"
+          />
+        </div>
       </div>
     </template>
     <template #body>

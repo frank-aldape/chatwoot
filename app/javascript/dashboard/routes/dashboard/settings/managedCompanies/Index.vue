@@ -177,6 +177,15 @@ const filterOptions = computed(() => [
   },
 ]);
 
+const selectedStatusFilter = computed({
+  get: () =>
+    filterOptions.value.find(o => o.value === statusFilter.value) ??
+    filterOptions.value[0],
+  set: value => {
+    statusFilter.value = value?.value ?? 'all';
+  },
+});
+
 const showEmptySearchResults = computed(() => {
   if (!hasActiveSearch.value && statusFilter.value === 'all') {
     return false;
@@ -366,18 +375,16 @@ watch(filteredManagedCompanies, companies => {
           <span class="text-sm text-n-slate-11">
             {{ $t('MANAGED_COMPANIES_SETTINGS.FILTER.LABEL') }}
           </span>
-          <select
-            v-model="statusFilter"
-            class="h-10 rounded-lg border border-n-weak bg-n-alpha-2 px-3 text-sm text-n-slate-12"
-          >
-            <option
-              v-for="option in filterOptions"
-              :key="option.value"
-              :value="option.value"
-            >
-              {{ option.label }}
-            </option>
-          </select>
+          <multiselect
+            v-model="selectedStatusFilter"
+            :options="filterOptions"
+            track-by="value"
+            label="label"
+            :allow-empty="false"
+            :searchable="false"
+            :show-labels="false"
+            class="min-w-40"
+          />
         </div>
       </div>
     </template>
