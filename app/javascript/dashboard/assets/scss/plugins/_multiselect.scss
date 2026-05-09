@@ -44,14 +44,14 @@
   }
 
   .multiselect__content-wrapper {
-    @apply bg-n-alpha-black2 text-n-slate-12 backdrop-blur-[100px] border-0 border-none outline outline-1 outline-n-weak rounded-b-lg;
+    @apply bg-n-alpha-3 backdrop-blur-[100px] text-n-slate-12 border border-n-weak rounded-xl shadow-sm py-2 px-2;
   }
 
   .multiselect__content {
     @apply max-w-full;
 
     .multiselect__option {
-      @apply text-sm font-normal flex justify-between items-center;
+      @apply text-sm font-normal flex justify-between items-center p-2 rounded-lg;
 
       span {
         @apply inline-block overflow-hidden text-ellipsis whitespace-nowrap w-fit;
@@ -66,11 +66,11 @@
       }
 
       &.multiselect__option--highlight {
-        @apply bg-n-alpha-black2 text-n-slate-12;
+        @apply bg-n-alpha-2 text-n-slate-12;
       }
 
       &.multiselect__option--highlight:hover {
-        @apply bg-n-brand/10 text-n-slate-12;
+        @apply bg-n-alpha-2 text-n-slate-12;
 
         &::after {
           @apply bg-transparent text-center text-n-slate-12;
@@ -89,7 +89,7 @@
         }
 
         &.multiselect__option--highlight:hover {
-          @apply bg-transparent;
+          @apply bg-n-brand/10;
 
           &::after:hover {
             @apply text-n-slate-12 bg-transparent;
