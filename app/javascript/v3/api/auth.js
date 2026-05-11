@@ -5,6 +5,7 @@ import {
 } from 'dashboard/store/utils/api';
 import wootAPI from './apiClient';
 import { getLoginRedirectURL } from '../helpers/AuthHelper';
+import { frontendURL } from 'dashboard/helper/URLHelper';
 
 export const login = async ({
   ssoAccountId,
@@ -25,6 +26,14 @@ export const login = async ({
 
     setAuthCredentials(response);
     clearLocalStorageOnLogout();
+
+    if (response.data.mfa_setup_required) {
+      const user = response.data.data;
+      const accountId = user?.account_id || user?.accounts?.[0]?.id;
+      window.location = frontendURL(`accounts/${accountId}/profile`);
+      return null;
+    }
+
     window.location = getLoginRedirectURL({
       ssoAccountId,
       ssoConversationId,
