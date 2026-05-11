@@ -229,7 +229,6 @@ const openDelete = inbox => {
             track-by="id"
             label="name"
             :allow-empty="false"
-            :searchable="companyFilterOptions.length > 7"
             :show-labels="false"
             :placeholder="$t('INBOX_MGMT.FILTER.ALL_MANAGED_COMPANIES')"
           />

@@ -381,7 +381,6 @@ watch(filteredManagedCompanies, companies => {
             track-by="value"
             label="label"
             :allow-empty="false"
-            :searchable="false"
             :show-labels="false"
             class="min-w-40"
           />
