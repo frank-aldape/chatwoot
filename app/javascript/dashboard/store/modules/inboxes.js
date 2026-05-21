@@ -303,6 +303,7 @@ export const actions = {
       const response = await InboxesAPI.update(id, inboxParams);
       commit(types.default.EDIT_INBOXES, response.data);
       commit(types.default.SET_INBOXES_UI_FLAG, { isUpdatingIMAP: false });
+      return response.data;
     } catch (error) {
       commit(types.default.SET_INBOXES_UI_FLAG, { isUpdatingIMAP: false });
       throwErrorMessage(error);
@@ -314,6 +315,7 @@ export const actions = {
       const response = await InboxesAPI.update(id, inboxParams);
       commit(types.default.EDIT_INBOXES, response.data);
       commit(types.default.SET_INBOXES_UI_FLAG, { isUpdatingSMTP: false });
+      return response.data;
     } catch (error) {
       commit(types.default.SET_INBOXES_UI_FLAG, { isUpdatingSMTP: false });
       throwErrorMessage(error);

@@ -84,8 +84,18 @@ export default {
           payload.channel.smtp_enabled = false;
         }
 
-        await this.$store.dispatch('inboxes/updateInboxIMAP', payload);
-        useAlert(this.$t('INBOX_MGMT.IMAP.EDIT.SUCCESS_MESSAGE'));
+        const updatedInbox = await this.$store.dispatch(
+          'inboxes/updateInboxIMAP',
+          payload
+        );
+        const validationError = updatedInbox.channel_validation_error;
+        useAlert(
+          validationError
+            ? this.$t('INBOX_MGMT.IMAP.EDIT.VERIFICATION_WARNING', {
+                error: validationError,
+              })
+            : this.$t('INBOX_MGMT.IMAP.EDIT.SUCCESS_MESSAGE')
+        );
       } catch (error) {
         useAlert(error.message);
       }

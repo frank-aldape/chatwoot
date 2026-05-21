@@ -151,7 +151,8 @@ class Api::V1::Accounts::InboxesController < Api::V1::Accounts::BaseController
   def validate_and_update_email_channel(channel_attributes)
     validate_email_channel(channel_attributes)
   rescue StandardError => e
-    render json: { message: e }, status: :unprocessable_entity and return
+    @channel_validation_error = e.message
+    Rails.logger.warn "[Api::V1::Accounts::InboxesController] Email channel validation failed for inbox #{@inbox.id}: #{e.message}"
   end
 
   def reauthorize_and_update_channel(channel_attributes)

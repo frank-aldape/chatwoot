@@ -144,8 +144,18 @@ export default {
             smtp_authentication: this.authMechanism,
           },
         };
-        await this.$store.dispatch('inboxes/updateInboxSMTP', payload);
-        useAlert(this.$t('INBOX_MGMT.SMTP.EDIT.SUCCESS_MESSAGE'));
+        const updatedInbox = await this.$store.dispatch(
+          'inboxes/updateInboxSMTP',
+          payload
+        );
+        const validationError = updatedInbox.channel_validation_error;
+        useAlert(
+          validationError
+            ? this.$t('INBOX_MGMT.SMTP.EDIT.VERIFICATION_WARNING', {
+                error: validationError,
+              })
+            : this.$t('INBOX_MGMT.SMTP.EDIT.SUCCESS_MESSAGE')
+        );
       } catch (error) {
         useAlert(this.$t('INBOX_MGMT.SMTP.EDIT.ERROR_MESSAGE'));
       }

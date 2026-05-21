@@ -956,7 +956,8 @@
       "TOGGLE_HELP": "Enabling IMAP will help the user to receive email",
       "EDIT": {
         "SUCCESS_MESSAGE": "IMAP settings updated successfully",
-        "ERROR_MESSAGE": "Unable to update IMAP settings"
+        "ERROR_MESSAGE": "Unable to update IMAP settings",
+        "VERIFICATION_WARNING": "IMAP settings updated successfully, but we couldn't verify the configuration: {error}"
       },
       "ADDRESS": {
         "LABEL": "Address",
@@ -988,7 +989,8 @@
       "TOGGLE_HELP": "Enabling SMTP will help the user to send email",
       "EDIT": {
         "SUCCESS_MESSAGE": "SMTP settings updated successfully",
-        "ERROR_MESSAGE": "Unable to update SMTP settings"
+        "ERROR_MESSAGE": "Unable to update SMTP settings",
+        "VERIFICATION_WARNING": "SMTP settings updated successfully, but we couldn't verify the configuration: {error}"
       },
       "ADDRESS": {
         "LABEL": "Address",
