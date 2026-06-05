@@ -84,9 +84,11 @@ RUN mkdir -p /app/log
 RUN if [ "$RAILS_ENV" = "production" ]; then \
   SECRET_KEY_BASE=precompile_placeholder \
   ACTIVE_STORAGE_SERVICE=local \
+  FRONTEND_URL=http://localhost:3000 \
   POSTGRES_DATABASE=precompile_placeholder \
   POSTGRES_USERNAME=precompile_placeholder \
   POSTGRES_PASSWORD=precompile_placeholder \
+  REDIS_URL=redis://127.0.0.1:6379 \
   RAILS_LOG_TO_STDOUT=enabled \
   bundle exec rake assets:precompile \
   && rm -rf spec node_modules tmp/cache; \
