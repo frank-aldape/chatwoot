@@ -8,13 +8,11 @@ vi.mock('shared/helpers/mitt', () => ({
   },
 }));
 
-vi.mock('dashboard/helper/AnalyticsHelper/index', async importOriginal => {
-  const actual = await importOriginal();
-  actual.default = {
+vi.mock('dashboard/helper/AnalyticsHelper/index', () => ({
+  default: {
     track: vi.fn(),
-  };
-  return actual;
-});
+  },
+}));
 
 describe('useTrack', () => {
   it('should call analyticsHelper.track and return a function', () => {

@@ -2,9 +2,13 @@ import endPoints from '../endPoints';
 
 describe('#sendMessage', () => {
   it('returns correct payload', () => {
-    const spy = vi.spyOn(global, 'Date').mockImplementation(() => ({
-      toString: () => 'mock date',
-    }));
+    const spy = vi
+      .spyOn(global, 'Date')
+      .mockImplementation(function DateMock() {
+        return {
+          toString: () => 'mock date',
+        };
+      });
     vi.spyOn(window, 'location', 'get').mockReturnValue({
       ...window.location,
       search: '?param=1',
@@ -49,9 +53,13 @@ describe('#getConversation', () => {
 
 describe('#triggerCampaign', () => {
   it('should returns correct payload', () => {
-    const spy = vi.spyOn(global, 'Date').mockImplementation(() => ({
-      toString: () => 'mock date',
-    }));
+    const spy = vi
+      .spyOn(global, 'Date')
+      .mockImplementation(function DateMock() {
+        return {
+          toString: () => 'mock date',
+        };
+      });
     vi.spyOn(window, 'location', 'get').mockReturnValue({
       ...window.location,
       search: '',
@@ -86,9 +94,13 @@ describe('#triggerCampaign', () => {
 
 describe('#getConversation', () => {
   it('should returns correct payload', () => {
-    const spy = vi.spyOn(global, 'Date').mockImplementation(() => ({
-      toString: () => 'mock date',
-    }));
+    const spy = vi
+      .spyOn(global, 'Date')
+      .mockImplementation(function DateMock() {
+        return {
+          toString: () => 'mock date',
+        };
+      });
     vi.spyOn(window, 'location', 'get').mockReturnValue({
       ...window.location,
       search: '',

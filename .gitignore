@@ -103,3 +103,4 @@ CLAUDE.local.md
 local/
 .agents
 skills-lock.json
+*.md

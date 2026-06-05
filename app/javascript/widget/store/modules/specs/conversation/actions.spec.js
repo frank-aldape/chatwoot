@@ -97,7 +97,11 @@ describe('#actions', () => {
     it('sends correct mutations', async () => {
       const mockDate = new Date(1466424490000);
       getUuid.mockImplementationOnce(() => '1111');
-      const spy = vi.spyOn(global, 'Date').mockImplementation(() => mockDate);
+      const spy = vi
+        .spyOn(global, 'Date')
+        .mockImplementation(function DateMock() {
+          return mockDate;
+        });
       const windowSpy = vi.spyOn(window, 'window', 'get');
       windowSpy.mockImplementation(() => ({
         WOOT_WIDGET: {
@@ -133,7 +137,11 @@ describe('#actions', () => {
     it('sends correct mutations', () => {
       const mockDate = new Date(1466424490000);
       getUuid.mockImplementationOnce(() => '1111');
-      const spy = vi.spyOn(global, 'Date').mockImplementation(() => mockDate);
+      const spy = vi
+        .spyOn(global, 'Date')
+        .mockImplementation(function DateMock() {
+          return mockDate;
+        });
       const thumbUrl = '';
       const attachment = { thumbUrl, fileType: 'file' };
 

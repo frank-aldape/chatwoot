@@ -31,6 +31,7 @@
     }
   ],
   "dependencies": {
+    "@amplitude/analytics-browser": "^2.11.10",
     "@breezystack/lamejs": "^1.2.7",
     "@chatwoot/ninja-keys": "1.2.3",
     "@chatwoot/prosemirror-schema": "1.3.5",
@@ -50,14 +51,14 @@
     "@tailwindcss/typography": "^0.5.15",
     "@tanstack/vue-table": "^8.20.5",
     "@twilio/voice-sdk": "^2.12.4",
-    "@vitejs/plugin-vue": "^5.1.4",
-    "@vue/compiler-sfc": "^3.5.8",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/compiler-sfc": "^3.5.26",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
     "@vueuse/components": "^12.0.0",
     "@vueuse/core": "^12.0.0",
     "activestorage": "^5.2.6",
-    "axios": "^1.13.2",
+    "axios": "^1.17.0",
     "camelcase-keys": "^9.1.3",
     "chart.js": "~4.4.4",
     "color2k": "^2.0.2",
@@ -66,24 +67,23 @@
     "countries-and-timezones": "^3.6.0",
     "date-fns": "2.21.1",
     "date-fns-tz": "^1.3.3",
-    "dompurify": "3.2.4",
+    "dompurify": "3.4.8",
     "flag-icons": "^7.2.3",
     "floating-vue": "^5.2.2",
     "highlight.js": "^11.10.0",
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
     "idb": "^8.0.0",
-    "js-cookie": "^3.0.5",
+    "js-cookie": "^3.0.7",
     "json-logic-js": "^2.0.5",
     "lettersanitizer": "^1.0.6",
     "libphonenumber-js": "^1.11.9",
-    "markdown-it": "^13.0.2",
+    "markdown-it": "^14.2.0",
     "markdown-it-link-attributes": "^4.0.1",
     "md5": "^2.3.0",
     "mitt": "^3.0.1",
     "opus-recorder": "^8.0.5",
     "pinia": "^3.0.4",
-    "@amplitude/analytics-browser": "^2.11.10",
     "qrcode": "^1.5.4",
     "semver": "7.6.3",
     "snakecase-keys": "^8.0.1",
@@ -94,7 +94,7 @@
     "video.js": "7.18.1",
     "videojs-record": "4.5.0",
     "videojs-wavesurfer": "3.8.0",
-    "vue": "^3.5.12",
+    "vue": "^3.5.26",
     "vue-chartjs": "5.3.1",
     "vue-datepicker-next": "^1.0.3",
     "vue-dompurify-html": "^5.1.0",
@@ -112,7 +112,7 @@
   },
   "devDependencies": {
     "@egoist/tailwindcss-icons": "^1.9.0",
-    "@histoire/plugin-vue": "0.17.15",
+    "@histoire/plugin-vue": "1.0.0-beta.1",
     "@iconify-json/logos": "^1.2.10",
     "@iconify-json/lucide": "^1.2.82",
     "@iconify-json/ph": "^1.2.2",
@@ -120,7 +120,7 @@
     "@iconify-json/teenyicons": "^1.2.2",
     "@intlify/eslint-plugin-vue-i18n": "^3.2.0",
     "@size-limit/file": "^8.2.4",
-    "@vitest/coverage-v8": "3.0.5",
+    "@vitest/coverage-v8": "4.1.8",
     "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.0",
@@ -133,7 +133,7 @@
     "eslint-plugin-vitest-globals": "^1.5.0",
     "eslint-plugin-vue": "^9.28.0",
     "fake-indexeddb": "^6.0.0",
-    "histoire": "0.17.15",
+    "histoire": "1.0.0-beta.1",
     "husky": "^7.0.0",
     "jsdom": "^27.2.0",
     "lint-staged": "^16.2.7",
@@ -143,30 +143,43 @@
     "prosemirror-model": "^1.22.3",
     "size-limit": "^8.2.4",
     "tailwindcss": "^3.4.13",
-    "vite": "^5.4.21",
-    "vite-plugin-ruby": "^5.0.0",
-    "vitest": "3.0.5"
+    "vite": "^7.3.0",
+    "vite-plugin-ruby": "^5.2.2",
+    "vitest": "4.1.8"
   },
   "engines": {
     "node": "24.x",
     "pnpm": "10.x"
+  },
+  "pnpm": {
+    "overrides": {
+      "@babel/runtime": "7.29.7",
+      "@intlify/core-base": "9.14.5",
+      "@xmldom/xmldom": "0.8.13",
+      "ajv@<7": "6.14.0",
+      "ajv@>=7": "8.18.0",
+      "brace-expansion": "5.0.2",
+      "fast-uri": "3.1.2",
+      "flatted": "3.4.2",
+      "glob": "10.5.0",
+      "js-yaml": "4.1.1",
+      "lodash": "4.18.0",
+      "markdown-it": "14.2.0",
+      "min-document": "2.19.1",
+      "minimatch": "9.0.7",
+      "postcss": "8.5.10",
+      "ws": "8.20.1",
+      "yaml": "2.8.3"
+    }
   },
   "husky": {
     "hooks": {
       "pre-push": "sh bin/validate_push"
     }
   },
-  "pnpm": {
-    "overrides": {
-      "vite-node": "2.0.1",
-      "vite": "5.4.21",
-      "vitest": "3.0.5"
-    }
-  },
   "lint-staged": {
     "app/**/*.{js,vue}": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ],
     "*.scss": []
   },

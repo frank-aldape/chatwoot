@@ -11,13 +11,11 @@ import analyticsHelper from 'dashboard/helper/AnalyticsHelper/index';
 vi.mock('dashboard/composables/store');
 vi.mock('vue-i18n');
 vi.mock('dashboard/api/integrations/openapi');
-vi.mock('dashboard/helper/AnalyticsHelper/index', async importOriginal => {
-  const actual = await importOriginal();
-  actual.default = {
+vi.mock('dashboard/helper/AnalyticsHelper/index', () => ({
+  default: {
     track: vi.fn(),
-  };
-  return actual;
-});
+  },
+}));
 vi.mock('dashboard/helper/AnalyticsHelper/events', () => ({
   OPEN_AI_EVENTS: {
     TEST_EVENT: 'open_ai_test_event',

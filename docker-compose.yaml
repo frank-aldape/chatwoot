@@ -33,7 +33,7 @@ services:
       - chatwoot_network
 
   redis:
-    image: redis:7.0-alpine
+    image: redis:7.4-alpine
     restart: always
     command: ["redis-server", "--appendonly", "yes"]
     volumes:

@@ -1,5 +1,5 @@
 x-base: &base
-    image: ghcr.io/frank-aldape/chatwoot:prod
+    image: ${CHATWOOT_IMAGE:?Set CHATWOOT_IMAGE to an immutable tag or digest, e.g. ghcr.io/frank-aldape/chatwoot@sha256:...}
     env_file: .env
     volumes:
       - app_storage:/app/storage
@@ -30,7 +30,7 @@ services:
       - NODE_ENV=production
       - RAILS_ENV=production
       - INSTALLATION_ENV=docker
-      - SIDEKIQ_CONCURRENCY=25
+      - SIDEKIQ_CONCURRENCY=${SIDEKIQ_CONCURRENCY:-25}
     command: ['bundle', 'exec', 'sidekiq', '-C', 'config/sidekiq.yml']
     restart: always
     extra_hosts:
@@ -38,7 +38,7 @@ services:
       - 'chat.mastercode.com.mx:host-gateway'
 
   redis:
-    image: redis:7.0-alpine
+    image: redis:7.4-alpine
     restart: always
     command: ["sh", "-c", "redis-server --appendonly yes --requirepass \"$REDIS_PASSWORD\""]
     env_file: .env
