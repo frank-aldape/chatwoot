@@ -90,6 +90,7 @@ RUN if [ "$RAILS_ENV" = "production" ]; then \
   POSTGRES_PASSWORD=precompile_placeholder \
   REDIS_URL=redis://127.0.0.1:6379 \
   RAILS_LOG_TO_STDOUT=enabled \
+  VITE_RUBY_SKIP_COMPATIBILITY_CHECK=true \
   bundle exec rake assets:precompile \
   && rm -rf spec node_modules tmp/cache; \
   fi
