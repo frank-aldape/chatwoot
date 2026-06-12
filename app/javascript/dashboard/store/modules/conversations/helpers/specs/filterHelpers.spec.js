@@ -1567,6 +1567,19 @@ describe('filterHelpers', () => {
       expect(matchesFilters(conversation, filters)).toBe(false);
     });
 
+    it('should match conversation with equal_to operator for managed_company_id', () => {
+      const conversation = { managed_company_id: 19 };
+      const filters = [
+        {
+          attribute_key: 'managed_company_id',
+          filter_operator: 'equal_to',
+          values: [19],
+          query_operator: null,
+        },
+      ];
+      expect(matchesFilters(conversation, filters)).toBe(true);
+    });
+
     // Test for default case (returning null) in getValueFromConversation
     it('should not match conversation when attribute key is not recognized', () => {
       const conversation = { status: 'open' };

@@ -75,6 +75,8 @@ const getValueFromConversation = (conversation, attributeKey) => {
       return conversation.meta?.assignee?.id;
     case 'inbox_id':
       return conversation.inbox_id;
+    case 'managed_company_id':
+      return conversation.managed_company_id;
     case 'team_id':
       return conversation.meta?.team?.id;
     case 'browser_language':
