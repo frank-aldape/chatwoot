@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_29_230000) do
+ActiveRecord::Schema[7.1].define(version: 2026_06_11_120000) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -873,6 +873,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_29_230000) do
     t.string "access_type", default: "manual", null: false
     t.index ["inbox_id", "user_id"], name: "index_inbox_members_on_inbox_id_and_user_id", unique: true
     t.index ["inbox_id"], name: "index_inbox_members_on_inbox_id"
+    t.index ["user_id"], name: "index_inbox_members_on_user_id"
   end
 
   create_table "inboxes", id: :serial, force: :cascade do |t|
@@ -1244,6 +1245,20 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_29_230000) do
     t.index ["team_id"], name: "index_team_managed_companies_on_team_id"
   end
 
+  create_table "team_managed_company_channel_rules", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "team_id", null: false
+    t.bigint "managed_company_id", null: false
+    t.string "channel_key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "managed_company_id", "channel_key"], name: "idx_team_company_channel_rules_lookup"
+    t.index ["account_id"], name: "idx_team_company_channel_rules_account_id"
+    t.index ["managed_company_id"], name: "idx_team_company_channel_rules_company_id"
+    t.index ["team_id", "managed_company_id", "channel_key"], name: "idx_team_company_channel_rules_unique", unique: true
+    t.index ["team_id"], name: "idx_team_company_channel_rules_team_id"
+  end
+
   create_table "team_members", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.bigint "user_id", null: false
@@ -1346,6 +1361,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_29_230000) do
   add_foreign_key "team_managed_companies", "accounts"
   add_foreign_key "team_managed_companies", "managed_companies"
   add_foreign_key "team_managed_companies", "teams"
+  add_foreign_key "team_managed_company_channel_rules", "accounts"
+  add_foreign_key "team_managed_company_channel_rules", "managed_companies"
+  add_foreign_key "team_managed_company_channel_rules", "teams"
   create_trigger("accounts_after_insert_row_tr", :generated => true, :compatibility => 1).
       on("accounts").
       after(:insert).

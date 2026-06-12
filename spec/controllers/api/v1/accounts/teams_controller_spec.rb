@@ -109,6 +109,30 @@ RSpec.describe 'Teams API', type: :request do
         expect(created_team.managed_company_ids).to include(managed_company.id)
         expect(created_team.inbox_ids).to include(inbox.id)
       end
+
+      it 'creates channel rules and grants matching inboxes when provided' do
+        managed_company = create(:managed_company, account: account, authorized_domain: 'example.com')
+        email_inbox = create(:inbox, :with_email, account: account, managed_company: managed_company)
+        params = {
+          name: 'team-with-email-access',
+          managed_company_assignments: [
+            {
+              managed_company_id: managed_company.id,
+              channel_keys: ['email']
+            }
+          ]
+        }
+
+        post "/api/v1/accounts/#{account.id}/teams",
+             params: params,
+             headers: administrator.create_new_auth_token,
+             as: :json
+
+        expect(response).to have_http_status(:success)
+        created_team = Team.order(:id).last
+        expect(created_team.team_managed_company_channel_rules.pluck(:channel_key)).to contain_exactly('email')
+        expect(created_team.inbox_ids).to include(email_inbox.id)
+      end
     end
   end
 
@@ -170,6 +194,30 @@ RSpec.describe 'Teams API', type: :request do
 
         expect(response).to have_http_status(:success)
         expect(team.reload.inbox_ids).to contain_exactly(other_inbox.id)
+      end
+
+      it 'updates channel rules and applies future matching inbox access' do
+        managed_company = create(:managed_company, account: account, authorized_domain: 'example.com')
+        create(:team_managed_company, account: account, team: team, managed_company: managed_company)
+        params = {
+          managed_company_assignments: [
+            {
+              managed_company_id: managed_company.id,
+              channel_keys: ['email']
+            }
+          ]
+        }
+
+        put "/api/v1/accounts/#{account.id}/teams/#{team.id}",
+            params: params,
+            headers: administrator.create_new_auth_token,
+            as: :json
+
+        email_inbox = create(:inbox, :with_email, account: account, managed_company: managed_company)
+
+        expect(response).to have_http_status(:success)
+        expect(team.reload.team_managed_company_channel_rules.pluck(:channel_key)).to contain_exactly('email')
+        expect(team.inbox_ids).to include(email_inbox.id)
       end
     end
   end

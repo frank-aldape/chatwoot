@@ -24,12 +24,8 @@ class Conversations::FilterService < FilterService
   end
 
   def base_relation
-    conversations = @account.conversations.includes(
-      :taggings, :inbox, { assignee: { avatar_attachment: [:blob] } }, { contact: { avatar_attachment: [:blob] } }, :team, :messages, :contact_inbox
-    )
-
     Conversations::PermissionFilterService.new(
-      conversations,
+      @account.conversations,
       @user,
       @account
     ).perform
@@ -47,6 +43,16 @@ class Conversations::FilterService < FilterService
   end
 
   def conversations
-    @conversations.sort_on_last_activity_at.page(current_page)
+    @conversations
+      .sort_on_last_activity_at
+      .page(current_page)
+      .includes(
+        :taggings,
+        :inbox,
+        { assignee: { avatar_attachment: [:blob] } },
+        { contact: { avatar_attachment: [:blob] } },
+        :team,
+        :contact_inbox
+      )
   end
 end

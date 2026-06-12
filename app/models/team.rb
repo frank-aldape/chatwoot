@@ -23,6 +23,7 @@ class Team < ApplicationRecord
   has_many :members, through: :team_members, source: :user
   has_many :team_managed_companies, dependent: :destroy
   has_many :managed_companies, through: :team_managed_companies
+  has_many :team_managed_company_channel_rules, dependent: :destroy
   has_many :team_inboxes, dependent: :destroy
   has_many :inboxes, through: :team_inboxes
   has_many :conversations, dependent: :nullify

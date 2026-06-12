@@ -13,7 +13,6 @@ import {
   useStoreGetters,
   useStore,
 } from 'dashboard/composables/store';
-import ChannelName from './components/ChannelName.vue';
 import ChannelIcon from 'next/icon/ChannelIcon.vue';
 import Button from 'dashboard/components-next/button/Button.vue';
 
@@ -28,23 +27,6 @@ const selectedManagedCompanyId = ref('all');
 const searchQuery = ref('');
 
 const inboxes = useMapGetter('inboxes/getInboxes');
-
-const getInboxSearchFields = inbox => {
-  return [
-    inbox.name,
-    inbox.email,
-    inbox.forward_to_email,
-    inbox.business_name,
-    inbox.channel_type,
-    inbox.provider,
-    inbox.website_url,
-    inbox.managed_company?.name,
-    inbox.managed_company?.authorized_domain,
-  ]
-    .filter(Boolean)
-    .join(' ')
-    .toLowerCase();
-};
 
 const managedCompanyOptions = computed(() => {
   const companies = (inboxes.value || [])
@@ -87,11 +69,85 @@ const matchesManagedCompanyFilter = inbox => {
   );
 };
 
+const getInboxChannelLabel = inbox => {
+  const labels = {
+    'Channel::FacebookPage': t('INBOX_MGMT.CHANNELS.MESSENGER'),
+    'Channel::WebWidget': t('INBOX_MGMT.CHANNELS.WEB_WIDGET'),
+    'Channel::TwitterProfile': t('INBOX_MGMT.CHANNELS.TWITTER_PROFILE'),
+    'Channel::Whatsapp': t('INBOX_MGMT.CHANNELS.WHATSAPP'),
+    'Channel::Sms': t('INBOX_MGMT.CHANNELS.SMS'),
+    'Channel::Email': t('INBOX_MGMT.CHANNELS.EMAIL'),
+    'Channel::Telegram': t('INBOX_MGMT.CHANNELS.TELEGRAM'),
+    'Channel::Line': t('INBOX_MGMT.CHANNELS.LINE'),
+    'Channel::Api': t('INBOX_MGMT.CHANNELS.API'),
+    'Channel::Instagram': t('INBOX_MGMT.CHANNELS.INSTAGRAM'),
+    'Channel::Tiktok': t('INBOX_MGMT.CHANNELS.TIKTOK'),
+    'Channel::Voice': t('INBOX_MGMT.CHANNELS.VOICE'),
+  };
+
+  if (inbox.channel_type === 'Channel::TwilioSms') {
+    return inbox.medium === 'whatsapp'
+      ? t('INBOX_MGMT.CHANNELS.WHATSAPP')
+      : t('INBOX_MGMT.CHANNELS.TWILIO_SMS');
+  }
+
+  return labels[inbox.channel_type] || inbox.channel_type;
+};
+
+const getInboxSourceLabel = inbox => {
+  return (
+    inbox.email ||
+    inbox.phone_number ||
+    inbox.website_url ||
+    inbox.forward_to_email ||
+    inbox.business_name ||
+    ''
+  );
+};
+
+const getInboxSubtitle = inbox => {
+  return [getInboxChannelLabel(inbox), getInboxSourceLabel(inbox)]
+    .filter(Boolean)
+    .join(' - ');
+};
+
+const getInboxSearchFields = inbox => {
+  return [
+    inbox.name,
+    getInboxChannelLabel(inbox),
+    getInboxSourceLabel(inbox),
+    inbox.email,
+    inbox.phone_number,
+    inbox.forward_to_email,
+    inbox.business_name,
+    inbox.channel_type,
+    inbox.provider,
+    inbox.website_url,
+    inbox.managed_company?.name,
+    inbox.managed_company?.authorized_domain,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+};
+
 const inboxesList = computed(() => {
   const normalizedSearch = searchQuery.value.trim().toLowerCase();
   const sortedInboxes = inboxes.value
     ?.slice()
-    .sort((a, b) => a.name.localeCompare(b.name))
+    .sort((a, b) => {
+      const companyCompare = (a.managed_company?.name || '').localeCompare(
+        b.managed_company?.name || ''
+      );
+      if (companyCompare !== 0) return companyCompare;
+
+      const channelCompare = getInboxChannelLabel(a).localeCompare(
+        getInboxChannelLabel(b)
+      );
+      if (channelCompare !== 0) return channelCompare;
+
+      return a.name.localeCompare(b.name);
+    })
     .filter(matchesManagedCompanyFilter);
 
   if (!normalizedSearch) {
@@ -123,7 +179,18 @@ const groupedInboxesList = computed(() => {
     return acc;
   }, {});
 
-  return Object.values(groups).sort((a, b) => a.name.localeCompare(b.name));
+  return Object.values(groups)
+    .map(group => ({
+      ...group,
+      inboxes: group.inboxes.sort((a, b) => {
+        const channelCompare = getInboxChannelLabel(a).localeCompare(
+          getInboxChannelLabel(b)
+        );
+        if (channelCompare !== 0) return channelCompare;
+        return a.name.localeCompare(b.name);
+      }),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 });
 
 const hasActiveSearch = computed(() => searchQuery.value.trim().length > 0);
@@ -132,7 +199,7 @@ const showNoRecordsFound = computed(
   () => !hasRecords.value && !hasActiveSearch.value
 );
 const showEmptySearchResults = computed(
-  () => hasActiveSearch.value && (inboxesList.value || []).length === 0
+  () => hasRecords.value && (inboxesList.value || []).length === 0
 );
 
 const uiFlags = computed(() => getters['inboxes/getUIFlags'].value);
@@ -295,15 +362,19 @@ const openDelete = inbox => {
                         :inbox="inbox"
                       />
                     </div>
-                    <div>
+                    <div class="min-w-0">
                       <span class="block font-medium capitalize">
                         {{ inbox.name }}
                       </span>
-                      <ChannelName
-                        :channel-type="inbox.channel_type"
-                        :medium="inbox.medium"
-                        :additional-attributes="inbox.additional_attributes"
-                      />
+                      <span class="block truncate text-sm text-n-slate-11">
+                        {{ getInboxSubtitle(inbox) }}
+                      </span>
+                      <span
+                        v-if="inbox.managed_company?.authorized_domain"
+                        class="block truncate text-xs text-n-slate-10"
+                      >
+                        {{ inbox.managed_company.authorized_domain }}
+                      </span>
                     </div>
                   </div>
                 </td>

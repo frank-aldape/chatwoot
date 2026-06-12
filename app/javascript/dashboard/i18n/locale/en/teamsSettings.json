@@ -70,7 +70,10 @@
       "ADD_AGENTS": "Adding Agents to your Team...",
       "SELECT": "select",
       "SELECT_ALL": "select all agents",
-      "SELECTED_COUNT": "{selected} out of {total} agents selected."
+      "SELECTED_COUNT": "{selected} out of {total} agents selected.",
+      "SEARCH_PLACEHOLDER": "Buscar por nombre o correo",
+      "NO_MATCHES": "No se encontraron agentes con esa búsqueda.",
+      "ACCESS_NOTE": "Los agentes agregados a este equipo tendrán acceso automáticamente a los canales vinculados al equipo."
     },
     "ADD": {
       "TITLE": "Add agents to team - {teamName}",
@@ -125,7 +128,15 @@
         "COMPANY_LABEL": "Compañía",
         "COMPANY_PLACEHOLDER": "Selecciona una compañía",
         "INBOXES_LABEL": "Inboxes con acceso",
-        "INBOXES_PLACEHOLDER": "Mantén Ctrl/Cmd para seleccionar uno o más inboxes."
+        "INBOXES_PLACEHOLDER": "Mantén Ctrl/Cmd para seleccionar uno o más inboxes.",
+        "SELECT_ALL": "Seleccionar todos",
+        "CLEAR_ALL": "Limpiar selección",
+        "SELECTED_COUNT": "{selected} de {total} seleccionados",
+        "NO_INBOXES": "Esta compañía todavía no tiene inboxes vinculados.",
+        "SELECT_COMPANY_FIRST": "Selecciona una compañía para ver sus canales disponibles.",
+        "CHANNEL_PRESET": "{channel} ({selected}/{total})",
+        "SEARCH_INBOXES": "Buscar por canal, correo, teléfono o nombre",
+        "NO_MATCHES": "No hay canales que coincidan con esa búsqueda."
       },
       "SUBMIT_CREATE": "Crear equipo"
     }

@@ -30,14 +30,33 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      searchQuery: '',
+    };
   },
   computed: {
+    filteredAgents() {
+      const normalizedSearch = this.searchQuery.trim().toLowerCase();
+      if (!normalizedSearch) return this.agentList;
+
+      return this.agentList.filter(agent => {
+        return [agent.name, agent.email]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+          .includes(normalizedSearch);
+      });
+    },
     selectedAgentCount() {
       return this.selectedAgents.length;
     },
     allAgentsSelected() {
-      return this.selectedAgents.length === this.agentList.length;
+      return (
+        this.filteredAgents.length > 0 &&
+        this.filteredAgents.every(agent =>
+          this.selectedAgents.includes(agent.id)
+        )
+      );
     },
     disableSubmitButton() {
       return this.selectedAgentCount === 0;
@@ -60,8 +79,19 @@ export default {
       this.updateSelectedAgents(result);
     },
     selectAllAgents() {
-      const result = this.agentList.map(item => item.id);
-      this.updateSelectedAgents(result);
+      const visibleAgentIds = this.filteredAgents.map(item => item.id);
+      if (this.allAgentsSelected) {
+        this.updateSelectedAgents(
+          this.selectedAgents.filter(
+            agentId => !visibleAgentIds.includes(agentId)
+          )
+        );
+        return;
+      }
+
+      this.updateSelectedAgents([
+        ...new Set([...this.selectedAgents, ...visibleAgentIds]),
+      ]);
     },
     agentRowClass(agentId) {
       return { 'is-active': this.isAgentSelected(agentId) };
@@ -73,6 +103,19 @@ export default {
 <template>
   <div>
     <div class="add-agents__header" />
+    <div class="mb-4 grid gap-2">
+      <p
+        class="mb-0 rounded-lg border border-n-weak bg-n-alpha-1 p-3 text-sm text-n-slate-11"
+      >
+        {{ $t('TEAMS_SETTINGS.AGENTS.ACCESS_NOTE') }}
+      </p>
+      <input
+        v-model="searchQuery"
+        type="search"
+        class="h-10 rounded-lg border border-n-weak bg-n-alpha-1 px-3 text-sm text-n-slate-12"
+        :placeholder="$t('TEAMS_SETTINGS.AGENTS.SEARCH_PLACEHOLDER')"
+      />
+    </div>
     <table>
       <thead
         class="[&>th]:font-semibold [&>th]:tracking-[1px] ltr:[&>th]:text-left rtl:[&>th]:text-right [&>th]:px-2.5 [&>th]:uppercase [&>th]:text-n-slate-12"
@@ -99,7 +142,7 @@ export default {
       </thead>
       <tbody>
         <tr
-          v-for="agent in agentList"
+          v-for="agent in filteredAgents"
           :key="agent.id"
           :class="agentRowClass(agent.id)"
           class="border-b border-n-weak [&>td]:p-2.5 [&>td]:text-n-slate-12"
@@ -134,6 +177,12 @@ export default {
         </tr>
       </tbody>
     </table>
+    <p
+      v-if="filteredAgents.length === 0"
+      class="mb-0 rounded-lg bg-n-alpha-1 p-3 text-sm text-n-slate-11"
+    >
+      {{ $t('TEAMS_SETTINGS.AGENTS.NO_MATCHES') }}
+    </p>
     <div class="flex items-center justify-between mt-2">
       <p>
         {{

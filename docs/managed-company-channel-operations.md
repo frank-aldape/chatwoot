@@ -79,6 +79,12 @@ Examples:
 - A company may have multiple inboxes.
 - A team does not automatically see every inbox inside a company.
 - A team only sees the specific inboxes assigned to it.
+- Team channel assignments are the permission preset. When a user is added to a team, the system grants team access to every inbox linked through `TeamInbox`.
+- Removing a user from the team revokes that team-based inbox access, while preserving any manual inbox access the user may still have.
+- The team form should be used as the primary permission-loading surface: select the company, apply channel presets such as Email/WhatsApp/Instagram, then add users to the team.
+- Channel presets are persistent team/company/channel rules. When a future inbox is created for that company and channel, the system links it to every matching team automatically.
+- The inbox list should be used as the validation surface: channels are grouped by company and show the visible source such as email, phone number, website URL, or business name.
+- Unchecking one inbox inside a selected channel preset removes that channel preset and keeps only the explicitly selected inboxes, so the unchecked inbox is not re-added automatically.
 
 ## Email domain rule
 

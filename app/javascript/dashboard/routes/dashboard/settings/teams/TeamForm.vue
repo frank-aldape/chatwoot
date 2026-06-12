@@ -5,6 +5,7 @@ import { useVuelidate } from '@vuelidate/core';
 
 import FormInput from 'v3/components/Form/Input.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
+import ChannelIcon from 'next/icon/ChannelIcon.vue';
 import validations from './helpers/validations';
 import ManagedCompaniesAPI from 'dashboard/api/managedCompanies';
 
@@ -12,11 +13,14 @@ const buildAssignment = assignment => {
   const {
     managed_company_id: managedCompanyId = '',
     inbox_ids: inboxIds = [],
+    channel_keys: channelKeys = [],
   } = assignment || {};
 
   return {
     managedCompanyId: managedCompanyId || '',
     inboxIds,
+    channelKeys,
+    inboxSearchQuery: '',
   };
 };
 
@@ -24,6 +28,7 @@ export default {
   components: {
     NextButton,
     FormInput,
+    ChannelIcon,
   },
   props: {
     onSubmit: {
@@ -128,16 +133,205 @@ export default {
       });
     },
     inboxesForManagedCompany(managedCompanyId) {
-      return this.inboxOptions.filter(({ managed_company_id: companyId }) => {
-        return companyId === managedCompanyId;
-      });
+      return this.inboxOptions
+        .filter(({ managed_company_id: companyId }) => {
+          return companyId === managedCompanyId;
+        })
+        .sort((a, b) => {
+          const channelCompare = this.inboxChannelLabel(a).localeCompare(
+            this.inboxChannelLabel(b)
+          );
+          if (channelCompare !== 0) return channelCompare;
+          return a.name.localeCompare(b.name);
+        });
+    },
+    channelKey(inbox) {
+      const keys = {
+        'Channel::FacebookPage': 'facebook',
+        'Channel::WebWidget': 'web_widget',
+        'Channel::TwitterProfile': 'twitter',
+        'Channel::Whatsapp': 'whatsapp',
+        'Channel::Sms': 'sms',
+        'Channel::Email': 'email',
+        'Channel::Telegram': 'telegram',
+        'Channel::Line': 'line',
+        'Channel::Api': 'api',
+        'Channel::Instagram': 'instagram',
+        'Channel::Tiktok': 'tiktok',
+        'Channel::Voice': 'voice',
+      };
+
+      if (inbox.channel_type === 'Channel::TwilioSms') {
+        return inbox.medium === 'whatsapp' ? 'whatsapp' : 'twilio_sms';
+      }
+      return keys[inbox.channel_type] || inbox.channel_type;
+    },
+    channelOptionsForManagedCompany(managedCompanyId) {
+      const groups = this.inboxesForManagedCompany(managedCompanyId).reduce(
+        (acc, inbox) => {
+          const key = this.channelKey(inbox);
+          if (!acc[key]) {
+            acc[key] = {
+              key,
+              label: this.inboxChannelLabel(inbox),
+              inboxes: [],
+            };
+          }
+          acc[key].inboxes.push(inbox);
+          return acc;
+        },
+        {}
+      );
+
+      return Object.values(groups).sort((a, b) =>
+        a.label.localeCompare(b.label)
+      );
+    },
+    inboxChannelLabel(inbox) {
+      const labels = {
+        'Channel::FacebookPage': this.$t('INBOX_MGMT.CHANNELS.MESSENGER'),
+        'Channel::WebWidget': this.$t('INBOX_MGMT.CHANNELS.WEB_WIDGET'),
+        'Channel::TwitterProfile': this.$t(
+          'INBOX_MGMT.CHANNELS.TWITTER_PROFILE'
+        ),
+        'Channel::Whatsapp': this.$t('INBOX_MGMT.CHANNELS.WHATSAPP'),
+        'Channel::Sms': this.$t('INBOX_MGMT.CHANNELS.SMS'),
+        'Channel::Email': this.$t('INBOX_MGMT.CHANNELS.EMAIL'),
+        'Channel::Telegram': this.$t('INBOX_MGMT.CHANNELS.TELEGRAM'),
+        'Channel::Line': this.$t('INBOX_MGMT.CHANNELS.LINE'),
+        'Channel::Api': this.$t('INBOX_MGMT.CHANNELS.API'),
+        'Channel::Instagram': this.$t('INBOX_MGMT.CHANNELS.INSTAGRAM'),
+        'Channel::Tiktok': this.$t('INBOX_MGMT.CHANNELS.TIKTOK'),
+        'Channel::Voice': this.$t('INBOX_MGMT.CHANNELS.VOICE'),
+      };
+
+      if (inbox.channel_type === 'Channel::TwilioSms') {
+        return inbox.medium === 'whatsapp'
+          ? this.$t('INBOX_MGMT.CHANNELS.WHATSAPP')
+          : this.$t('INBOX_MGMT.CHANNELS.TWILIO_SMS');
+      }
+
+      return labels[inbox.channel_type] || inbox.channel_type;
+    },
+    inboxSourceLabel(inbox) {
+      return (
+        inbox.email ||
+        inbox.phone_number ||
+        inbox.website_url ||
+        inbox.forward_to_email ||
+        inbox.business_name ||
+        ''
+      );
+    },
+    inboxSubtitle(inbox) {
+      return [this.inboxChannelLabel(inbox), this.inboxSourceLabel(inbox)]
+        .filter(Boolean)
+        .join(' - ');
+    },
+    managedCompanyOptionLabel(managedCompany) {
+      return [managedCompany.name, managedCompany.authorized_domain]
+        .filter(Boolean)
+        .join(' - ');
+    },
+    selectedInboxCount(assignment) {
+      return assignment.inboxIds.length;
+    },
+    selectedChannelCount(assignment, channelOption) {
+      if (assignment.channelKeys.includes(channelOption.key)) {
+        return channelOption.inboxes.length;
+      }
+
+      return channelOption.inboxes.filter(inbox =>
+        assignment.inboxIds.includes(inbox.id)
+      ).length;
+    },
+    isChannelSelected(assignment, channelOption) {
+      return assignment.channelKeys.includes(channelOption.key);
+    },
+    toggleChannelInboxes(assignment, channelOption) {
+      const channelInboxIds = channelOption.inboxes.map(inbox => inbox.id);
+      if (this.isChannelSelected(assignment, channelOption)) {
+        assignment.channelKeys = assignment.channelKeys.filter(
+          channelKey => channelKey !== channelOption.key
+        );
+        assignment.inboxIds = assignment.inboxIds.filter(
+          inboxId => !channelInboxIds.includes(inboxId)
+        );
+        return;
+      }
+
+      assignment.channelKeys = [
+        ...new Set([...assignment.channelKeys, channelOption.key]),
+      ];
+      assignment.inboxIds = [
+        ...new Set([...assignment.inboxIds, ...channelInboxIds]),
+      ];
+    },
+    isAllCompanyInboxesSelected(assignment) {
+      const companyInboxes = this.inboxesForManagedCompany(
+        assignment.managedCompanyId
+      );
+      return (
+        companyInboxes.length > 0 &&
+        companyInboxes.every(inbox => assignment.inboxIds.includes(inbox.id))
+      );
+    },
+    toggleAllCompanyInboxes(index) {
+      const assignment = this.state.managedCompanyAssignments[index];
+      const companyInboxes = this.inboxesForManagedCompany(
+        assignment.managedCompanyId
+      );
+      const shouldClearSelection = this.isAllCompanyInboxesSelected(assignment);
+
+      assignment.inboxIds = shouldClearSelection
+        ? []
+        : companyInboxes.map(inbox => inbox.id);
+      assignment.channelKeys = shouldClearSelection
+        ? []
+        : this.channelOptionsForManagedCompany(assignment.managedCompanyId).map(
+            channelOption => channelOption.key
+          );
+    },
+    toggleInbox(assignment, inboxId) {
+      const inbox = this.inboxOptions.find(({ id }) => id === inboxId);
+      if (assignment.inboxIds.includes(inboxId)) {
+        assignment.inboxIds = assignment.inboxIds.filter(id => id !== inboxId);
+        if (inbox) {
+          assignment.channelKeys = assignment.channelKeys.filter(
+            channelKey => channelKey !== this.channelKey(inbox)
+          );
+        }
+      } else {
+        assignment.inboxIds = [...assignment.inboxIds, inboxId];
+      }
+    },
+    filteredInboxesForAssignment(assignment) {
+      const normalizedSearch = assignment.inboxSearchQuery.trim().toLowerCase();
+
+      return this.inboxesForManagedCompany(assignment.managedCompanyId).filter(
+        inbox => {
+          const searchFields = [
+            inbox.name,
+            this.inboxChannelLabel(inbox),
+            this.inboxSourceLabel(inbox),
+            inbox.managed_company?.name,
+            inbox.managed_company?.authorized_domain,
+          ]
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase();
+
+          return searchFields.includes(normalizedSearch);
+        }
+      );
     },
     normalizedManagedCompanyAssignments() {
       return this.state.managedCompanyAssignments
         .filter(({ managedCompanyId }) => Boolean(managedCompanyId))
-        .map(({ managedCompanyId, inboxIds }) => ({
+        .map(({ managedCompanyId, inboxIds, channelKeys }) => ({
           managed_company_id: managedCompanyId,
           inbox_ids: inboxIds,
+          channel_keys: channelKeys,
         }));
     },
     handleSubmit() {
@@ -247,9 +441,7 @@ export default {
                   :key="managedCompany.id"
                   :value="managedCompany.id"
                 >
-                  {{ managedCompany.name }} ({{
-                    managedCompany.authorized_domain
-                  }})
+                  {{ managedCompanyOptionLabel(managedCompany) }}
                 </option>
               </select>
             </label>
@@ -265,30 +457,142 @@ export default {
             </div>
           </div>
 
-          <label class="grid gap-2 text-sm font-medium text-n-slate-12">
-            {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.INBOXES_LABEL') }}
-            <select
-              v-model="assignment.inboxIds"
-              multiple
-              :disabled="!assignment.managedCompanyId"
-              class="min-h-32 rounded-lg border border-n-weak bg-n-background px-3 py-2 text-sm text-n-slate-12"
+          <div class="grid gap-2">
+            <div
+              class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
             >
-              <option
-                v-for="inbox in inboxesForManagedCompany(
-                  assignment.managedCompanyId
-                )"
-                :key="inbox.id"
-                :value="inbox.id"
-              >
-                {{ inbox.name }}
-              </option>
-            </select>
-            <span class="text-xs font-normal text-n-slate-11">
+              <div>
+                <p class="mb-0 text-sm font-medium text-n-slate-12">
+                  {{
+                    $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.INBOXES_LABEL')
+                  }}
+                </p>
+                <p class="mb-0 text-xs text-n-slate-11">
+                  {{
+                    $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SELECTED_COUNT', {
+                      selected: selectedInboxCount(assignment),
+                      total: inboxesForManagedCompany(
+                        assignment.managedCompanyId
+                      ).length,
+                    })
+                  }}
+                </p>
+              </div>
+              <NextButton
+                type="button"
+                size="sm"
+                slate
+                :disabled="!assignment.managedCompanyId"
+                :label="
+                  isAllCompanyInboxesSelected(assignment)
+                    ? $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.CLEAR_ALL')
+                    : $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SELECT_ALL')
+                "
+                @click="toggleAllCompanyInboxes(index)"
+              />
+            </div>
+
+            <div
+              v-if="!assignment.managedCompanyId"
+              class="rounded-lg border border-n-weak bg-n-alpha-1 p-3 text-sm text-n-slate-11"
+            >
               {{
-                $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.INBOXES_PLACEHOLDER')
+                $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SELECT_COMPANY_FIRST')
               }}
-            </span>
-          </label>
+            </div>
+
+            <div
+              v-else-if="
+                inboxesForManagedCompany(assignment.managedCompanyId).length ===
+                0
+              "
+              class="rounded-lg border border-n-weak bg-n-alpha-1 p-3 text-sm text-n-slate-11"
+            >
+              {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.NO_INBOXES') }}
+            </div>
+
+            <div
+              v-else
+              class="grid gap-3 rounded-lg border border-n-weak bg-n-background p-3"
+            >
+              <div
+                v-if="assignment.managedCompanyId"
+                class="flex flex-wrap gap-2"
+              >
+                <button
+                  v-for="channelOption in channelOptionsForManagedCompany(
+                    assignment.managedCompanyId
+                  )"
+                  :key="channelOption.key"
+                  type="button"
+                  class="rounded-md border px-3 py-1.5 text-xs font-medium"
+                  :class="
+                    isChannelSelected(assignment, channelOption)
+                      ? 'border-n-brand bg-n-brand/10 text-n-brand'
+                      : 'border-n-weak text-n-slate-11 hover:bg-n-alpha-2'
+                  "
+                  @click="toggleChannelInboxes(assignment, channelOption)"
+                >
+                  {{
+                    $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.CHANNEL_PRESET', {
+                      channel: channelOption.label,
+                      selected: selectedChannelCount(assignment, channelOption),
+                      total: channelOption.inboxes.length,
+                    })
+                  }}
+                </button>
+              </div>
+
+              <input
+                v-if="assignment.managedCompanyId"
+                v-model="assignment.inboxSearchQuery"
+                type="search"
+                class="h-10 rounded-lg border border-n-weak bg-n-alpha-1 px-3 text-sm text-n-slate-12"
+                :placeholder="
+                  $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SEARCH_INBOXES')
+                "
+              />
+
+              <div class="grid max-h-72 gap-2 overflow-y-auto">
+                <p
+                  v-if="
+                    assignment.managedCompanyId &&
+                    filteredInboxesForAssignment(assignment).length === 0
+                  "
+                  class="mb-0 rounded-lg bg-n-alpha-1 p-3 text-sm text-n-slate-11"
+                >
+                  {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.NO_MATCHES') }}
+                </p>
+
+                <label
+                  v-for="inbox in filteredInboxesForAssignment(assignment)"
+                  :key="inbox.id"
+                  class="flex cursor-pointer items-start gap-3 rounded-lg border border-n-weak bg-n-alpha-1 p-3 hover:bg-n-alpha-2"
+                >
+                  <input
+                    type="checkbox"
+                    class="mt-1"
+                    :checked="assignment.inboxIds.includes(inbox.id)"
+                    @change="toggleInbox(assignment, inbox.id)"
+                  />
+                  <ChannelIcon
+                    class="mt-0.5 size-4 text-n-slate-10"
+                    :inbox="inbox"
+                  />
+                  <span class="min-w-0 flex-1">
+                    <span
+                      class="block truncate text-sm font-medium text-n-slate-12"
+                    >
+                      {{ inbox.name }}
+                    </span>
+                    <span class="block truncate text-xs text-n-slate-11">
+                      {{ inboxSubtitle(inbox) }}
+                    </span>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="flex flex-row justify-end gap-2 py-2 px-0 w-full">

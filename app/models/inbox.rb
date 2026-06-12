@@ -93,11 +93,12 @@ class Inbox < ApplicationRecord
   enum sender_name_type: { friendly: 0, professional: 1 }
 
   before_save :sync_integration_slot
-
   after_destroy :delete_round_robin_agents
 
   after_create_commit :dispatch_create_event
+  after_create_commit :sync_team_channel_rule_access
   after_update_commit :dispatch_update_event
+  after_update_commit :sync_team_channel_rule_access, if: :saved_change_to_managed_company_id?
 
   scope :order_by_name, -> { order('lower(name) ASC') }
 
@@ -185,6 +186,14 @@ class Inbox < ApplicationRecord
 
   def twilio_whatsapp?
     channel_type == 'Channel::TwilioSms' && channel.medium == 'whatsapp'
+  end
+
+  def voice?
+    channel_type == 'Channel::Voice'
+  end
+
+  def linkedin_bridge?
+    api? && channel.try(:linkedin?)
   end
 
   def assignable_agents
@@ -305,12 +314,12 @@ class Inbox < ApplicationRecord
     nil
   end
 
-  def linkedin_bridge?
-    api? && channel.try(:linkedin?)
-  end
-
   def sync_integration_slot
     self.integration_slot = managed_company_integration_slot
+  end
+
+  def sync_team_channel_rule_access
+    ::Teams::ApplyManagedCompanyChannelRulesService.new(inbox: self).perform
   end
 
   def delete_round_robin_agents

@@ -6,6 +6,7 @@ class ManagedCompany < ApplicationRecord
   has_many :inboxes, dependent: :nullify
   has_many :team_managed_companies, dependent: :destroy
   has_many :teams, through: :team_managed_companies
+  has_many :team_managed_company_channel_rules, dependent: :destroy
 
   enum :status, { active: 0, inactive: 1 }, prefix: true
 

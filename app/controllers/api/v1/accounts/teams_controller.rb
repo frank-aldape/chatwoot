@@ -31,8 +31,12 @@ class Api::V1::Accounts::TeamsController < Api::V1::Accounts::BaseController
   end
 
   def team_params
-    raw_team_params.permit(:name, :description, :allow_auto_assign,
-                           managed_company_assignments: [:managed_company_id, { inbox_ids: [] }])
+    raw_team_params.permit(
+      :name,
+      :description,
+      :allow_auto_assign,
+      managed_company_assignments: [:managed_company_id, { inbox_ids: [], channel_keys: [] }]
+    )
   end
 
   def team_record_params
@@ -41,7 +45,9 @@ class Api::V1::Accounts::TeamsController < Api::V1::Accounts::BaseController
 
   def raw_team_params
     if params[:team].present?
-      params[:team] = params[:team].merge(managed_company_assignments: params[:managed_company_assignments]) if params[:managed_company_assignments].present? && params[:team][:managed_company_assignments].blank?
+      if params[:managed_company_assignments].present? && params[:team][:managed_company_assignments].blank?
+        params[:team] = params[:team].merge(managed_company_assignments: params[:managed_company_assignments])
+      end
       params[:team]
     else
       params

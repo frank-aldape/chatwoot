@@ -8,6 +8,7 @@ class TeamManagedCompany < ApplicationRecord
 
   before_validation :sync_account_id
   after_destroy :remove_team_inboxes_for_company
+  after_destroy :remove_team_channel_rules_for_company
 
   private
 
@@ -24,6 +25,12 @@ class TeamManagedCompany < ApplicationRecord
   def remove_team_inboxes_for_company
     team.team_inboxes.joins(:inbox)
         .where(inboxes: { managed_company_id: managed_company_id })
+        .find_each(&:destroy!)
+  end
+
+  def remove_team_channel_rules_for_company
+    team.team_managed_company_channel_rules
+        .where(managed_company_id: managed_company_id)
         .find_each(&:destroy!)
   end
 end
