@@ -20,6 +20,10 @@
     "SEARCH": {
       "INPUT": "Search for People, Chats, Saved Replies .."
     },
+    "SMART_FILTER": {
+      "PLACEHOLDER": "Filter by company, inbox, agent, team, label, status, priority...",
+      "CLEAR": "Clear conversation filter"
+    },
     "FILTER_ALL": "All",
     "ASSIGNEE_TYPE_TABS": {
       "me": "Mine",

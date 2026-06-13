@@ -46,6 +46,7 @@ import {
 } from 'dashboard/composables/useTransformKeys';
 import { useEmitter } from 'dashboard/composables/emitter';
 import { useEventListener } from '@vueuse/core';
+import { debounce } from '@chatwoot/utils';
 
 import { emitter } from 'shared/helpers/mitt';
 
@@ -109,6 +110,7 @@ const showAddFoldersModal = ref(false);
 const showDeleteFoldersModal = ref(false);
 const isContextMenuOpen = ref(false);
 const appliedFilter = ref([]);
+const smartFilterQuery = ref('');
 const advancedFilterTypes = ref(
   advancedFilterOptions.map(filter => ({
     ...filter,
@@ -169,6 +171,10 @@ const intersectionObserverOptions = computed(() => {
 const hasAppliedFilters = computed(() => {
   return appliedFilters.value.length !== 0;
 });
+
+const normalizedSmartFilterQuery = computed(() =>
+  smartFilterQuery.value.trim().toLowerCase()
+);
 
 const activeFolder = computed(() => {
   if (props.foldersId) {
@@ -435,6 +441,144 @@ const uniqueInboxes = computed(() => {
 });
 
 // ---------------------- Methods -----------------------
+function matchesSmartFilterQuery(...values) {
+  const query = normalizedSmartFilterQuery.value;
+  return values
+    .filter(Boolean)
+    .some(value => String(value).toLowerCase().includes(query));
+}
+
+function buildSmartFilter(attributeKey, values, queryOperator = 'or') {
+  return {
+    attributeKey,
+    attributeModel: 'standard',
+    customAttributeType: '',
+    filterOperator: 'equal_to',
+    queryOperator,
+    values,
+  };
+}
+
+function managedCompanyOptions() {
+  return inboxesList.value
+    .map(inboxRecord => inboxRecord.managed_company)
+    .filter(company => company?.id)
+    .filter(
+      (company, index, companies) =>
+        companies.findIndex(({ id }) => id === company.id) === index
+    );
+}
+
+function statusOptions() {
+  return Object.values(wootConstants.STATUS_TYPE).map(status => ({
+    id: status,
+    name: t(`CHAT_LIST.CHAT_STATUS_FILTER_ITEMS.${status}.TEXT`),
+  }));
+}
+
+function priorityOptions() {
+  return [
+    { id: 'low', name: t('CONVERSATION.PRIORITY.OPTIONS.LOW') },
+    { id: 'medium', name: t('CONVERSATION.PRIORITY.OPTIONS.MEDIUM') },
+    { id: 'high', name: t('CONVERSATION.PRIORITY.OPTIONS.HIGH') },
+    { id: 'urgent', name: t('CONVERSATION.PRIORITY.OPTIONS.URGENT') },
+  ];
+}
+
+function smartFilterCandidates() {
+  const candidates = [];
+
+  managedCompanyOptions()
+    .filter(company =>
+      matchesSmartFilterQuery(company.name, company.authorized_domain)
+    )
+    .forEach(company => {
+      candidates.push(
+        buildSmartFilter('managed_company_id', [
+          { id: company.id, name: company.name },
+        ])
+      );
+    });
+
+  inboxesList.value
+    .filter(inboxRecord =>
+      matchesSmartFilterQuery(
+        inboxRecord.name,
+        inboxRecord.email,
+        inboxRecord.phone_number,
+        inboxRecord.website_url,
+        inboxRecord.business_name,
+        inboxRecord.managed_company?.name
+      )
+    )
+    .forEach(inboxRecord => {
+      candidates.push(
+        buildSmartFilter('inbox_id', [
+          { id: inboxRecord.id, name: inboxRecord.name },
+        ])
+      );
+    });
+
+  agentList.value
+    .filter(agent =>
+      matchesSmartFilterQuery(agent.name, agent.email, agent.available_name)
+    )
+    .forEach(agent => {
+      candidates.push(
+        buildSmartFilter('assignee_id', [{ id: agent.id, name: agent.name }])
+      );
+    });
+
+  teamsList.value
+    .filter(team => matchesSmartFilterQuery(team.name))
+    .forEach(team => {
+      candidates.push(
+        buildSmartFilter('team_id', [{ id: team.id, name: team.name }])
+      );
+    });
+
+  labels.value
+    .filter(label => matchesSmartFilterQuery(label.title))
+    .forEach(label => {
+      candidates.push(
+        buildSmartFilter('labels', [{ id: label.title, name: label.title }])
+      );
+    });
+
+  campaigns.value
+    .filter(campaign => matchesSmartFilterQuery(campaign.title))
+    .forEach(campaign => {
+      candidates.push(
+        buildSmartFilter('campaign_id', [
+          { id: campaign.id, name: campaign.title },
+        ])
+      );
+    });
+
+  statusOptions()
+    .filter(status => matchesSmartFilterQuery(status.id, status.name))
+    .forEach(status => {
+      candidates.push(buildSmartFilter('status', [status]));
+    });
+
+  priorityOptions()
+    .filter(priority => matchesSmartFilterQuery(priority.id, priority.name))
+    .forEach(priority => {
+      candidates.push(buildSmartFilter('priority', [priority]));
+    });
+
+  if (/^\d+$/.test(normalizedSmartFilterQuery.value)) {
+    candidates.push(
+      buildSmartFilter('display_id', normalizedSmartFilterQuery.value)
+    );
+  }
+
+  return candidates.map((candidate, index) => ({
+    ...candidate,
+    queryOperator: index === candidates.length - 1 ? null : 'or',
+  }));
+}
+
 function setFiltersFromUISettings() {
   const { conversations_filter_by: filterBy = {} } = uiSettings.value;
   const { status, order_by: orderBy } = filterBy;
@@ -655,6 +799,7 @@ function fetchConversations() {
 }
 
 function resetAndFetchData() {
+  smartFilterQuery.value = '';
   appliedFilter.value = [];
   resetBulkActions();
   store.dispatch('conversationPage/reset');
@@ -668,6 +813,43 @@ function resetAndFetchData() {
     return;
   }
   fetchConversations();
+}
+
+function applySmartFilter() {
+  const query = normalizedSmartFilterQuery.value;
+  if (!query) {
+    resetAndFetchData();
+    return;
+  }
+
+  const filters = smartFilterCandidates();
+  if (!filters.length) {
+    resetBulkActions();
+    appliedFilter.value = [];
+    store.dispatch('conversationPage/reset');
+    store.dispatch('emptyAllConversations');
+    store.dispatch('setConversationFilters', []);
+    emitConversationLoaded();
+    return;
+  }
+
+  resetBulkActions();
+  appliedFilter.value = filters;
+  store.dispatch('conversationPage/reset');
+  store.dispatch('emptyAllConversations');
+  store.dispatch('setConversationFilters', useSnakeCase(filters));
+  fetchFilteredConversations(filters);
+}
+
+const debouncedApplySmartFilter = debounce(applySmartFilter, 500);
+
+function onSmartFilterInput() {
+  debouncedApplySmartFilter();
+}
+
+function clearSmartFilter() {
+  smartFilterQuery.value = '';
+  resetAndFetchData();
 }
 
 function loadMoreConversations() {
@@ -955,6 +1137,32 @@ watch(conversationFilters, (newVal, oldVal) => {
       @reset-filters="resetAndFetchData"
       @basic-filter-change="onBasicFilterChange"
     />
+
+    <div class="border-b border-n-weak px-3 py-2">
+      <div
+        class="flex h-9 items-center gap-2 rounded-lg border border-n-weak bg-n-alpha-1 px-3 text-n-slate-11 focus-within:border-n-brand"
+      >
+        <span class="i-lucide-search size-4 flex-shrink-0" />
+        <input
+          v-model="smartFilterQuery"
+          type="search"
+          class="min-w-0 flex-1 bg-transparent text-sm text-n-slate-12 outline-none placeholder:text-n-slate-10"
+          :placeholder="$t('CHAT_LIST.SMART_FILTER.PLACEHOLDER')"
+          @input="onSmartFilterInput"
+          @keydown.enter.prevent="applySmartFilter"
+          @keydown.esc.prevent="clearSmartFilter"
+        />
+        <button
+          v-if="smartFilterQuery"
+          type="button"
+          class="grid size-6 place-items-center rounded-md text-n-slate-10 hover:bg-n-alpha-2 hover:text-n-slate-12"
+          :aria-label="$t('CHAT_LIST.SMART_FILTER.CLEAR')"
+          @click="clearSmartFilter"
+        >
+          <span class="i-lucide-x size-4" />
+        </button>
+      </div>
+    </div>
 
     <TeleportWithDirection
       v-if="showAddFoldersModal"
