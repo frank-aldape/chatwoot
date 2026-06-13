@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require 'erb'
+require 'fileutils'
 require 'json'
+require 'net/http'
 require 'open3'
 require 'sidekiq/api'
+require 'uri'
 require 'yaml'
 
 def percent(value, total)
@@ -35,6 +38,82 @@ def disk_usage(path)
     used_percent: fields[4].delete('%').to_i,
     mounted_on: fields[5]
   }
+end
+
+def boolean_env(name, default)
+  value = ENV.fetch(name, default).to_s.downcase
+  %w[1 true yes y].include?(value)
+end
+
+def notification_signature(payload)
+  JSON.generate(
+    status: payload[:status],
+    warnings: payload[:warnings].sort
+  )
+end
+
+def notification_state_path
+  Rails.root.join('tmp/production_alerts_check_state.json')
+end
+
+def notification_state
+  path = notification_state_path
+  return {} unless File.exist?(path)
+
+  JSON.parse(File.read(path))
+rescue JSON::ParserError
+  {}
+end
+
+def write_notification_state(payload)
+  FileUtils.mkdir_p(notification_state_path.dirname)
+  File.write(
+    notification_state_path,
+    JSON.pretty_generate(
+      last_status: payload[:status],
+      last_signature: notification_signature(payload),
+      last_sent_at: Time.current.iso8601
+    )
+  )
+end
+
+def should_notify?(payload)
+  return false if ENV.fetch('ALERT_WEBHOOK_URL', '').empty?
+
+  state = notification_state
+  previous_status = state.fetch('last_status', nil)
+  current_signature = notification_signature(payload)
+
+  return true if payload[:status] == 'warning' && current_signature != state.fetch('last_signature', nil)
+  return true if payload[:status] == 'ok' && previous_status == 'warning' && boolean_env('ALERT_NOTIFY_RECOVERY', true)
+  return true if payload[:status] == 'ok' && boolean_env('ALERT_NOTIFY_ON_OK', false)
+
+  last_sent_at = Time.zone.parse(state.fetch('last_sent_at', nil).to_s)
+  repeat_minutes = threshold('ALERT_REPEAT_MINUTES', 60)
+
+  payload[:status] == 'warning' && (last_sent_at.blank? || last_sent_at < repeat_minutes.minutes.ago)
+rescue ArgumentError
+  true
+end
+
+def send_alert_notification(payload)
+  uri = URI.parse(ENV.fetch('ALERT_WEBHOOK_URL'))
+  request = Net::HTTP::Post.new(uri)
+  request['Content-Type'] = 'application/json'
+  request.body = JSON.generate(
+    text: "#{ENV.fetch('ALERT_INSTANCE_NAME', 'Chatwoot production')} #{payload[:status]}",
+    status: payload[:status],
+    generated_at: payload[:generated_at],
+    warnings: payload[:warnings],
+    metrics: payload[:metrics]
+  )
+
+  Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', read_timeout: threshold('ALERT_WEBHOOK_TIMEOUT_SECONDS', 10)) do |http|
+    response = http.request(request)
+    raise "alert webhook failed with HTTP #{response.code}" unless response.is_a?(Net::HTTPSuccess)
+  end
+
+  write_notification_state(payload)
 end
 
 warnings = []
@@ -123,4 +202,14 @@ payload = {
 }
 
 puts JSON.pretty_generate(payload)
+
+if should_notify?(payload)
+  begin
+    send_alert_notification(payload)
+  rescue StandardError => e
+    warn "alert notification failed: #{e.message}"
+    exit(1)
+  end
+end
+
 exit(warnings.empty? ? 0 : 1)

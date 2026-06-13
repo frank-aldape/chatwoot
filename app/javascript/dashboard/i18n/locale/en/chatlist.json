@@ -21,7 +21,7 @@
       "INPUT": "Search for People, Chats, Saved Replies .."
     },
     "SMART_FILTER": {
-      "PLACEHOLDER": "Filter by company, inbox, agent, team, label, status, priority...",
+      "PLACEHOLDER": "Filter conversations...",
       "CLEAR": "Clear conversation filter"
     },
     "FILTER_ALL": "All",

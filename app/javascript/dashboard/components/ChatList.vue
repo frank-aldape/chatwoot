@@ -1138,15 +1138,15 @@ watch(conversationFilters, (newVal, oldVal) => {
       @basic-filter-change="onBasicFilterChange"
     />
 
-    <div class="border-b border-n-weak px-3 py-2">
+    <div class="border-b border-n-weak px-4 pb-3 pt-1">
       <div
-        class="flex h-9 items-center gap-2 rounded-lg border border-n-weak bg-n-alpha-1 px-3 text-n-slate-11 focus-within:border-n-brand"
+        class="flex h-10 items-center gap-2 rounded-md border border-n-weak bg-n-alpha-2 px-3 text-n-slate-10 transition-colors focus-within:border-n-brand focus-within:bg-n-solid-2 focus-within:text-n-slate-12"
       >
-        <span class="i-lucide-search size-4 flex-shrink-0" />
+        <span class="i-lucide-search size-4 flex-shrink-0" aria-hidden="true" />
         <input
           v-model="smartFilterQuery"
           type="search"
-          class="min-w-0 flex-1 bg-transparent text-sm text-n-slate-12 outline-none placeholder:text-n-slate-10"
+          class="min-w-0 flex-1 bg-transparent text-sm leading-5 text-n-slate-12 outline-none placeholder:text-n-slate-10"
           :placeholder="$t('CHAT_LIST.SMART_FILTER.PLACEHOLDER')"
           @input="onSmartFilterInput"
           @keydown.enter.prevent="applySmartFilter"
@@ -1155,7 +1155,7 @@ watch(conversationFilters, (newVal, oldVal) => {
         <button
           v-if="smartFilterQuery"
           type="button"
-          class="grid size-6 place-items-center rounded-md text-n-slate-10 hover:bg-n-alpha-2 hover:text-n-slate-12"
+          class="grid size-6 flex-shrink-0 place-items-center rounded-md text-n-slate-10 hover:bg-n-alpha-2 hover:text-n-slate-12"
           :aria-label="$t('CHAT_LIST.SMART_FILTER.CLEAR')"
           @click="clearSmartFilter"
         >
