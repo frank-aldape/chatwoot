@@ -67,6 +67,11 @@ onMounted(async () => {
     const response = await ManagedCompaniesAPI.get();
     managedCompanies.value = response.data || [];
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      '[ComposeNewConversationForm] Failed to load managed companies',
+      error
+    );
     managedCompanies.value = [];
   }
 });
