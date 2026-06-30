@@ -24,7 +24,7 @@ export const createConversationPayload = ({ params, contactId, files }) => {
 
   payload.append('inbox_id', inboxId);
   payload.append('contact_id', contactId);
-  payload.append('source_id', sourceId);
+  if (sourceId) payload.append('source_id', sourceId);
   payload.append('additional_attributes[mail_subject]', mailSubject);
   payload.append('assignee_id', assigneeId);
 

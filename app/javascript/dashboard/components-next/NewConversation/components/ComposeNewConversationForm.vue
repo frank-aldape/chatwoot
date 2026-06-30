@@ -1,7 +1,8 @@
 <script setup>
-import { reactive, ref, computed } from 'vue';
+import { reactive, ref, computed, onMounted } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, requiredIf } from '@vuelidate/validators';
+import { useMapGetter } from 'dashboard/composables/store';
 import { INBOX_TYPES } from 'dashboard/helper/inbox';
 import {
   appendSignature,
@@ -11,9 +12,11 @@ import {
 } from 'dashboard/helper/editorHelper';
 import {
   buildContactableInboxesList,
+  buildManagedCompanyEmailInboxesList,
   prepareNewMessagePayload,
   prepareWhatsAppMessagePayload,
 } from 'dashboard/components-next/NewConversation/helpers/composeConversationHelper.js';
+import ManagedCompaniesAPI from 'dashboard/api/managedCompanies';
 
 import ContactSelector from './ContactSelector.vue';
 import InboxSelector from './InboxSelector.vue';
@@ -54,6 +57,19 @@ const showContactsDropdown = ref(false);
 const showInboxesDropdown = ref(false);
 const showCcEmailsDropdown = ref(false);
 const showBccEmailsDropdown = ref(false);
+
+const allInboxes = useMapGetter('inboxes/getInboxes');
+const managedCompanies = ref([]);
+const selectedCompanyId = ref(null);
+
+onMounted(async () => {
+  try {
+    const response = await ManagedCompaniesAPI.get();
+    managedCompanies.value = response.data || [];
+  } catch (error) {
+    managedCompanies.value = [];
+  }
+});
 
 const isCreating = computed(() => props.contactConversationsUiFlags.isCreating);
 
@@ -137,10 +153,30 @@ const contactableInboxesList = computed(() => {
   return buildContactableInboxesList(props.selectedContact?.contactInboxes);
 });
 
+// Req2: cascading Empresa -> Canal selector. When the agent picks a company,
+// the candidate list switches from "contact's known channels" to "every
+// email inbox that company owns" (via ManagedCompany), even if the contact
+// never talked to that inbox before.
+const companyEmailInboxesList = computed(() =>
+  buildManagedCompanyEmailInboxesList(selectedCompanyId.value, allInboxes.value)
+);
+
+const inboxSelectorList = computed(() =>
+  selectedCompanyId.value
+    ? companyEmailInboxesList.value
+    : contactableInboxesList.value
+);
+
+const setSelectedCompany = companyId => {
+  selectedCompanyId.value = companyId;
+};
+
 const showNoInboxAlert = computed(() => {
   return (
     props.selectedContact &&
+    !selectedCompanyId.value &&
     contactableInboxesList.value.length === 0 &&
+    managedCompanies.value.length === 0 &&
     !props.contactsUiFlags.isFetchingInboxes &&
     !props.isFetchingInboxes
   );
@@ -196,6 +232,13 @@ const searchBccEmails = value => {
 
 const setSelectedContact = async ({ value, action, ...rest }) => {
   v$.value.$reset();
+  // Only drop the in-progress company/channel selection when switching away
+  // from an already-selected contact — not on the first pick, otherwise an
+  // Empresa chosen before the contact (the new "sender-first" flow) would be
+  // silently wiped the moment the agent confirms the contact.
+  if (props.selectedContact) {
+    selectedCompanyId.value = null;
+  }
   emit('updateSelectedContact', { value, action, ...rest });
   showContactsDropdown.value = false;
   showInboxesDropdown.value = true;
@@ -245,6 +288,7 @@ const removeTargetInbox = value => {
 
 const clearSelectedContact = () => {
   removeSignatureFromMessage();
+  selectedCompanyId.value = null;
   emit('clearSelectedContact');
   state.message = '';
   state.attachedFiles = [];
@@ -365,9 +409,12 @@ const shouldShowMessageEditor = computed(() => {
         :target-inbox="targetInbox"
         :selected-contact="selectedContact"
         :show-inboxes-dropdown="showInboxesDropdown"
-        :contactable-inboxes-list="contactableInboxesList"
+        :contactable-inboxes-list="inboxSelectorList"
+        :managed-companies="managedCompanies"
+        :selected-company-id="selectedCompanyId"
         :has-errors="validationStates.isInboxInvalid"
         @update-inbox="removeTargetInbox"
+        @update-selected-company="setSelectedCompany"
         @toggle-dropdown="showInboxesDropdown = $event"
         @handle-inbox-action="handleInboxAction"
       />

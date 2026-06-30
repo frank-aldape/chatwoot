@@ -2,6 +2,7 @@ import { INBOX_TYPES } from 'dashboard/helper/inbox';
 import { getInboxIconByType } from 'dashboard/helper/inbox';
 import camelcaseKeys from 'camelcase-keys';
 import ContactAPI from 'dashboard/api/contacts';
+import { getManagedCompanyInboxes } from 'dashboard/helper/managedCompanyHelper';
 
 const CHANNEL_PRIORITY = {
   'Channel::Email': 1,
@@ -30,7 +31,7 @@ export const generateLabelForContactableInboxesList = ({
   return name;
 };
 
-const transformInbox = ({
+export const transformInbox = ({
   name,
   id,
   email,
@@ -76,6 +77,18 @@ export const buildContactableInboxesList = contactInboxes => {
   if (!contactInboxes) return [];
 
   return contactInboxes.map(transformInbox).sort(compareInboxes);
+};
+
+// Builds the cascading "Empresa -> Canal" selector list: every Channel::Email
+// inbox that belongs to the chosen managed company, regardless of whether the
+// contact already has a ContactInbox there (first-touch email scenario).
+export const buildManagedCompanyEmailInboxesList = (companyId, inboxes) => {
+  if (!companyId) return [];
+
+  return getManagedCompanyInboxes(companyId, inboxes)
+    .filter(inbox => inbox.channel_type === INBOX_TYPES.EMAIL)
+    .map(inbox => transformInbox(camelcaseKeys(inbox, { deep: true })))
+    .sort(compareInboxes);
 };
 
 export const getCapitalizedNameFromEmail = email => {

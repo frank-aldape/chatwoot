@@ -1,0 +1,22 @@
+{
+  "INBOX_ASSIGNMENT": {
+    "HEADER": "Asignación de Canales",
+    "DESCRIPTION": "Busca canales de cualquier compañía y asígnalos en bloque a un equipo, sin perder las asignaciones que el equipo ya tenía.",
+    "LOADING": "Cargando canales...",
+    "EMPTY": "No encontramos canales con ese criterio de búsqueda.",
+    "SEARCH_PLACEHOLDER": "Buscar por nombre de canal o compañía",
+    "SELECTED_COUNT": "0 canales seleccionados | 1 canal seleccionado | {count} canales seleccionados",
+    "TEAM_PLACEHOLDER": "Elegir equipo",
+    "ASSIGN_BUTTON": "Asignar",
+    "CLEAR_SELECTION": "Limpiar selección",
+    "ASSIGN_SUCCESS": "Canales asignados a {team} correctamente.",
+    "ASSIGN_ERROR": "No pudimos asignar los canales seleccionados. Intenta de nuevo.",
+    "NO_COMPANY_WARNING": "Algunos canales seleccionados no pertenecen a ninguna compañía y fueron omitidos.",
+    "TABLE": {
+      "INBOX": "Canal",
+      "COMPANY": "Compañía",
+      "TEAMS": "Equipos asignados",
+      "NO_COMPANY": "Sin compañía"
+    }
+  }
+}

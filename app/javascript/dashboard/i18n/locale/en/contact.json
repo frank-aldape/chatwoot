@@ -612,6 +612,10 @@
         "TAG_INPUT_PLACEHOLDER": "Search for a contact with name, email or phone number",
         "CONTACT_CREATING": "Creating contact..."
       },
+      "COMPANY_SELECTOR": {
+        "BUTTON": "Choose company",
+        "SEARCH_PLACEHOLDER": "Search by company name"
+      },
       "INBOX_SELECTOR": {
         "LABEL": "Via:",
         "BUTTON": "Show inboxes",

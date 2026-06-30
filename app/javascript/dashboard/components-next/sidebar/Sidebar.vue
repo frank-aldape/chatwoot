@@ -573,6 +573,12 @@ const menuItems = computed(() => {
           to: accountScopedRoute('settings_managed_companies_list'),
         },
         {
+          name: 'Settings Inbox Assignment',
+          label: t('SIDEBAR.INBOX_ASSIGNMENT'),
+          icon: 'i-lucide-list-checks',
+          to: accountScopedRoute('settings_inbox_assignment_list'),
+        },
+        {
           name: 'Settings Agent Assignment',
           label: t('SIDEBAR.AGENT_ASSIGNMENT'),
           icon: 'i-lucide-user-cog',
