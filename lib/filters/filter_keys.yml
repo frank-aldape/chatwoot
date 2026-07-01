@@ -44,6 +44,18 @@ conversations:
       - "not_equal_to"
       - "is_present"
       - "is_not_present"
+  contact_email:
+    attribute_type: "standard"
+    data_type: "text"
+    filter_operators:
+      - "contains"
+      - "does_not_contain"
+  contact_name:
+    attribute_type: "standard"
+    data_type: "text"
+    filter_operators:
+      - "contains"
+      - "does_not_contain"
   team_id:
     attribute_type: "standard"
     data_type: "number"

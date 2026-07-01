@@ -459,6 +459,17 @@ function buildSmartFilter(attributeKey, values, queryOperator = 'or') {
   };
 }
 
+function buildContainsFilter(attributeKey, query, queryOperator = 'or') {
+  return {
+    attributeKey,
+    attributeModel: 'standard',
+    customAttributeType: '',
+    filterOperator: 'contains',
+    queryOperator,
+    values: [query],
+  };
+}
+
 function managedCompanyOptions() {
   return inboxesList.value
     .map(inboxRecord => inboxRecord.managed_company)
@@ -570,6 +581,18 @@ function smartFilterCandidates() {
   if (/^\d+$/.test(normalizedSmartFilterQuery.value)) {
     candidates.push(
       buildSmartFilter('display_id', normalizedSmartFilterQuery.value)
+    );
+  }
+
+  // Contacts aren't preloaded client-side like inboxes/agents/teams, so we
+  // can't pre-match them here — send the raw query straight to the backend
+  // as a "contains" filter instead of resolving it to a specific candidate.
+  if (normalizedSmartFilterQuery.value.length >= 2) {
+    candidates.push(
+      buildContainsFilter('contact_email', normalizedSmartFilterQuery.value)
+    );
+    candidates.push(
+      buildContainsFilter('contact_name', normalizedSmartFilterQuery.value)
     );
   }
 

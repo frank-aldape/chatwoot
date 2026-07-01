@@ -32,6 +32,7 @@ module Filters::FilterHelper
 
     return handle_nil_filter(query_hash, current_index) if current_filter.nil?
     return handle_managed_company_filter(query_hash, filter_operator_value) if query_hash[:attribute_key] == 'managed_company_id'
+    return handle_contact_filter(query_hash, filter_operator_value) if %w[contact_email contact_name].include?(query_hash[:attribute_key])
 
     case current_filter['attribute_type']
     when 'additional_attributes'
@@ -85,6 +86,11 @@ module Filters::FilterHelper
 
   def handle_managed_company_filter(query_hash, filter_operator_value)
     "#{filter_config[:table_name]}.inbox_id IN (SELECT id FROM inboxes WHERE managed_company_id #{filter_operator_value}) #{query_hash[:query_operator]}"
+  end
+
+  def handle_contact_filter(query_hash, filter_operator_value)
+    column = query_hash[:attribute_key] == 'contact_email' ? 'email' : 'name'
+    "#{filter_config[:table_name]}.contact_id IN (SELECT id FROM contacts WHERE #{column} #{filter_operator_value}) #{query_hash[:query_operator]}"
   end
 
   def validate_single_condition(condition)
