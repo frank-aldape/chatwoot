@@ -1,10 +1,12 @@
 class ManagedCompanyPolicy < ApplicationPolicy
+  # Read-only for any agent in the account so they can look up which
+  # authorized_domain belongs to a company without needing admin rights.
   def index?
-    @account_user.administrator?
+    true
   end
 
   def show?
-    @account_user.administrator?
+    true
   end
 
   def create?

@@ -21,6 +21,10 @@ import ManagedCompanyDetailsModal from './ManagedCompanyDetailsModal.vue';
 const { t } = useI18n();
 const store = useStore();
 
+const isAdmin = computed(
+  () => store.getters.getCurrentRole === 'administrator'
+);
+
 const managedCompanies = ref([]);
 const isLoading = ref(false);
 const isSubmitting = ref(false);
@@ -341,7 +345,7 @@ watch(filteredManagedCompanies, companies => {
         :title="$t('MANAGED_COMPANIES_SETTINGS.HEADER')"
         :description="$t('MANAGED_COMPANIES_SETTINGS.DESCRIPTION')"
       >
-        <template #actions>
+        <template v-if="isAdmin" #actions>
           <Button
             icon="i-lucide-circle-plus"
             :label="$t('MANAGED_COMPANIES_SETTINGS.HEADER_BUTTON')"
@@ -481,6 +485,7 @@ watch(filteredManagedCompanies, companies => {
                     @click="openDetailsModal(managedCompany)"
                   />
                   <Button
+                    v-if="isAdmin"
                     v-tooltip.top="$t('MANAGED_COMPANIES_SETTINGS.LIST.EDIT')"
                     icon="i-lucide-pen"
                     slate
@@ -489,6 +494,7 @@ watch(filteredManagedCompanies, companies => {
                     @click="openEditModal(managedCompany)"
                   />
                   <Button
+                    v-if="isAdmin"
                     v-tooltip.top="$t('MANAGED_COMPANIES_SETTINGS.LIST.DELETE')"
                     icon="i-lucide-trash-2"
                     xs
