@@ -1,131 +1,131 @@
 {
   "AGENT_MGMT": {
-    "HEADER": "Agents",
-    "HEADER_BTN_TXT": "Add Agent",
-    "LOADING": "Fetching Agent List",
-    "DESCRIPTION": "An agent is a member of your customer support team who can view and respond to user messages. The list below shows all the agents in your account.",
-    "LEARN_MORE": "Learn about user roles",
+    "HEADER": "Agentes",
+    "HEADER_BTN_TXT": "Agregar agente",
+    "LOADING": "Obteniendo lista de agentes",
+    "DESCRIPTION": "Un agente es un miembro de tu equipo de soporte al cliente que puede ver y responder a los mensajes de los usuarios. La lista a continuación muestra todos los agentes de tu cuenta.",
+    "LEARN_MORE": "Conoce más sobre los roles de usuario",
     "AGENT_TYPES": {
-      "ADMINISTRATOR": "Administrator",
-      "AGENT": "Agent"
+      "ADMINISTRATOR": "Administrador",
+      "AGENT": "Agente"
     },
     "LIST": {
-      "404": "There are no agents associated to this account",
-      "TITLE": "Manage agents in your team",
-      "DESC": "You can add/remove agents to/in your team.",
-      "NAME": "Name",
-      "EMAIL": "EMAIL",
-      "STATUS": "Status",
-      "ACTIONS": "Actions",
+      "404": "No hay agentes asociados a esta cuenta",
+      "TITLE": "Administra los agentes de tu equipo",
+      "DESC": "Puedes agregar/quitar agentes de tu equipo.",
+      "NAME": "Nombre",
+      "EMAIL": "CORREO ELECTRÓNICO",
+      "STATUS": "Estado",
+      "ACTIONS": "Acciones",
       "VERIFIED": "Verificado",
       "VERIFICATION_PENDING": "Invitación pendiente",
       "INVITATION_SENT_AT": "Último envío: {date}",
-      "AVAILABLE_CUSTOM_ROLE": "Available custom role permissions"
+      "AVAILABLE_CUSTOM_ROLE": "Permisos de rol personalizado disponibles"
     },
     "ADD": {
-      "TITLE": "Add agent to your team",
-      "DESC": "You can add people who will be able to handle support for your inboxes.",
-      "CANCEL_BUTTON_TEXT": "Cancel",
+      "TITLE": "Agregar agente a tu equipo",
+      "DESC": "Puedes agregar personas que podrán encargarse del soporte de tus inboxes.",
+      "CANCEL_BUTTON_TEXT": "Cancelar",
       "FORM": {
         "NAME": {
-          "LABEL": "Agent Name",
-          "PLACEHOLDER": "Please enter a name of the agent"
+          "LABEL": "Nombre del agente",
+          "PLACEHOLDER": "Ingresa el nombre del agente"
         },
         "AGENT_TYPE": {
-          "LABEL": "Role",
-          "PLACEHOLDER": "Please select a role",
-          "ERROR": "Role is required"
+          "LABEL": "Rol",
+          "PLACEHOLDER": "Selecciona un rol",
+          "ERROR": "El rol es obligatorio"
         },
         "EMAIL": {
-          "LABEL": "Email Address",
-          "PLACEHOLDER": "Please enter an email address of the agent"
+          "LABEL": "Correo electrónico",
+          "PLACEHOLDER": "Ingresa el correo electrónico del agente"
         },
-        "SUBMIT": "Add Agent"
+        "SUBMIT": "Agregar agente"
       },
       "API": {
-        "SUCCESS_MESSAGE": "Agent added successfully",
-        "EXIST_MESSAGE": "Agent email already in use, Please try another email address",
-        "ERROR_MESSAGE": "Could not connect to Woot Server, Please try again later"
+        "SUCCESS_MESSAGE": "Agente agregado correctamente",
+        "EXIST_MESSAGE": "El correo del agente ya está en uso, prueba con otra dirección de correo",
+        "ERROR_MESSAGE": "No se pudo conectar con el servidor de Woot. Por favor, inténtalo de nuevo más tarde"
       }
     },
     "DELETE": {
-      "BUTTON_TEXT": "Delete",
+      "BUTTON_TEXT": "Eliminar",
       "API": {
-        "SUCCESS_MESSAGE": "Agent deleted successfully",
-        "ERROR_MESSAGE": "Could not connect to Woot Server, Please try again later"
+        "SUCCESS_MESSAGE": "Agente eliminado correctamente",
+        "ERROR_MESSAGE": "No se pudo conectar con el servidor de Woot. Por favor, inténtalo de nuevo más tarde"
       },
       "CONFIRM": {
-        "TITLE": "Confirm Deletion",
-        "MESSAGE": "Are you sure to delete ",
-        "YES": "Yes, Delete ",
-        "NO": "No, Keep "
+        "TITLE": "Confirmar eliminación",
+        "MESSAGE": "¿Estás seguro de que deseas eliminar ",
+        "YES": "Sí, eliminar ",
+        "NO": "No, conservar "
       }
     },
     "RESEND_INVITATION": {
-      "BUTTON_TEXT": "Resend invitation",
+      "BUTTON_TEXT": "Reenviar invitación",
       "API": {
-        "SUCCESS_MESSAGE": "Invitation resent successfully",
-        "ERROR_MESSAGE": "Could not resend the invitation. Please try again later"
+        "SUCCESS_MESSAGE": "Invitación reenviada correctamente",
+        "ERROR_MESSAGE": "No se pudo reenviar la invitación. Por favor, inténtalo de nuevo más tarde"
       }
     },
     "EDIT": {
-      "TITLE": "Edit agent",
+      "TITLE": "Editar agente",
       "FORM": {
         "NAME": {
-          "LABEL": "Agent Name",
-          "PLACEHOLDER": "Please enter a name of the agent"
+          "LABEL": "Nombre del agente",
+          "PLACEHOLDER": "Ingresa el nombre del agente"
         },
         "AGENT_TYPE": {
-          "LABEL": "Role",
-          "PLACEHOLDER": "Please select a role",
-          "ERROR": "Role is required"
+          "LABEL": "Rol",
+          "PLACEHOLDER": "Selecciona un rol",
+          "ERROR": "El rol es obligatorio"
         },
         "EMAIL": {
-          "LABEL": "Email Address",
-          "PLACEHOLDER": "Please enter an email address of the agent"
+          "LABEL": "Correo electrónico",
+          "PLACEHOLDER": "Ingresa el correo electrónico del agente"
         },
         "AGENT_AVAILABILITY": {
-          "LABEL": "Availability",
-          "PLACEHOLDER": "Please select an availability status",
-          "ERROR": "Availability is required"
+          "LABEL": "Disponibilidad",
+          "PLACEHOLDER": "Selecciona un estado de disponibilidad",
+          "ERROR": "La disponibilidad es obligatoria"
         },
-        "SUBMIT": "Edit Agent"
+        "SUBMIT": "Editar agente"
       },
-      "BUTTON_TEXT": "Edit",
-      "CANCEL_BUTTON_TEXT": "Cancel",
+      "BUTTON_TEXT": "Editar",
+      "CANCEL_BUTTON_TEXT": "Cancelar",
       "API": {
-        "SUCCESS_MESSAGE": "Agent updated successfully",
-        "ERROR_MESSAGE": "Could not connect to Woot Server, Please try again later"
+        "SUCCESS_MESSAGE": "Agente actualizado correctamente",
+        "ERROR_MESSAGE": "No se pudo conectar con el servidor de Woot. Por favor, inténtalo de nuevo más tarde"
       },
       "PASSWORD_RESET": {
-        "ADMIN_RESET_BUTTON": "Reset Password",
-        "ADMIN_SUCCESS_MESSAGE": "An email with reset password instructions has been sent to the agent",
-        "SUCCESS_MESSAGE": "Agent password reset successfully",
-        "ERROR_MESSAGE": "Could not connect to Woot Server, Please try again later"
+        "ADMIN_RESET_BUTTON": "Restablecer contraseña",
+        "ADMIN_SUCCESS_MESSAGE": "Se envió al agente un correo con instrucciones para restablecer la contraseña",
+        "SUCCESS_MESSAGE": "Contraseña del agente restablecida correctamente",
+        "ERROR_MESSAGE": "No se pudo conectar con el servidor de Woot. Por favor, inténtalo de nuevo más tarde"
       }
     },
     "SEARCH": {
-      "PLACEHOLDER": "Search by name, email, role, or status",
-      "NO_RESULTS": "No results found."
+      "PLACEHOLDER": "Buscar por nombre, correo, rol o estado",
+      "NO_RESULTS": "No se encontraron resultados."
     },
     "MULTI_SELECTOR": {
-      "PLACEHOLDER": "None",
+      "PLACEHOLDER": "Ninguno",
       "TITLE": {
-        "AGENT": "Select agent",
-        "TEAM": "Select team"
+        "AGENT": "Seleccionar agente",
+        "TEAM": "Seleccionar equipo"
       },
       "LIST": {
-        "NONE": "None"
+        "NONE": "Ninguno"
       },
       "SEARCH": {
         "NO_RESULTS": {
-          "AGENT": "No agents found",
-          "TEAM": "No teams found"
+          "AGENT": "No se encontraron agentes",
+          "TEAM": "No se encontraron equipos"
         },
         "PLACEHOLDER": {
-          "AGENT": "Search agents",
-          "TEAM": "Search teams",
-          "INPUT": "Search for agents"
+          "AGENT": "Buscar agentes",
+          "TEAM": "Buscar equipos",
+          "INPUT": "Buscar agentes"
         }
       }
     }

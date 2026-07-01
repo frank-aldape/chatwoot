@@ -1,49 +1,49 @@
 {
   "REGISTER": {
-    "TRY_WOOT": "Create an account",
-    "TITLE": "Register",
-    "TESTIMONIAL_HEADER": "All it takes is one step to move forward",
-    "TESTIMONIAL_CONTENT": "You're one step away from engaging your customers, retaining them and finding new ones.",
-    "TERMS_ACCEPT": "By creating an account, you agree to our <a href=\"https://www.chatwoot.com/terms\">T & C</a> and <a href=\"https://www.chatwoot.com/privacy-policy\">Privacy policy</a>",
+    "TRY_WOOT": "Crear una cuenta",
+    "TITLE": "Registro",
+    "TESTIMONIAL_HEADER": "Solo necesitas un paso para avanzar",
+    "TESTIMONIAL_CONTENT": "Estás a un paso de interactuar con tus clientes, retenerlos y encontrar nuevos.",
+    "TERMS_ACCEPT": "Al crear una cuenta, aceptas nuestros <a href=\"https://www.chatwoot.com/terms\">Términos y condiciones</a> y nuestro <a href=\"https://www.chatwoot.com/privacy-policy\">Aviso de privacidad</a>",
     "OAUTH": {
-      "GOOGLE_SIGNUP": "Sign up with Google"
+      "GOOGLE_SIGNUP": "Registrarse con Google"
     },
     "COMPANY_NAME": {
-      "LABEL": "Company name",
-      "PLACEHOLDER": "Enter your company name. E.g., Wayne Enterprises",
-      "ERROR": "Company name is too short."
+      "LABEL": "Nombre de la compañía",
+      "PLACEHOLDER": "Ingresa el nombre de tu compañía. Ej., Wayne Enterprises",
+      "ERROR": "El nombre de la compañía es demasiado corto."
     },
     "FULL_NAME": {
-      "LABEL": "Full name",
-      "PLACEHOLDER": "Enter your full name. E.g., Bruce Wayne",
-      "ERROR": "Full name is too short."
+      "LABEL": "Nombre completo",
+      "PLACEHOLDER": "Ingresa tu nombre completo. Ej., Bruce Wayne",
+      "ERROR": "El nombre completo es demasiado corto."
     },
     "EMAIL": {
-      "LABEL": "Work email",
-      "PLACEHOLDER": "Enter your work email address. E.g., bruce{'@'}wayne{'.'}enterprises",
-      "ERROR": "Please enter a valid work email address."
+      "LABEL": "Correo del trabajo",
+      "PLACEHOLDER": "Ingresa tu correo electrónico de trabajo. Ej., bruce{'@'}wayne{'.'}enterprises",
+      "ERROR": "Ingresa un correo electrónico de trabajo válido."
     },
     "PASSWORD": {
-      "LABEL": "Password",
-      "PLACEHOLDER": "Password",
-      "ERROR": "Password is too short.",
-      "IS_INVALID_PASSWORD": "Password should contain atleast 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character.",
-      "REQUIREMENTS_LENGTH": "At least 6 characters long",
-      "REQUIREMENTS_UPPERCASE": "At least one uppercase letter",
-      "REQUIREMENTS_LOWERCASE": "At least one lowercase letter",
-      "REQUIREMENTS_NUMBER": "At least one number",
-      "REQUIREMENTS_SPECIAL": "At least one special character"
+      "LABEL": "Contraseña",
+      "PLACEHOLDER": "Contraseña",
+      "ERROR": "La contraseña es demasiado corta.",
+      "IS_INVALID_PASSWORD": "La contraseña debe contener al menos 1 letra mayúscula, 1 letra minúscula, 1 número y 1 carácter especial.",
+      "REQUIREMENTS_LENGTH": "Al menos 6 caracteres de longitud",
+      "REQUIREMENTS_UPPERCASE": "Al menos una letra mayúscula",
+      "REQUIREMENTS_LOWERCASE": "Al menos una letra minúscula",
+      "REQUIREMENTS_NUMBER": "Al menos un número",
+      "REQUIREMENTS_SPECIAL": "Al menos un carácter especial"
     },
     "CONFIRM_PASSWORD": {
-      "LABEL": "Confirm password",
-      "PLACEHOLDER": "Confirm password",
-      "ERROR": "Passwords do not match."
+      "LABEL": "Confirmar contraseña",
+      "PLACEHOLDER": "Confirmar contraseña",
+      "ERROR": "Las contraseñas no coinciden."
     },
     "API": {
-      "SUCCESS_MESSAGE": "Registration Successful",
-      "ERROR_MESSAGE": "Could not connect to Woot server. Please try again."
+      "SUCCESS_MESSAGE": "Registro exitoso",
+      "ERROR_MESSAGE": "No se pudo conectar con el servidor de Woot. Intenta de nuevo."
     },
-    "SUBMIT": "Create account",
-    "HAVE_AN_ACCOUNT": "Already have an account?"
+    "SUBMIT": "Crear cuenta",
+    "HAVE_AN_ACCOUNT": "¿Ya tienes una cuenta?"
   }
 }

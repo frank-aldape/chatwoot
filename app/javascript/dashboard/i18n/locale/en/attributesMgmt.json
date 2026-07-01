@@ -1,138 +1,138 @@
 {
   "ATTRIBUTES_MGMT": {
-    "HEADER": "Custom Attributes",
-    "HEADER_BTN_TXT": "Add Custom Attribute",
-    "LOADING": "Fetching custom attributes",
-    "DESCRIPTION": "A custom attribute tracks additional details about your contacts or conversations—such as the subscription plan or the date of their first purchase. You can add different types of custom attributes, such as text, lists, or numbers, to capture the specific information you need.",
-    "LEARN_MORE": "Learn more about custom attributes",
+    "HEADER": "Atributos personalizados",
+    "HEADER_BTN_TXT": "Agregar atributo personalizado",
+    "LOADING": "Obteniendo atributos personalizados",
+    "DESCRIPTION": "Un atributo personalizado registra detalles adicionales sobre tus contactos o conversaciones, como el plan de suscripción o la fecha de su primera compra. Puedes agregar diferentes tipos de atributos personalizados, como texto, listas o números, para capturar la información específica que necesitas.",
+    "LEARN_MORE": "Más información sobre los atributos personalizados",
     "ATTRIBUTE_MODELS": {
-      "CONVERSATION": "Conversation",
-      "CONTACT": "Contact"
+      "CONVERSATION": "Conversación",
+      "CONTACT": "Contacto"
     },
     "ATTRIBUTE_TYPES": {
-      "TEXT": "Text",
-      "NUMBER": "Number",
-      "LINK": "Link",
-      "DATE": "Date",
-      "LIST": "List",
-      "CHECKBOX": "Checkbox"
+      "TEXT": "Texto",
+      "NUMBER": "Número",
+      "LINK": "Enlace",
+      "DATE": "Fecha",
+      "LIST": "Lista",
+      "CHECKBOX": "Casilla de verificación"
     },
     "ADD": {
-      "TITLE": "Add Custom Attribute",
-      "SUBMIT": "Create",
-      "CANCEL_BUTTON_TEXT": "Cancel",
+      "TITLE": "Agregar atributo personalizado",
+      "SUBMIT": "Crear",
+      "CANCEL_BUTTON_TEXT": "Cancelar",
       "FORM": {
         "NAME": {
-          "LABEL": "Display Name",
-          "PLACEHOLDER": "Enter custom attribute display name",
-          "ERROR": "Name is required"
+          "LABEL": "Nombre para mostrar",
+          "PLACEHOLDER": "Ingresa el nombre para mostrar del atributo personalizado",
+          "ERROR": "El nombre es obligatorio"
         },
         "DESC": {
-          "LABEL": "Description",
-          "PLACEHOLDER": "Enter custom attribute description",
-          "ERROR": "Description is required"
+          "LABEL": "Descripción",
+          "PLACEHOLDER": "Ingresa la descripción del atributo personalizado",
+          "ERROR": "La descripción es obligatoria"
         },
         "MODEL": {
-          "LABEL": "Applies to",
-          "PLACEHOLDER": "Please select one",
-          "ERROR": "Model is required"
+          "LABEL": "Aplica a",
+          "PLACEHOLDER": "Selecciona una opción",
+          "ERROR": "El modelo es obligatorio"
         },
         "TYPE": {
-          "LABEL": "Type",
-          "PLACEHOLDER": "Please select a type",
-          "ERROR": "Type is required",
+          "LABEL": "Tipo",
+          "PLACEHOLDER": "Selecciona un tipo",
+          "ERROR": "El tipo es obligatorio",
           "LIST": {
-            "LABEL": "List Values",
-            "PLACEHOLDER": "Please enter value and press enter key",
-            "ERROR": "Must have at least one value"
+            "LABEL": "Valores de la lista",
+            "PLACEHOLDER": "Ingresa el valor y presiona la tecla enter",
+            "ERROR": "Debe tener al menos un valor"
           }
         },
         "KEY": {
-          "LABEL": "Key",
-          "PLACEHOLDER": "Enter custom attribute key",
-          "ERROR": "Key is required",
-          "IN_VALID": "Invalid key"
+          "LABEL": "Clave",
+          "PLACEHOLDER": "Ingresa la clave del atributo personalizado",
+          "ERROR": "La clave es obligatoria",
+          "IN_VALID": "Clave inválida"
         },
         "REGEX_PATTERN": {
-          "LABEL": "Regex Pattern",
-          "PLACEHOLDER": "Please enter custom attribute regex pattern. (Optional)"
+          "LABEL": "Patrón de expresión regular",
+          "PLACEHOLDER": "Ingresa el patrón de expresión regular del atributo personalizado. (Opcional)"
         },
         "REGEX_CUE": {
-          "LABEL": "Regex Cue",
-          "PLACEHOLDER": "Please enter regex pattern hint. (Optional)"
+          "LABEL": "Pista de expresión regular",
+          "PLACEHOLDER": "Ingresa la pista del patrón de expresión regular. (Opcional)"
         },
         "ENABLE_REGEX": {
-          "LABEL": "Enable regex validation"
+          "LABEL": "Habilitar validación por expresión regular"
         }
       },
       "API": {
-        "SUCCESS_MESSAGE": "Custom Attribute added successfully!",
-        "ERROR_MESSAGE": "Could not create a Custom Attribute. Please try again later."
+        "SUCCESS_MESSAGE": "¡Atributo personalizado agregado correctamente!",
+        "ERROR_MESSAGE": "No se pudo crear el atributo personalizado. Por favor, inténtalo de nuevo más tarde."
       }
     },
     "DELETE": {
-      "BUTTON_TEXT": "Delete",
+      "BUTTON_TEXT": "Eliminar",
       "API": {
-        "SUCCESS_MESSAGE": "Custom Attribute deleted successfully.",
-        "ERROR_MESSAGE": "Couldn't delete the custom attribute. Try again."
+        "SUCCESS_MESSAGE": "Atributo personalizado eliminado correctamente.",
+        "ERROR_MESSAGE": "No se pudo eliminar el atributo personalizado. Inténtalo de nuevo."
       },
       "CONFIRM": {
-        "TITLE": "Are you sure want to delete - {attributeName}",
-        "PLACE_HOLDER": "Please type {attributeName} to confirm",
-        "MESSAGE": "Deleting will remove the custom attribute",
-        "YES": "Delete ",
-        "NO": "Cancel"
+        "TITLE": "¿Estás seguro de que deseas eliminar - {attributeName}",
+        "PLACE_HOLDER": "Escribe {attributeName} para confirmar",
+        "MESSAGE": "Eliminar quitará el atributo personalizado",
+        "YES": "Eliminar ",
+        "NO": "Cancelar"
       }
     },
     "EDIT": {
-      "TITLE": "Edit Custom Attribute",
-      "UPDATE_BUTTON_TEXT": "Update",
+      "TITLE": "Editar atributo personalizado",
+      "UPDATE_BUTTON_TEXT": "Actualizar",
       "TYPE": {
         "LIST": {
-          "LABEL": "List Values",
-          "PLACEHOLDER": "Please enter values and press enter key"
+          "LABEL": "Valores de la lista",
+          "PLACEHOLDER": "Ingresa los valores y presiona la tecla enter"
         }
       },
       "API": {
-        "SUCCESS_MESSAGE": "Custom Attribute updated successfully",
-        "ERROR_MESSAGE": "There was an error updating custom attribute, please try again"
+        "SUCCESS_MESSAGE": "Atributo personalizado actualizado correctamente",
+        "ERROR_MESSAGE": "Ocurrió un error al actualizar el atributo personalizado. Por favor, inténtalo de nuevo"
       }
     },
     "TABS": {
-      "HEADER": "Custom Attributes",
-      "CONVERSATION": "Conversation",
-      "CONTACT": "Contact"
+      "HEADER": "Atributos personalizados",
+      "CONVERSATION": "Conversación",
+      "CONTACT": "Contacto"
     },
     "LIST": {
       "TABLE_HEADER": {
-        "NAME": "Name",
-        "DESCRIPTION": "Description",
-        "TYPE": "Type",
-        "KEY": "Key"
+        "NAME": "Nombre",
+        "DESCRIPTION": "Descripción",
+        "TYPE": "Tipo",
+        "KEY": "Clave"
       },
       "BUTTONS": {
-        "EDIT": "Edit",
-        "DELETE": "Delete"
+        "EDIT": "Editar",
+        "DELETE": "Eliminar"
       },
       "EMPTY_RESULT": {
-        "404": "There are no custom attributes created",
-        "NOT_FOUND": "There are no custom attributes configured"
+        "404": "No se han creado atributos personalizados",
+        "NOT_FOUND": "No hay atributos personalizados configurados"
       },
       "REGEX_PATTERN": {
-        "LABEL": "Regex Pattern",
-        "PLACEHOLDER": "Please enter custom attribute regex pattern. (Optional)"
+        "LABEL": "Patrón de expresión regular",
+        "PLACEHOLDER": "Ingresa el patrón de expresión regular del atributo personalizado. (Opcional)"
       },
       "REGEX_CUE": {
-        "LABEL": "Regex Cue",
-        "PLACEHOLDER": "Please enter regex pattern hint. (Optional)"
+        "LABEL": "Pista de expresión regular",
+        "PLACEHOLDER": "Ingresa la pista del patrón de expresión regular. (Opcional)"
       },
       "ENABLE_REGEX": {
-        "LABEL": "Enable regex validation"
+        "LABEL": "Habilitar validación por expresión regular"
       }
     },
     "BADGES": {
       "PRE_CHAT": "Pre-chat",
-      "RESOLUTION": "Resolution"
+      "RESOLUTION": "Resolución"
     }
   }
 }

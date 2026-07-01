@@ -1,60 +1,60 @@
 {
   "CONTACTS_FILTER": {
-    "TITLE": "Filter Contacts",
-    "SUBTITLE": "Add filters below and hit 'Submit' to filter contacts.",
-    "EDIT_CUSTOM_SEGMENT": "Edit Segment",
-    "CUSTOM_VIEWS_SUBTITLE": "Add or remove filters and update your segment.",
-    "ADD_NEW_FILTER": "Add Filter",
-    "CLEAR_ALL_FILTERS": "Clear All Filters",
-    "FILTER_DELETE_ERROR": "You should have atleast one filter to save",
-    "SUBMIT_BUTTON_LABEL": "Submit",
-    "UPDATE_BUTTON_LABEL": "Update Segment",
-    "CANCEL_BUTTON_LABEL": "Cancel",
-    "CLEAR_BUTTON_LABEL": "Clear Filters",
-    "EMPTY_VALUE_ERROR": "Value is required",
-    "SEGMENT_LABEL": "Segment Name",
-    "SEGMENT_QUERY_LABEL": "Segment Query",
-    "TOOLTIP_LABEL": "Filter contacts",
+    "TITLE": "Filtrar contactos",
+    "SUBTITLE": "Agrega filtros abajo y presiona 'Enviar' para filtrar contactos.",
+    "EDIT_CUSTOM_SEGMENT": "Editar segmento",
+    "CUSTOM_VIEWS_SUBTITLE": "Agrega o quita filtros y actualiza tu segmento.",
+    "ADD_NEW_FILTER": "Agregar filtro",
+    "CLEAR_ALL_FILTERS": "Borrar todos los filtros",
+    "FILTER_DELETE_ERROR": "Debes tener al menos un filtro para guardar",
+    "SUBMIT_BUTTON_LABEL": "Enviar",
+    "UPDATE_BUTTON_LABEL": "Actualizar segmento",
+    "CANCEL_BUTTON_LABEL": "Cancelar",
+    "CLEAR_BUTTON_LABEL": "Borrar filtros",
+    "EMPTY_VALUE_ERROR": "El valor es obligatorio",
+    "SEGMENT_LABEL": "Nombre del segmento",
+    "SEGMENT_QUERY_LABEL": "Consulta del segmento",
+    "TOOLTIP_LABEL": "Filtrar contactos",
     "QUERY_DROPDOWN_LABELS": {
-      "AND": "AND",
-      "OR": "OR"
+      "AND": "Y",
+      "OR": "O"
     },
     "OPERATOR_LABELS": {
-      "equal_to": "Equal to",
-      "not_equal_to": "Not equal to",
-      "contains": "Contains",
-      "does_not_contain": "Does not contain",
-      "is_present": "Is present",
-      "is_not_present": "Is not present",
-      "is_greater_than": "Is greater than",
-      "is_lesser_than": "Is lesser than",
-      "days_before": "Is x days before"
+      "equal_to": "Igual a",
+      "not_equal_to": "Distinto de",
+      "contains": "Contiene",
+      "does_not_contain": "No contiene",
+      "is_present": "Está presente",
+      "is_not_present": "No está presente",
+      "is_greater_than": "Es mayor que",
+      "is_lesser_than": "Es menor que",
+      "days_before": "Es x días antes"
     },
     "ERRORS": {
-      "VALUE_REQUIRED": "Value is required"
+      "VALUE_REQUIRED": "El valor es obligatorio"
     },
     "ATTRIBUTES": {
-      "NAME": "Name",
-      "EMAIL": "Email",
-      "PHONE_NUMBER": "Phone number",
-      "IDENTIFIER": "Identifier",
-      "CITY": "City",
-      "COUNTRY": "Country",
-      "CUSTOM_ATTRIBUTE_LIST": "List",
-      "CUSTOM_ATTRIBUTE_TEXT": "Text",
-      "CUSTOM_ATTRIBUTE_NUMBER": "Number",
-      "CUSTOM_ATTRIBUTE_LINK": "Link",
-      "CUSTOM_ATTRIBUTE_CHECKBOX": "Checkbox",
-      "CREATED_AT": "Created At",
-      "LAST_ACTIVITY": "Last Activity",
-      "REFERER_LINK": "Referrer link",
-      "BLOCKED": "Blocked",
-      "LABELS": "Labels"
+      "NAME": "Nombre",
+      "EMAIL": "Correo electrónico",
+      "PHONE_NUMBER": "Número de teléfono",
+      "IDENTIFIER": "Identificador",
+      "CITY": "Ciudad",
+      "COUNTRY": "País",
+      "CUSTOM_ATTRIBUTE_LIST": "Lista",
+      "CUSTOM_ATTRIBUTE_TEXT": "Texto",
+      "CUSTOM_ATTRIBUTE_NUMBER": "Número",
+      "CUSTOM_ATTRIBUTE_LINK": "Enlace",
+      "CUSTOM_ATTRIBUTE_CHECKBOX": "Casilla de verificación",
+      "CREATED_AT": "Creado el",
+      "LAST_ACTIVITY": "Última actividad",
+      "REFERER_LINK": "Enlace de referencia",
+      "BLOCKED": "Bloqueado",
+      "LABELS": "Etiquetas"
     },
     "GROUPS": {
-      "STANDARD_FILTERS": "Standard Filters",
-      "ADDITIONAL_FILTERS": "Additional Filters",
-      "CUSTOM_ATTRIBUTES": "Custom Attributes"
+      "STANDARD_FILTERS": "Filtros estándar",
+      "ADDITIONAL_FILTERS": "Filtros adicionales",
+      "CUSTOM_ATTRIBUTES": "Atributos personalizados"
     }
   }
 }

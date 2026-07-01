@@ -1,118 +1,118 @@
 {
   "FILTER": {
-    "TITLE": "Filter conversations",
-    "SUBTITLE": "Add your filters below and hit 'Apply filters' to cut through the chat clutter.",
-    "EDIT_CUSTOM_FILTER": "Edit Folder",
-    "CUSTOM_VIEWS_SUBTITLE": "Add or remove filters and update your folder.",
-    "ADD_NEW_FILTER": "Add filter",
-    "FILTER_DELETE_ERROR": "Oops, looks like we can't save nothing! Please add at least one filter to save it.",
-    "SUBMIT_BUTTON_LABEL": "Apply filters",
-    "UPDATE_BUTTON_LABEL": "Update folder",
-    "CANCEL_BUTTON_LABEL": "Cancel",
-    "CLEAR_BUTTON_LABEL": "Clear filters",
-    "FOLDER_LABEL": "Folder Name",
-    "FOLDER_QUERY_LABEL": "Folder Query",
-    "EMPTY_VALUE_ERROR": "Value is required.",
-    "TOOLTIP_LABEL": "Filter conversations",
+    "TITLE": "Filtrar conversaciones",
+    "SUBTITLE": "Agrega tus filtros abajo y presiona 'Aplicar filtros' para eliminar el desorden del chat.",
+    "EDIT_CUSTOM_FILTER": "Editar carpeta",
+    "CUSTOM_VIEWS_SUBTITLE": "Agrega o elimina filtros y actualiza tu carpeta.",
+    "ADD_NEW_FILTER": "Agregar filtro",
+    "FILTER_DELETE_ERROR": "Ups, parece que no puedes guardar nada vacío. Agrega al menos un filtro para guardarlo.",
+    "SUBMIT_BUTTON_LABEL": "Aplicar filtros",
+    "UPDATE_BUTTON_LABEL": "Actualizar carpeta",
+    "CANCEL_BUTTON_LABEL": "Cancelar",
+    "CLEAR_BUTTON_LABEL": "Limpiar filtros",
+    "FOLDER_LABEL": "Nombre de la carpeta",
+    "FOLDER_QUERY_LABEL": "Consulta de la carpeta",
+    "EMPTY_VALUE_ERROR": "El valor es obligatorio.",
+    "TOOLTIP_LABEL": "Filtrar conversaciones",
     "QUERY_DROPDOWN_LABELS": {
-      "AND": "AND",
-      "OR": "OR"
+      "AND": "Y",
+      "OR": "O"
     },
-    "INPUT_PLACEHOLDER": "Enter value",
+    "INPUT_PLACEHOLDER": "Ingresa un valor",
     "OPERATOR_LABELS": {
-      "equal_to": "Equal to",
-      "not_equal_to": "Not equal to",
-      "does_not_contain": "Does not contain",
-      "is_present": "Is present",
-      "is_not_present": "Is not present",
-      "is_greater_than": "Is greater than",
-      "is_less_than": "Is lesser than",
-      "days_before": "Is x days before",
-      "starts_with": "Starts with",
-      "equalTo": "Equal to",
-      "notEqualTo": "Not equal to",
-      "contains": "Contains",
-      "doesNotContain": "Does not contain",
-      "isPresent": "Is present",
-      "isNotPresent": "Is not present",
-      "isGreaterThan": "Is greater than",
-      "isLessThan": "Is lesser than",
-      "daysBefore": "Is x days before",
-      "startsWith": "Starts with"
+      "equal_to": "Igual a",
+      "not_equal_to": "No es igual a",
+      "does_not_contain": "No contiene",
+      "is_present": "Está presente",
+      "is_not_present": "No está presente",
+      "is_greater_than": "Es mayor que",
+      "is_less_than": "Es menor que",
+      "days_before": "Es x días antes",
+      "starts_with": "Comienza con",
+      "equalTo": "Igual a",
+      "notEqualTo": "No es igual a",
+      "contains": "Contiene",
+      "doesNotContain": "No contiene",
+      "isPresent": "Está presente",
+      "isNotPresent": "No está presente",
+      "isGreaterThan": "Es mayor que",
+      "isLessThan": "Es menor que",
+      "daysBefore": "Es x días antes",
+      "startsWith": "Comienza con"
     },
     "ATTRIBUTE_LABELS": {
-      "TRUE": "True",
-      "FALSE": "False"
+      "TRUE": "Verdadero",
+      "FALSE": "Falso"
     },
     "ATTRIBUTES": {
-      "STATUS": "Status",
-      "ASSIGNEE_NAME": "Assignee name",
-      "INBOX_NAME": "Inbox name",
-      "MANAGED_COMPANY": "Managed company",
-      "TEAM_NAME": "Team name",
-      "CONVERSATION_IDENTIFIER": "Conversation identifier",
-      "CAMPAIGN_NAME": "Campaign name",
-      "LABELS": "Labels",
-      "BROWSER_LANGUAGE": "Browser language",
-      "PRIORITY": "Priority",
-      "COUNTRY_NAME": "Country name",
-      "REFERER_LINK": "Referer link",
-      "CUSTOM_ATTRIBUTE_LIST": "List",
-      "CUSTOM_ATTRIBUTE_TEXT": "Text",
-      "CUSTOM_ATTRIBUTE_NUMBER": "Number",
-      "CUSTOM_ATTRIBUTE_LINK": "Link",
-      "CUSTOM_ATTRIBUTE_CHECKBOX": "Checkbox",
-      "CREATED_AT": "Created at",
-      "LAST_ACTIVITY": "Last activity"
+      "STATUS": "Estado",
+      "ASSIGNEE_NAME": "Nombre del asignado",
+      "INBOX_NAME": "Nombre del inbox",
+      "MANAGED_COMPANY": "Compañía administrada",
+      "TEAM_NAME": "Nombre del equipo",
+      "CONVERSATION_IDENTIFIER": "Identificador de la conversación",
+      "CAMPAIGN_NAME": "Nombre de la campaña",
+      "LABELS": "Etiquetas",
+      "BROWSER_LANGUAGE": "Idioma del navegador",
+      "PRIORITY": "Prioridad",
+      "COUNTRY_NAME": "Nombre del país",
+      "REFERER_LINK": "Enlace de referencia",
+      "CUSTOM_ATTRIBUTE_LIST": "Lista",
+      "CUSTOM_ATTRIBUTE_TEXT": "Texto",
+      "CUSTOM_ATTRIBUTE_NUMBER": "Número",
+      "CUSTOM_ATTRIBUTE_LINK": "Enlace",
+      "CUSTOM_ATTRIBUTE_CHECKBOX": "Casilla de verificación",
+      "CREATED_AT": "Creado el",
+      "LAST_ACTIVITY": "Última actividad"
     },
     "ERRORS": {
-      "VALUE_REQUIRED": "Value is required",
-      "ATTRIBUTE_KEY_REQUIRED": "Attribute key is required",
-      "FILTER_OPERATOR_REQUIRED": "Filter operator is required",
-      "VALUE_MUST_BE_BETWEEN_1_AND_998": "Value must be between 1 and 998"
+      "VALUE_REQUIRED": "El valor es obligatorio",
+      "ATTRIBUTE_KEY_REQUIRED": "La clave del atributo es obligatoria",
+      "FILTER_OPERATOR_REQUIRED": "El operador del filtro es obligatorio",
+      "VALUE_MUST_BE_BETWEEN_1_AND_998": "El valor debe estar entre 1 y 998"
     },
     "GROUPS": {
-      "STANDARD_FILTERS": "Standard filters",
-      "ADDITIONAL_FILTERS": "Additional filters",
-      "CUSTOM_ATTRIBUTES": "Custom attributes"
+      "STANDARD_FILTERS": "Filtros estándar",
+      "ADDITIONAL_FILTERS": "Filtros adicionales",
+      "CUSTOM_ATTRIBUTES": "Atributos personalizados"
     },
     "CUSTOM_VIEWS": {
       "ADD": {
-        "TITLE": "Do you want to save this filter?",
-        "LABEL": "Name this filter",
-        "PLACEHOLDER": "Name your filter to refer it later.",
-        "ERROR_MESSAGE": "Name is required.",
-        "SAVE_BUTTON": "Save filter",
-        "CANCEL_BUTTON": "Cancel",
+        "TITLE": "¿Deseas guardar este filtro?",
+        "LABEL": "Nombra este filtro",
+        "PLACEHOLDER": "Nombra tu filtro para referirlo más tarde.",
+        "ERROR_MESSAGE": "El nombre es obligatorio.",
+        "SAVE_BUTTON": "Guardar filtro",
+        "CANCEL_BUTTON": "Cancelar",
         "API_FOLDERS": {
-          "SUCCESS_MESSAGE": "Folder created successfully.",
-          "ERROR_MESSAGE": "Error while creating folder."
+          "SUCCESS_MESSAGE": "Carpeta creada correctamente.",
+          "ERROR_MESSAGE": "Error al crear la carpeta."
         },
         "API_SEGMENTS": {
-          "SUCCESS_MESSAGE": "Segment created successfully.",
-          "ERROR_MESSAGE": "Error while creating segment."
+          "SUCCESS_MESSAGE": "Segmento creado correctamente.",
+          "ERROR_MESSAGE": "Error al crear el segmento."
         }
       },
       "EDIT": {
-        "EDIT_BUTTON": "Edit folder"
+        "EDIT_BUTTON": "Editar carpeta"
       },
       "DELETE": {
-        "DELETE_BUTTON": "Delete filter",
+        "DELETE_BUTTON": "Eliminar filtro",
         "MODAL": {
           "CONFIRM": {
-            "TITLE": "Confirm deletion",
-            "MESSAGE": "Are you sure to delete the filter ",
-            "YES": "Yes, delete",
-            "NO": "No, keep it"
+            "TITLE": "Confirmar eliminación",
+            "MESSAGE": "¿Estás seguro de que deseas eliminar el filtro ",
+            "YES": "Sí, eliminar",
+            "NO": "No, conservarlo"
           }
         },
         "API_FOLDERS": {
-          "SUCCESS_MESSAGE": "Folder deleted successfully.",
-          "ERROR_MESSAGE": "Error while deleting folder."
+          "SUCCESS_MESSAGE": "Carpeta eliminada correctamente.",
+          "ERROR_MESSAGE": "Error al eliminar la carpeta."
         },
         "API_SEGMENTS": {
-          "SUCCESS_MESSAGE": "Segment deleted successfully.",
-          "ERROR_MESSAGE": "Error while deleting segment."
+          "SUCCESS_MESSAGE": "Segmento eliminado correctamente.",
+          "ERROR_MESSAGE": "Error al eliminar el segmento."
         }
       }
     }

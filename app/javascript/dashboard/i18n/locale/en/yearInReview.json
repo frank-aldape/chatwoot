@@ -1,64 +1,64 @@
 {
   "YEAR_IN_REVIEW": {
-    "TITLE": "Year in Review",
-    "LOADING": "Loading your year in review...",
-    "ERROR": "Failed to load year in review",
-    "CLOSE": "Close",
+    "TITLE": "Resumen del año",
+    "LOADING": "Cargando tu resumen del año...",
+    "ERROR": "No se pudo cargar el resumen del año",
+    "CLOSE": "Cerrar",
     "CONVERSATIONS": {
-      "TITLE": "You have handled",
-      "SUBTITLE": "conversations",
-      "FALLBACK": "This year wasn't about the numbers. It was about showing up.",
+      "TITLE": "Has atendido",
+      "SUBTITLE": "conversaciones",
+      "FALLBACK": "Este año no se trató de números. Se trató de estar presente.",
       "COMPARISON": {
-        "0_50": "You showed up, and that's how every good inbox begins.",
-        "50_100": "You kept the replies flowing and the conversations alive.",
-        "100_500": "You handled serious volume and kept everything on track.",
-        "500_2000": "You kept things moving while the volume kept climbing.",
-        "2000_10000": "You ran high traffic through your inbox without breaking a sweat.",
-        "10000_PLUS": "That's a full city of customers knocking on your door. You made it look effortless."
+        "0_50": "Estuviste presente, y así empieza toda buena bandeja de entrada.",
+        "50_100": "Mantuviste las respuestas fluyendo y las conversaciones vivas.",
+        "100_500": "Manejaste un volumen serio y mantuviste todo bajo control.",
+        "500_2000": "Mantuviste el ritmo mientras el volumen seguía creciendo.",
+        "2000_10000": "Llevaste tráfico alto por tu bandeja de entrada sin inmutarte.",
+        "10000_PLUS": "Eso es toda una ciudad de clientes tocando tu puerta. Lo hiciste ver fácil."
       }
     },
     "BUSIEST_DAY": {
-      "TITLE": "Your busiest day was",
-      "MESSAGE": "{count} conversations that day.",
+      "TITLE": "Tu día más ocupado fue",
+      "MESSAGE": "{count} conversaciones ese día.",
       "COMPARISON": {
-        "0_5": "A warm-up lap that barely woke the inbox.",
-        "5_10": "Enough action to justify a second cup of coffee.",
-        "10_25": "Things got busy and the inbox stayed on its toes.",
-        "25_50": "A proper rush that barely broke a sweat.",
-        "50_100": "Controlled chaos, handled like a normal Tuesday.",
-        "100_500": "Absolute dumpster fire, somehow still shipping replies.",
-        "500_PLUS": "The inbox lost all chill and never slowed down."
+        "0_5": "Una vuelta de calentamiento que apenas despertó la bandeja de entrada.",
+        "5_10": "Suficiente actividad para justificar una segunda taza de café.",
+        "10_25": "Las cosas se pusieron ocupadas y la bandeja de entrada se mantuvo alerta.",
+        "25_50": "Una racha considerable que apenas te hizo sudar.",
+        "50_100": "Caos controlado, manejado como un martes cualquiera.",
+        "100_500": "Un verdadero caos, y aun así siguieron saliendo las respuestas.",
+        "500_PLUS": "La bandeja de entrada perdió la calma y nunca bajó el ritmo."
       }
     },
     "PERSONALITY": {
-      "TITLE": "Your support personality is",
+      "TITLE": "Tu personalidad de soporte es",
       "MESSAGES": {
-        "SWIFT_HELPER": "You replied in {time} on average. Faster than most notifications.",
-        "QUICK_RESPONDER": "You replied in {time} on average. The inbox barely waited.",
-        "STEADY_SUPPORT": "You replied in {time} on average. Calm pace, solid replies.",
-        "THOUGHTFUL_ADVISOR": "You replied in {time} on average. Took the time to get it right."
+        "SWIFT_HELPER": "Respondiste en {time} en promedio. Más rápido que la mayoría de las notificaciones.",
+        "QUICK_RESPONDER": "Respondiste en {time} en promedio. La bandeja de entrada apenas esperó.",
+        "STEADY_SUPPORT": "Respondiste en {time} en promedio. Ritmo tranquilo, respuestas sólidas.",
+        "THOUGHTFUL_ADVISOR": "Respondiste en {time} en promedio. Te tomaste el tiempo de hacerlo bien."
       }
     },
     "THANK_YOU": {
-      "TITLE": "Congratulations on surviving the inbox of {year}.",
-      "MESSAGE": "Thank you for your incredible dedication to supporting customers throughout this year. Your hard work has made a real difference, and we're grateful to have you on this journey. Here's to making {nextYear} even better together!"
+      "TITLE": "Felicidades por sobrevivir la bandeja de entrada de {year}.",
+      "MESSAGE": "Gracias por tu increíble dedicación al apoyar a los clientes durante todo este año. Tu esfuerzo ha marcado una diferencia real, y agradecemos que seas parte de este camino. ¡Brindemos por hacer de {nextYear} un año aún mejor juntos!"
     },
     "SHARE_MODAL": {
-      "TITLE": "Share Your Year in Review",
-      "PREPARING": "Preparing your image...",
-      "DOWNLOAD": "Download",
-      "SHARE_TITLE": "My {year} Year in Review",
-      "SHARE_TEXT": "Check out my {year} Year in Review with Chatwoot!",
-      "BRANDING": "Made with Chatwoot"
+      "TITLE": "Comparte tu resumen del año",
+      "PREPARING": "Preparando tu imagen...",
+      "DOWNLOAD": "Descargar",
+      "SHARE_TITLE": "Mi resumen del año {year}",
+      "SHARE_TEXT": "¡Mira mi resumen del año {year} con Chatwoot!",
+      "BRANDING": "Hecho con Chatwoot"
     },
     "BANNER": {
-      "TITLE": "Your {year} Year in Review is here",
-      "BUTTON": "See your impact"
+      "TITLE": "Tu resumen del año {year} ya está aquí",
+      "BUTTON": "Ve tu impacto"
     },
     "NAVIGATION": {
-      "PREVIOUS": "Previous",
-      "NEXT": "Next",
-      "SHARE": "Share"
+      "PREVIOUS": "Anterior",
+      "NEXT": "Siguiente",
+      "SHARE": "Compartir"
     }
   }
 }

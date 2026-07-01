@@ -1,84 +1,84 @@
 {
   "LABEL_MGMT": {
-    "HEADER": "Labels",
-    "HEADER_BTN_TXT": "Add label",
-    "LOADING": "Fetching labels",
-    "DESCRIPTION": "Labels help you categorize and prioritize conversations and leads. You can assign a label to a conversation or contact using the side panel.",
-    "LEARN_MORE": "Learn more about labels",
-    "SEARCH_404": "There are no items matching this query",
+    "HEADER": "Etiquetas",
+    "HEADER_BTN_TXT": "Agregar etiqueta",
+    "LOADING": "Cargando etiquetas",
+    "DESCRIPTION": "Las etiquetas te ayudan a categorizar y priorizar conversaciones y leads. Puedes asignar una etiqueta a una conversación o contacto usando el panel lateral.",
+    "LEARN_MORE": "Más información sobre las etiquetas",
+    "SEARCH_404": "No hay elementos que coincidan con esta búsqueda",
     "LIST": {
-      "404": "There are no labels available in this account.",
-      "TITLE": "Manage labels",
-      "DESC": "Labels let you group the conversations together.",
+      "404": "No hay etiquetas disponibles en esta cuenta.",
+      "TITLE": "Gestionar etiquetas",
+      "DESC": "Las etiquetas te permiten agrupar las conversaciones.",
       "TABLE_HEADER": {
-        "NAME": "Name",
-        "DESCRIPTION": "Description",
+        "NAME": "Nombre",
+        "DESCRIPTION": "Descripción",
         "COLOR": "Color"
       }
     },
     "FORM": {
       "NAME": {
-        "LABEL": "Label Name",
-        "PLACEHOLDER": "Label name",
-        "REQUIRED_ERROR": "Label name is required",
-        "MINIMUM_LENGTH_ERROR": "Minimum length 2 is required",
-        "VALID_ERROR": "Only Alphabets, Numbers, Hyphen and Underscore are allowed"
+        "LABEL": "Nombre de la etiqueta",
+        "PLACEHOLDER": "Nombre de la etiqueta",
+        "REQUIRED_ERROR": "El nombre de la etiqueta es obligatorio",
+        "MINIMUM_LENGTH_ERROR": "Se requiere una longitud mínima de 2",
+        "VALID_ERROR": "Solo se permiten letras, números, guiones y guiones bajos"
       },
       "DESCRIPTION": {
-        "LABEL": "Description",
-        "PLACEHOLDER": "Label Description"
+        "LABEL": "Descripción",
+        "PLACEHOLDER": "Descripción de la etiqueta"
       },
       "COLOR": {
         "LABEL": "Color"
       },
       "SHOW_ON_SIDEBAR": {
-        "LABEL": "Show label on sidebar"
+        "LABEL": "Mostrar etiqueta en la barra lateral"
       },
-      "EDIT": "Edit",
-      "CREATE": "Create",
-      "DELETE": "Delete",
-      "CANCEL": "Cancel"
+      "EDIT": "Editar",
+      "CREATE": "Crear",
+      "DELETE": "Eliminar",
+      "CANCEL": "Cancelar"
     },
     "SUGGESTIONS": {
       "TOOLTIP": {
-        "SINGLE_SUGGESTION": "Add label to conversation",
-        "MULTIPLE_SUGGESTION": "Select this label",
-        "DESELECT": "Deselect label",
-        "DISMISS": "Dismiss suggestion"
+        "SINGLE_SUGGESTION": "Agregar etiqueta a la conversación",
+        "MULTIPLE_SUGGESTION": "Seleccionar esta etiqueta",
+        "DESELECT": "Anular selección de la etiqueta",
+        "DISMISS": "Descartar sugerencia"
       },
       "POWERED_BY": "Chatwoot AI",
-      "DISMISS": "Dismiss",
-      "ADD_SELECTED_LABELS": "Add selected labels",
-      "ADD_SELECTED_LABEL": "Add selected label",
-      "ADD_ALL_LABELS": "Add all labels",
-      "SUGGESTED_LABELS": "Suggested labels"
+      "DISMISS": "Descartar",
+      "ADD_SELECTED_LABELS": "Agregar etiquetas seleccionadas",
+      "ADD_SELECTED_LABEL": "Agregar etiqueta seleccionada",
+      "ADD_ALL_LABELS": "Agregar todas las etiquetas",
+      "SUGGESTED_LABELS": "Etiquetas sugeridas"
     },
     "ADD": {
-      "TITLE": "Add label",
-      "DESC": "Labels let you group the conversations together.",
+      "TITLE": "Agregar etiqueta",
+      "DESC": "Las etiquetas te permiten agrupar las conversaciones.",
       "API": {
-        "SUCCESS_MESSAGE": "Label added successfully",
-        "ERROR_MESSAGE": "There was an error, please try again"
+        "SUCCESS_MESSAGE": "Etiqueta agregada correctamente",
+        "ERROR_MESSAGE": "Ocurrió un error, intenta de nuevo"
       }
     },
     "EDIT": {
-      "TITLE": "Edit label",
+      "TITLE": "Editar etiqueta",
       "API": {
-        "SUCCESS_MESSAGE": "Label updated successfully",
-        "ERROR_MESSAGE": "There was an error, please try again"
+        "SUCCESS_MESSAGE": "Etiqueta actualizada correctamente",
+        "ERROR_MESSAGE": "Ocurrió un error, intenta de nuevo"
       }
     },
     "DELETE": {
-      "BUTTON_TEXT": "Delete",
+      "BUTTON_TEXT": "Eliminar",
       "API": {
-        "SUCCESS_MESSAGE": "Label deleted successfully",
-        "ERROR_MESSAGE": "There was an error, please try again"
+        "SUCCESS_MESSAGE": "Etiqueta eliminada correctamente",
+        "ERROR_MESSAGE": "Ocurrió un error, intenta de nuevo"
       },
       "CONFIRM": {
-        "TITLE": "Confirm Deletion",
-        "MESSAGE": "Are you sure to delete ",
-        "YES": "Yes, Delete ",
-        "NO": "No, Keep "
+        "TITLE": "Confirmar eliminación",
+        "MESSAGE": "¿Estás seguro de eliminar ",
+        "YES": "Sí, eliminar ",
+        "NO": "No, mantener "
       }
     }
   }

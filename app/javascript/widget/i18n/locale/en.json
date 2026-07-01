@@ -1,153 +1,153 @@
 {
   "COMPONENTS": {
     "FILE_BUBBLE": {
-      "DOWNLOAD": "Download",
-      "UPLOADING": "Uploading..."
+      "DOWNLOAD": "Descargar",
+      "UPLOADING": "Subiendo..."
     },
     "FORM_BUBBLE": {
-      "SUBMIT": "Submit"
+      "SUBMIT": "Enviar"
     },
     "MESSAGE_BUBBLE": {
-      "RETRY": "Send message again",
-      "ERROR_MESSAGE": "Couldn't send, try again"
+      "RETRY": "Enviar mensaje nuevamente",
+      "ERROR_MESSAGE": "No se pudo enviar, intenta de nuevo"
     }
   },
   "THUMBNAIL": {
     "AUTHOR": {
-      "NOT_AVAILABLE": "Not available"
+      "NOT_AVAILABLE": "No disponible"
     }
   },
   "TEAM_AVAILABILITY": {
-    "ONLINE": "We are online",
-    "OFFLINE": "We are away at the moment",
-    "BACK_AS_SOON_AS_POSSIBLE": "We will be back as soon as possible"
+    "ONLINE": "Estamos en línea",
+    "OFFLINE": "En este momento estamos ausentes",
+    "BACK_AS_SOON_AS_POSSIBLE": "Volveremos lo antes posible"
   },
   "REPLY_TIME": {
-    "IN_A_FEW_MINUTES": "Typically replies in a few minutes",
-    "IN_A_FEW_HOURS": "Typically replies in a few hours",
-    "IN_A_DAY": "Typically replies in a day",
-    "BACK_IN_HOURS": "We will be back online in {n} hour | We will be back online in {n} hours",
-    "BACK_IN_MINUTES": "We will be back online in {time} minutes",
-    "BACK_AT_TIME": "We will be back online at {time}",
-    "BACK_ON_DAY": "We will be back online on {day}",
-    "BACK_TOMORROW": "We will be back online tomorrow",
-    "BACK_IN_SOME_TIME": "We will be back online in some time"
+    "IN_A_FEW_MINUTES": "Normalmente respondemos en pocos minutos",
+    "IN_A_FEW_HOURS": "Normalmente respondemos en pocas horas",
+    "IN_A_DAY": "Normalmente respondemos en un día",
+    "BACK_IN_HOURS": "Estaremos de vuelta en línea en {n} hora | Estaremos de vuelta en línea en {n} horas",
+    "BACK_IN_MINUTES": "Estaremos de vuelta en línea en {time} minutos",
+    "BACK_AT_TIME": "Estaremos de vuelta en línea a las {time}",
+    "BACK_ON_DAY": "Estaremos de vuelta en línea el {day}",
+    "BACK_TOMORROW": "Estaremos de vuelta en línea mañana",
+    "BACK_IN_SOME_TIME": "Estaremos de vuelta en línea en un momento"
   },
   "DAY_NAMES": {
-    "SUNDAY": "Sunday",
-    "MONDAY": "Monday",
-    "TUESDAY": "Tuesday",
-    "WEDNESDAY": "Wednesday",
-    "THURSDAY": "Thursday",
-    "FRIDAY": "Friday",
-    "SATURDAY": "Saturday"
+    "SUNDAY": "Domingo",
+    "MONDAY": "Lunes",
+    "TUESDAY": "Martes",
+    "WEDNESDAY": "Miércoles",
+    "THURSDAY": "Jueves",
+    "FRIDAY": "Viernes",
+    "SATURDAY": "Sábado"
   },
-  "START_CONVERSATION": "Start Conversation",
-  "END_CONVERSATION": "End Conversation",
-  "CONTINUE_CONVERSATION": "Continue conversation",
-  "YOU": "You",
-  "START_NEW_CONVERSATION": "Start a new conversation",
-  "VIEW_UNREAD_MESSAGES": "You have unread messages",
+  "START_CONVERSATION": "Iniciar conversación",
+  "END_CONVERSATION": "Finalizar conversación",
+  "CONTINUE_CONVERSATION": "Continuar conversación",
+  "YOU": "Tú",
+  "START_NEW_CONVERSATION": "Iniciar una nueva conversación",
+  "VIEW_UNREAD_MESSAGES": "Tienes mensajes sin leer",
   "UNREAD_VIEW": {
-    "VIEW_MESSAGES_BUTTON": "See new messages",
-    "CLOSE_MESSAGES_BUTTON": "Close",
-    "COMPANY_FROM": "from",
+    "VIEW_MESSAGES_BUTTON": "Ver mensajes nuevos",
+    "CLOSE_MESSAGES_BUTTON": "Cerrar",
+    "COMPANY_FROM": "de",
     "BOT": "Bot"
   },
   "BUBBLE": {
-    "LABEL": "Chat with us"
+    "LABEL": "Chatea con nosotros"
   },
-  "POWERED_BY": "Powered by Chatwoot",
-  "EMAIL_PLACEHOLDER": "Please enter your email",
-  "CHAT_PLACEHOLDER": "Type your message",
-  "TODAY": "Today",
-  "YESTERDAY": "Yesterday",
+  "POWERED_BY": "Desarrollado por Chatwoot",
+  "EMAIL_PLACEHOLDER": "Por favor ingresa tu correo electrónico",
+  "CHAT_PLACEHOLDER": "Escribe tu mensaje",
+  "TODAY": "Hoy",
+  "YESTERDAY": "Ayer",
   "PRE_CHAT_FORM": {
     "FIELDS": {
       "FULL_NAME": {
-        "LABEL": "Full Name",
-        "PLACEHOLDER": "Please enter your full name",
-        "REQUIRED_ERROR": "Full Name is required"
+        "LABEL": "Nombre completo",
+        "PLACEHOLDER": "Por favor ingresa tu nombre completo",
+        "REQUIRED_ERROR": "El nombre completo es obligatorio"
       },
       "EMAIL_ADDRESS": {
-        "LABEL": "Email Address",
-        "PLACEHOLDER": "Please enter your email address",
-        "REQUIRED_ERROR": "Email Address is required",
-        "VALID_ERROR": "Please enter a valid email address"
+        "LABEL": "Correo electrónico",
+        "PLACEHOLDER": "Por favor ingresa tu correo electrónico",
+        "REQUIRED_ERROR": "El correo electrónico es obligatorio",
+        "VALID_ERROR": "Por favor ingresa un correo electrónico válido"
       },
       "PHONE_NUMBER": {
-        "LABEL": "Phone Number",
-        "PLACEHOLDER": "Please enter your phone number",
-        "REQUIRED_ERROR": "Phone Number is required",
-        "DIAL_CODE_VALID_ERROR": "Please select a country code",
-        "VALID_ERROR": "Please enter a valid phone number",
-        "DROPDOWN_EMPTY": "No results found",
-        "DROPDOWN_SEARCH": "Search country"
+        "LABEL": "Número de teléfono",
+        "PLACEHOLDER": "Por favor ingresa tu número de teléfono",
+        "REQUIRED_ERROR": "El número de teléfono es obligatorio",
+        "DIAL_CODE_VALID_ERROR": "Por favor selecciona un código de país",
+        "VALID_ERROR": "Por favor ingresa un número de teléfono válido",
+        "DROPDOWN_EMPTY": "No se encontraron resultados",
+        "DROPDOWN_SEARCH": "Buscar país"
       },
       "MESSAGE": {
-        "LABEL": "Message",
-        "PLACEHOLDER": "Please enter your message",
-        "ERROR": "Message too short"
+        "LABEL": "Mensaje",
+        "PLACEHOLDER": "Por favor ingresa tu mensaje",
+        "ERROR": "El mensaje es demasiado corto"
       }
     },
-    "CAMPAIGN_HEADER": "Please provide your name and email before starting the conversation",
-    "IS_REQUIRED": "is required",
-    "REQUIRED": "Required",
-    "REGEX_ERROR": "Please provide a valid input"
+    "CAMPAIGN_HEADER": "Por favor proporciona tu nombre y correo electrónico antes de iniciar la conversación",
+    "IS_REQUIRED": "es obligatorio",
+    "REQUIRED": "Obligatorio",
+    "REGEX_ERROR": "Por favor proporciona un valor válido"
   },
-  "FILE_SIZE_LIMIT": "File exceeds the {MAXIMUM_FILE_UPLOAD_SIZE} attachment limit",
+  "FILE_SIZE_LIMIT": "El archivo supera el límite de adjuntos de {MAXIMUM_FILE_UPLOAD_SIZE}",
   "CHAT_FORM": {
     "INVALID": {
-      "FIELD": "Invalid field"
+      "FIELD": "Campo inválido"
     }
   },
   "EMOJI": {
-    "PLACEHOLDER": "Search emojis",
-    "NOT_FOUND": "No emoji match your search",
-    "ARIA_LABEL": "Emoji picker"
+    "PLACEHOLDER": "Buscar emojis",
+    "NOT_FOUND": "Ningún emoji coincide con tu búsqueda",
+    "ARIA_LABEL": "Selector de emojis"
   },
   "CSAT": {
-    "TITLE": "Rate your conversation",
-    "SUBMITTED_TITLE": "Thank you for submitting the rating",
-    "PLACEHOLDER": "Tell us more..."
+    "TITLE": "Califica tu conversación",
+    "SUBMITTED_TITLE": "Gracias por enviar tu calificación",
+    "PLACEHOLDER": "Cuéntanos más..."
   },
   "EMAIL_TRANSCRIPT": {
-    "BUTTON_TEXT": "Request a conversation transcript",
-    "SEND_EMAIL_SUCCESS": "The chat transcript was sent successfully",
-    "SEND_EMAIL_ERROR": "There was an error, please try again"
+    "BUTTON_TEXT": "Solicitar una transcripción de la conversación",
+    "SEND_EMAIL_SUCCESS": "La transcripción del chat se envió correctamente",
+    "SEND_EMAIL_ERROR": "Ocurrió un error, por favor intenta de nuevo"
   },
   "INTEGRATIONS": {
     "DYTE": {
-      "CLICK_HERE_TO_JOIN": "Click here to join",
-      "LEAVE_THE_ROOM": "Leave the call"
+      "CLICK_HERE_TO_JOIN": "Haz clic aquí para unirte",
+      "LEAVE_THE_ROOM": "Salir de la llamada"
     }
   },
   "PORTAL": {
-    "POPULAR_ARTICLES": "Popular Articles",
-    "VIEW_ALL_ARTICLES": "View all articles",
-    "IFRAME_LOAD_ERROR": "There was an error loading the article, please refresh the page and try again."
+    "POPULAR_ARTICLES": "Artículos populares",
+    "VIEW_ALL_ARTICLES": "Ver todos los artículos",
+    "IFRAME_LOAD_ERROR": "Ocurrió un error al cargar el artículo, por favor actualiza la página e intenta de nuevo."
   },
   "ATTACHMENTS": {
     "image": {
-      "CONTENT": "Picture message"
+      "CONTENT": "Mensaje con imagen"
     },
     "audio": {
-      "CONTENT": "Audio message"
+      "CONTENT": "Mensaje de audio"
     },
     "video": {
-      "CONTENT": "Video message"
+      "CONTENT": "Mensaje de video"
     },
     "file": {
-      "CONTENT": "File Attachment"
+      "CONTENT": "Archivo adjunto"
     },
     "location": {
-      "CONTENT": "Location"
+      "CONTENT": "Ubicación"
     },
     "fallback": {
-      "CONTENT": "has shared a url"
+      "CONTENT": "compartió una url"
     }
   },
   "FOOTER_REPLY_TO": {
-    "REPLY_TO": "Replying to:"
+    "REPLY_TO": "Respondiendo a:"
   }
 }

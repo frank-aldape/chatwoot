@@ -1,56 +1,56 @@
 {
   "PAGINATION_FOOTER": {
-    "SHOWING": "Showing {startItem} - {endItem} of {totalItems} item | Showing {startItem} - {endItem} of {totalItems} items",
-    "CURRENT_PAGE_INFO": "{currentPage} of {totalPages} page | {currentPage} of {totalPages} pages"
+    "SHOWING": "Mostrando {startItem} - {endItem} de {totalItems} elemento | Mostrando {startItem} - {endItem} de {totalItems} elementos",
+    "CURRENT_PAGE_INFO": "Página {currentPage} de {totalPages} | Página {currentPage} de {totalPages}"
   },
   "COMBOBOX": {
-    "PLACEHOLDER": "Select an option...",
-    "EMPTY_SEARCH_RESULTS": "No items found for the search term `{searchTerm}`",
-    "EMPTY_STATE": "No results found.",
-    "SEARCH_PLACEHOLDER": "Search...",
-    "MORE": "+{count} more"
+    "PLACEHOLDER": "Selecciona una opción...",
+    "EMPTY_SEARCH_RESULTS": "No se encontraron elementos para el término de búsqueda `{searchTerm}`",
+    "EMPTY_STATE": "No se encontraron resultados.",
+    "SEARCH_PLACEHOLDER": "Buscar...",
+    "MORE": "+{count} más"
   },
   "DROPDOWN_MENU": {
-    "SEARCH_PLACEHOLDER": "Search...",
-    "EMPTY_STATE": "No results found.",
-    "SEARCHING": "Searching..."
+    "SEARCH_PLACEHOLDER": "Buscar...",
+    "EMPTY_STATE": "No se encontraron resultados.",
+    "SEARCHING": "Buscando..."
   },
   "DIALOG": {
     "BUTTONS": {
-      "CANCEL": "Cancel",
-      "CONFIRM": "Confirm"
+      "CANCEL": "Cancelar",
+      "CONFIRM": "Confirmar"
     }
   },
   "PHONE_INPUT": {
-    "SEARCH_PLACEHOLDER": "Search country",
-    "ERROR": "Phone number should be empty or in E.164 format",
-    "DIAL_CODE_ERROR": "Please select a dial code from the list"
+    "SEARCH_PLACEHOLDER": "Buscar país",
+    "ERROR": "El número de teléfono debe estar vacío o en formato E.164",
+    "DIAL_CODE_ERROR": "Selecciona un código de marcación de la lista"
   },
   "THUMBNAIL": {
     "AUTHOR": {
-      "NOT_AVAILABLE": "Author is not available"
+      "NOT_AVAILABLE": "El autor no está disponible"
     }
   },
   "BREADCRUMB": {
-    "ARIA_LABEL": "Breadcrumb"
+    "ARIA_LABEL": "Ruta de navegación"
   },
   "SWITCH": {
-    "TOGGLE": "Toggle switch"
+    "TOGGLE": "Activar o desactivar"
   },
   "LABEL": {
-    "TAG_BUTTON": "tag"
+    "TAG_BUTTON": "etiqueta"
   },
   "FEATURE_SPOTLIGHT": {
-    "LEARN_MORE": "Learn more",
-    "WATCH_VIDEO": "Watch video"
+    "LEARN_MORE": "Saber más",
+    "WATCH_VIDEO": "Ver video"
   },
   "DURATION_INPUT": {
-    "MINUTES": "Minutes",
-    "HOURS": "Hours",
-    "DAYS": "Days",
-    "PLACEHOLDER": "Enter duration"
+    "MINUTES": "Minutos",
+    "HOURS": "Horas",
+    "DAYS": "Días",
+    "PLACEHOLDER": "Ingresa la duración"
   },
   "CHANNEL_SELECTOR": {
-    "COMING_SOON": "Coming Soon!"
+    "COMING_SOON": "¡Próximamente!"
   }
 }

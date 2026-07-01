@@ -1,62 +1,62 @@
 {
   "INTEGRATION_APPS": {
-    "FETCHING": "Fetching Integrations",
-    "NO_HOOK_CONFIGURED": "There are no {integrationId} integrations configured in this account.",
-    "HEADER": "Applications",
+    "FETCHING": "Obteniendo integraciones",
+    "NO_HOOK_CONFIGURED": "No hay integraciones de {integrationId} configuradas en esta cuenta.",
+    "HEADER": "Aplicaciones",
     "STATUS": {
-      "ENABLED": "Enabled",
-      "DISABLED": "Disabled"
+      "ENABLED": "Habilitado",
+      "DISABLED": "Deshabilitado"
     },
-    "CONFIGURE": "Configure",
-    "ADD_BUTTON": "Add a new hook",
+    "CONFIGURE": "Configurar",
+    "ADD_BUTTON": "Agregar un nuevo hook",
     "DELETE": {
       "TITLE": {
-        "INBOX": "Confirm deletion",
-        "ACCOUNT": "Disconnect"
+        "INBOX": "Confirmar eliminación",
+        "ACCOUNT": "Desconectar"
       },
       "MESSAGE": {
-        "INBOX": "Are you sure to delete?",
-        "ACCOUNT": "Are you sure to disconnect?"
+        "INBOX": "¿Estás seguro de que deseas eliminarlo?",
+        "ACCOUNT": "¿Estás seguro de que deseas desconectarlo?"
       },
       "CONFIRM_BUTTON_TEXT": {
-        "INBOX": "Yes, Delete",
-        "ACCOUNT": "Yes, Disconnect"
+        "INBOX": "Sí, eliminar",
+        "ACCOUNT": "Sí, desconectar"
       },
-      "CANCEL_BUTTON_TEXT": "Cancel",
+      "CANCEL_BUTTON_TEXT": "Cancelar",
       "API": {
-        "SUCCESS_MESSAGE": "Hook deleted successfully",
-        "ERROR_MESSAGE": "Could not connect to Woot Server, Please try again later"
+        "SUCCESS_MESSAGE": "Hook eliminado correctamente",
+        "ERROR_MESSAGE": "No se pudo conectar con el servidor de Woot. Intenta de nuevo más tarde"
       }
     },
     "LIST": {
-      "FETCHING": "Fetching integration hooks",
-      "INBOX": "Inbox",
+      "FETCHING": "Obteniendo hooks de integración",
+      "INBOX": "Bandeja de entrada",
       "DELETE": {
-        "BUTTON_TEXT": "Delete"
+        "BUTTON_TEXT": "Eliminar"
       }
     },
     "ADD": {
       "FORM": {
         "INBOX": {
-          "LABEL": "Select Inbox",
-          "PLACEHOLDER": "Select Inbox"
+          "LABEL": "Selecciona una bandeja de entrada",
+          "PLACEHOLDER": "Selecciona una bandeja de entrada"
         },
-        "SUBMIT": "Create",
-        "CANCEL": "Cancel"
+        "SUBMIT": "Crear",
+        "CANCEL": "Cancelar"
       },
       "API": {
-        "SUCCESS_MESSAGE": "Integration hook added successfully",
-        "ERROR_MESSAGE": "Could not connect to Woot Server, Please try again later"
+        "SUCCESS_MESSAGE": "Hook de integración agregado correctamente",
+        "ERROR_MESSAGE": "No se pudo conectar con el servidor de Woot. Intenta de nuevo más tarde"
       }
     },
     "CONNECT": {
-      "BUTTON_TEXT": "Connect"
+      "BUTTON_TEXT": "Conectar"
     },
     "DISCONNECT": {
-      "BUTTON_TEXT": "Disconnect"
+      "BUTTON_TEXT": "Desconectar"
     },
     "SIDEBAR_DESCRIPTION": {
-      "DIALOGFLOW": "Dialogflow is a natural language processing platform for building conversational interfaces. Integrating it with {installationName} lets bots handle queries first and transfer them to agents when needed. It helps qualify leads and reduce agent workload by answering FAQs. To add Dialogflow, create a Service Account in Google Console and share the credentials. Refer to the docs for details"
+      "DIALOGFLOW": "Dialogflow es una plataforma de procesamiento de lenguaje natural para crear interfaces conversacionales. Al integrarla con {installationName}, los bots pueden atender las consultas primero y transferirlas a los agentes cuando sea necesario. Ayuda a calificar prospectos y a reducir la carga de trabajo de los agentes respondiendo preguntas frecuentes. Para agregar Dialogflow, crea una cuenta de servicio en Google Console y comparte las credenciales. Consulta la documentación para más detalles"
     }
   }
 }
