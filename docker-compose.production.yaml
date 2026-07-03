@@ -23,6 +23,13 @@ services:
     entrypoint: docker/entrypoints/rails.sh
     command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
     restart: always
+    # Base limits — tune to the real VPS capacity. Rails gets more headroom
+    # since it also serves asset/API request traffic, not just background work.
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: '1.0'
 
   sidekiq:
     <<: *base
@@ -39,11 +46,41 @@ services:
     extra_hosts:
       - 'mail.mastercode.com.mx:host-gateway'
       - 'chat.mastercode.com.mx:host-gateway'
+    # Base limits — tune to the real VPS capacity. Caps a runaway/orphaned
+    # worker (e.g. an IMAP backlog) so it can't starve the whole host.
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  sidekiq_low:
+    <<: *base
+    depends_on:
+      - redis
+    environment:
+      - NODE_ENV=production
+      - RAILS_ENV=production
+      - INSTALLATION_ENV=docker
+      - MALLOC_ARENA_MAX=${MALLOC_ARENA_MAX:-2}
+    command: ['bundle', 'exec', 'sidekiq', '-q', 'scheduled_jobs', '-q', 'purgable', '-q', 'housekeeping', '-q', 'deferred', '-c', '5']
+    restart: always
+    extra_hosts:
+      - 'mail.mastercode.com.mx:host-gateway'
+      - 'chat.mastercode.com.mx:host-gateway'
+    # Base limits — tune to the real VPS capacity. Dedicated worker for the
+    # low-priority queues (see config/sidekiq.yml) so they can't be starved
+    # indefinitely by critical/high/webhooks/... traffic on the main sidekiq.
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
 
   redis:
     image: redis:7.4-alpine
     restart: always
-    command: ["sh", "-c", "redis-server --appendonly yes --requirepass \"$REDIS_PASSWORD\""]
+    command: ["sh", "-c", "redis-server --appendonly yes --requirepass \"$REDIS_PASSWORD\" --maxmemory 256mb --maxmemory-policy allkeys-lru"]
     env_file: .env
     volumes:
       - redis_data:/data

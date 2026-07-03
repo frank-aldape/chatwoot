@@ -3,7 +3,7 @@ class Api::V1::Accounts::ManagedCompaniesController < Api::V1::Accounts::BaseCon
   before_action :check_authorization
 
   def index
-    @managed_companies = Current.account.managed_companies.ordered_by_name
+    @managed_companies = Current.account.managed_companies.ordered_by_name.includes(:inboxes, :teams)
   end
 
   def show; end

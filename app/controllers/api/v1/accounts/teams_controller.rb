@@ -3,7 +3,7 @@ class Api::V1::Accounts::TeamsController < Api::V1::Accounts::BaseController
   before_action :check_authorization
 
   def index
-    @teams = Current.account.teams
+    @teams = Current.account.teams.includes(:managed_companies, { team_inboxes: :inbox }, :team_managed_company_channel_rules)
   end
 
   def show; end

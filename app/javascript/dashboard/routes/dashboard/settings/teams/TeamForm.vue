@@ -88,6 +88,54 @@ export default {
     hasManagedCompanies() {
       return this.managedCompanies.length > 0;
     },
+    // Pre-grouped and pre-sorted once per inboxOptions change, instead of
+    // filtering/sorting the full inbox list on every template re-render.
+    inboxesByManagedCompanyId() {
+      const groups = {};
+      this.inboxOptions.forEach(inbox => {
+        const companyId = inbox.managed_company_id;
+        if (!companyId) return;
+        if (!groups[companyId]) groups[companyId] = [];
+        groups[companyId].push(inbox);
+      });
+
+      Object.values(groups).forEach(inboxes => {
+        inboxes.sort((a, b) => {
+          const channelCompare = this.inboxChannelLabel(a).localeCompare(
+            this.inboxChannelLabel(b)
+          );
+          if (channelCompare !== 0) return channelCompare;
+          return a.name.localeCompare(b.name);
+        });
+      });
+
+      return groups;
+    },
+    channelOptionsByManagedCompanyId() {
+      const optionsByCompany = {};
+      Object.entries(this.inboxesByManagedCompanyId).forEach(
+        ([companyId, inboxes]) => {
+          const groups = inboxes.reduce((acc, inbox) => {
+            const key = this.channelKey(inbox);
+            if (!acc[key]) {
+              acc[key] = {
+                key,
+                label: this.inboxChannelLabel(inbox),
+                inboxes: [],
+              };
+            }
+            acc[key].inboxes.push(inbox);
+            return acc;
+          }, {});
+
+          optionsByCompany[companyId] = Object.values(groups).sort((a, b) =>
+            a.label.localeCompare(b.label)
+          );
+        }
+      );
+
+      return optionsByCompany;
+    },
   },
   mounted() {
     this.fetchManagedCompanies();
@@ -138,17 +186,7 @@ export default {
       });
     },
     inboxesForManagedCompany(managedCompanyId) {
-      return this.inboxOptions
-        .filter(({ managed_company_id: companyId }) => {
-          return companyId === managedCompanyId;
-        })
-        .sort((a, b) => {
-          const channelCompare = this.inboxChannelLabel(a).localeCompare(
-            this.inboxChannelLabel(b)
-          );
-          if (channelCompare !== 0) return channelCompare;
-          return a.name.localeCompare(b.name);
-        });
+      return this.inboxesByManagedCompanyId[managedCompanyId] || [];
     },
     channelKey(inbox) {
       const keys = {
@@ -172,25 +210,7 @@ export default {
       return keys[inbox.channel_type] || inbox.channel_type;
     },
     channelOptionsForManagedCompany(managedCompanyId) {
-      const groups = this.inboxesForManagedCompany(managedCompanyId).reduce(
-        (acc, inbox) => {
-          const key = this.channelKey(inbox);
-          if (!acc[key]) {
-            acc[key] = {
-              key,
-              label: this.inboxChannelLabel(inbox),
-              inboxes: [],
-            };
-          }
-          acc[key].inboxes.push(inbox);
-          return acc;
-        },
-        {}
-      );
-
-      return Object.values(groups).sort((a, b) =>
-        a.label.localeCompare(b.label)
-      );
+      return this.channelOptionsByManagedCompanyId[managedCompanyId] || [];
     },
     inboxChannelLabel(inbox) {
       const labels = {
@@ -311,24 +331,28 @@ export default {
       }
     },
     filteredInboxesForAssignment(assignment) {
-      const normalizedSearch = assignment.inboxSearchQuery.trim().toLowerCase();
-
-      return this.inboxesForManagedCompany(assignment.managedCompanyId).filter(
-        inbox => {
-          const searchFields = [
-            inbox.name,
-            this.inboxChannelLabel(inbox),
-            this.inboxSourceLabel(inbox),
-            inbox.managed_company?.name,
-            inbox.managed_company?.authorized_domain,
-          ]
-            .filter(Boolean)
-            .join(' ')
-            .toLowerCase();
-
-          return searchFields.includes(normalizedSearch);
-        }
+      const companyInboxes = this.inboxesForManagedCompany(
+        assignment.managedCompanyId
       );
+      const normalizedSearch = assignment.inboxSearchQuery.trim().toLowerCase();
+      if (!normalizedSearch) {
+        return companyInboxes;
+      }
+
+      return companyInboxes.filter(inbox => {
+        const searchFields = [
+          inbox.name,
+          this.inboxChannelLabel(inbox),
+          this.inboxSourceLabel(inbox),
+          inbox.managed_company?.name,
+          inbox.managed_company?.authorized_domain,
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+
+        return searchFields.includes(normalizedSearch);
+      });
     },
     normalizedManagedCompanyAssignments() {
       return this.state.managedCompanyAssignments

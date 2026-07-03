@@ -44,6 +44,9 @@ module Redis::RedisKeys
   SLACK_MESSAGE_MUTEX = 'SLACK_MESSAGE_LOCK::%<conversation_id>s::%<reference_id>s'.freeze
   EMAIL_MESSAGE_MUTEX = 'EMAIL_CHANNEL_LOCK::%<inbox_id>s'.freeze
   CRM_PROCESS_MUTEX = 'CRM_PROCESS_MUTEX::%<hook_id>s'.freeze
+  # Prevents enqueueing a duplicate FetchImapEmailsJob while a previous run for
+  # the same inbox is still queued or being processed.
+  EMAIL_FETCH_ENQUEUE_MUTEX = 'EMAIL_FETCH_ENQUEUE_LOCK::%<inbox_id>d'.freeze
 
   ## Auto Assignment Keys
   # Track conversation assignments to agents for rate limiting
