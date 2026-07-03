@@ -59,3 +59,12 @@ periodic_assignment_job:
   cron: '*/30 * * * *'
   class: 'AutoAssignment::PeriodicAssignmentJob'
   queue: scheduled_jobs
+
+# executed daily at 0300 UTC
+# which is our lowest traffic time
+# purges unattached ActiveStorage blobs older than 48h to prevent orphaned
+# file storage growth
+purge_orphaned_active_storage_blobs_job:
+  cron: '0 3 * * *'
+  class: 'Internal::PurgeOrphanedActiveStorageBlobsJob'
+  queue: housekeeping
