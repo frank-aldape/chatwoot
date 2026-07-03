@@ -19,6 +19,10 @@ services:
       - RAILS_ENV=production
       - INSTALLATION_ENV=docker
       - RAILS_MIN_THREADS=${RAILS_MIN_THREADS:-1}
+      - RAILS_MAX_THREADS=${RAILS_MAX_THREADS:-10}
+      # Puma worker processes. Without this, Puma runs single-process
+      # (0 workers), sharing one thread pool for HTTP + ActionCable traffic.
+      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-2}
       - MALLOC_ARENA_MAX=${MALLOC_ARENA_MAX:-2}
     entrypoint: docker/entrypoints/rails.sh
     command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
