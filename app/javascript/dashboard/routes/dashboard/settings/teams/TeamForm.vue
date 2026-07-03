@@ -21,6 +21,7 @@ const buildAssignment = assignment => {
     inboxIds,
     channelKeys,
     inboxSearchQuery: '',
+    isCollapsed: Boolean(assignment),
   };
 };
 
@@ -109,6 +110,10 @@ export default {
     },
     removeManagedCompanyAssignment(index) {
       this.state.managedCompanyAssignments.splice(index, 1);
+    },
+    toggleAssignmentCollapse(index) {
+      const assignment = this.state.managedCompanyAssignments[index];
+      assignment.isCollapsed = !assignment.isCollapsed;
     },
     onManagedCompanyChange(index) {
       const assignment = this.state.managedCompanyAssignments[index];
@@ -478,18 +483,32 @@ export default {
                   }}
                 </p>
               </div>
-              <NextButton
-                type="button"
-                size="sm"
-                slate
-                :disabled="!assignment.managedCompanyId"
-                :label="
-                  isAllCompanyInboxesSelected(assignment)
-                    ? $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.CLEAR_ALL')
-                    : $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SELECT_ALL')
-                "
-                @click="toggleAllCompanyInboxes(index)"
-              />
+              <div class="flex items-center gap-2">
+                <NextButton
+                  type="button"
+                  size="sm"
+                  slate
+                  :disabled="!assignment.managedCompanyId"
+                  :label="
+                    isAllCompanyInboxesSelected(assignment)
+                      ? $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.CLEAR_ALL')
+                      : $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SELECT_ALL')
+                  "
+                  @click="toggleAllCompanyInboxes(index)"
+                />
+                <NextButton
+                  v-if="assignment.managedCompanyId"
+                  type="button"
+                  size="sm"
+                  slate
+                  :icon="
+                    assignment.isCollapsed
+                      ? 'i-lucide-chevron-down'
+                      : 'i-lucide-chevron-up'
+                  "
+                  @click="toggleAssignmentCollapse(index)"
+                />
+              </div>
             </div>
 
             <div
@@ -512,7 +531,7 @@ export default {
             </div>
 
             <div
-              v-else
+              v-else-if="!assignment.isCollapsed"
               class="grid gap-3 rounded-lg border border-n-weak bg-n-background p-3"
             >
               <div

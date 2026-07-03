@@ -25,6 +25,7 @@ const showDeletePopup = ref(false);
 const selectedInbox = ref({});
 const selectedManagedCompanyId = ref('all');
 const searchQuery = ref('');
+const expandedGroupIds = ref(new Set());
 
 const inboxes = useMapGetter('inboxes/getInboxes');
 
@@ -194,6 +195,20 @@ const groupedInboxesList = computed(() => {
 });
 
 const hasActiveSearch = computed(() => searchQuery.value.trim().length > 0);
+const isFiltered = computed(
+  () => hasActiveSearch.value || selectedManagedCompanyId.value !== 'all'
+);
+const isGroupExpanded = groupId =>
+  isFiltered.value || expandedGroupIds.value.has(groupId);
+const toggleGroup = groupId => {
+  const next = new Set(expandedGroupIds.value);
+  if (next.has(groupId)) {
+    next.delete(groupId);
+  } else {
+    next.add(groupId);
+  }
+  expandedGroupIds.value = next;
+};
 const hasRecords = computed(() => (inboxes.value || []).length > 0);
 const showNoRecordsFound = computed(
   () => !hasRecords.value && !hasActiveSearch.value
@@ -315,16 +330,26 @@ const openDelete = inbox => {
           :key="group.id"
           class="overflow-hidden rounded-xl border border-n-weak bg-n-background"
         >
-          <header
-            class="flex flex-col gap-1 border-b border-n-weak bg-n-alpha-1 px-4 py-3 lg:flex-row lg:items-center lg:justify-between"
+          <button
+            type="button"
+            class="flex w-full flex-col gap-1 border-b border-n-weak bg-n-alpha-1 px-4 py-3 text-left lg:flex-row lg:items-center lg:justify-between"
+            :aria-expanded="isGroupExpanded(group.id)"
+            @click="toggleGroup(group.id)"
           >
-            <div>
-              <h3 class="text-sm font-semibold text-n-slate-12">
-                {{ group.name }}
-              </h3>
-              <p class="text-sm text-n-slate-11">
-                {{ group.authorizedDomain }}
-              </p>
+            <div class="flex items-center gap-2">
+              <Icon
+                icon="i-lucide-chevron-right"
+                class="size-4 shrink-0 text-n-slate-11 transition-transform"
+                :class="{ 'rotate-90': isGroupExpanded(group.id) }"
+              />
+              <div>
+                <h3 class="text-sm font-semibold text-n-slate-12">
+                  {{ group.name }}
+                </h3>
+                <p class="text-sm text-n-slate-11">
+                  {{ group.authorizedDomain }}
+                </p>
+              </div>
             </div>
             <span
               class="text-xs font-medium uppercase tracking-wide text-n-slate-11"
@@ -335,9 +360,12 @@ const openDelete = inbox => {
                 })
               }}
             </span>
-          </header>
+          </button>
 
-          <table class="min-w-full overflow-x-auto">
+          <table
+            v-if="isGroupExpanded(group.id)"
+            class="min-w-full overflow-x-auto"
+          >
             <tbody class="divide-y divide-n-weak flex-1 text-n-slate-12">
               <tr v-for="inbox in group.inboxes" :key="inbox.id">
                 <td class="py-4 ltr:pr-4 rtl:pl-4">

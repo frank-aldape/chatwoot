@@ -66,13 +66,6 @@ const persistPreferences = () => {
 const inboxes = useMapGetter('inboxes/getInboxes');
 const teams = useMapGetter('teams/getTeams');
 
-const teamNamesById = computed(() =>
-  (teams.value || []).reduce((acc, team) => {
-    acc[team.id] = team.name;
-    return acc;
-  }, {})
-);
-
 const inboxNamesById = computed(() =>
   (inboxes.value || []).reduce((acc, inbox) => {
     acc[inbox.id] = inbox.name;
@@ -95,9 +88,6 @@ const resolvedManagedCompanies = computed(() =>
     ...managedCompany,
     inboxNames: (managedCompany.inbox_ids || [])
       .map(id => inboxNamesById.value[id])
-      .filter(Boolean),
-    teamNames: (managedCompany.team_ids || [])
-      .map(id => teamNamesById.value[id])
       .filter(Boolean),
   }))
 );
@@ -218,6 +208,29 @@ const showNoRecordsFound = computed(
 const resetSelection = () => {
   selectedManagedCompany.value = {};
 };
+
+const teamAccessDetails = computed(() => {
+  const companyId = selectedManagedCompany.value.id;
+  if (!companyId) return [];
+
+  return (selectedManagedCompany.value.team_ids || [])
+    .map(teamId => (teams.value || []).find(team => team.id === teamId))
+    .filter(Boolean)
+    .map(team => {
+      const assignment = (team.managed_company_assignments || []).find(
+        a => String(a.managed_company_id) === String(companyId)
+      );
+
+      return {
+        id: team.id,
+        name: team.name,
+        inboxNames: (assignment?.inbox_ids || [])
+          .map(id => inboxNamesById.value[id])
+          .filter(Boolean),
+      };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+});
 
 const fetchManagedCompanies = async () => {
   isLoading.value = true;
@@ -529,6 +542,7 @@ watch(filteredManagedCompanies, companies => {
     <ManagedCompanyDetailsModal
       :show="showDetailsModal"
       :managed-company="selectedManagedCompany"
+      :team-access-details="teamAccessDetails"
       @close="closeDetailsModal"
     />
 

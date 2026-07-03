@@ -10,6 +10,10 @@ defineProps({
     type: Object,
     default: () => ({}),
   },
+  teamAccessDetails: {
+    type: Array,
+    default: () => [],
+  },
 });
 
 const emit = defineEmits(['close']);
@@ -82,17 +86,28 @@ const handleClose = () => {
               }}
             </span>
           </div>
-          <div
-            v-if="managedCompany.teamNames?.length"
-            class="flex flex-wrap gap-2"
-          >
-            <span
-              v-for="teamName in managedCompany.teamNames"
-              :key="teamName"
-              class="rounded-full bg-n-alpha-2 px-2 py-1 text-xs text-n-slate-12"
+          <div v-if="teamAccessDetails.length" class="grid gap-3">
+            <div
+              v-for="team in teamAccessDetails"
+              :key="team.id"
+              class="grid gap-2 rounded-lg border border-n-weak bg-n-alpha-1 p-3"
             >
-              {{ teamName }}
-            </span>
+              <span class="text-sm font-medium text-n-slate-12">
+                {{ team.name }}
+              </span>
+              <div v-if="team.inboxNames.length" class="flex flex-wrap gap-2">
+                <span
+                  v-for="inboxName in team.inboxNames"
+                  :key="inboxName"
+                  class="rounded-full bg-n-alpha-2 px-2 py-1 text-xs text-n-slate-12"
+                >
+                  {{ inboxName }}
+                </span>
+              </div>
+              <p v-else class="mb-0 text-xs text-n-slate-11">
+                {{ $t('MANAGED_COMPANIES_SETTINGS.DETAILS.TEAM_NO_INBOXES') }}
+              </p>
+            </div>
           </div>
           <p v-else class="mb-0 text-sm text-n-slate-11">
             {{ $t('MANAGED_COMPANIES_SETTINGS.LIST.NO_TEAMS_ASSIGNED') }}

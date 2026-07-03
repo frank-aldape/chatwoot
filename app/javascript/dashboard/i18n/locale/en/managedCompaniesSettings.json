@@ -55,7 +55,8 @@
     },
     "DETAILS": {
       "TITLE": "Detalle de la compañía",
-      "CLOSE": "Cerrar"
+      "CLOSE": "Cerrar",
+      "TEAM_NO_INBOXES": "Sin inboxes asignados en esta compañía."
     },
     "DELETE": {
       "TITLE": "Eliminar compañía",
