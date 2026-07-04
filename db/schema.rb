@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_03_120000) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_04_120000) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -214,7 +214,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_03_120000) do
     t.string "external_url"
     t.float "coordinates_lat", default: 0.0
     t.float "coordinates_long", default: 0.0
-    t.integer "message_id", null: false
+    t.bigint "message_id", null: false
     t.integer "account_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -1001,7 +1001,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_03_120000) do
     t.index ["user_id"], name: "index_mentions_on_user_id"
   end
 
-  create_table "messages", id: :serial, force: :cascade do |t|
+  create_table "messages", force: :cascade do |t|
     t.text "content"
     t.integer "account_id", null: false
     t.integer "inbox_id", null: false
