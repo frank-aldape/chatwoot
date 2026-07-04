@@ -161,6 +161,9 @@ watch(
 );
 
 onMounted(() => {
+  // The inboxes index returns a summary payload; refetch the full record so
+  // web_widget_script survives a page refresh on this route.
+  store.dispatch('inboxes/show', route.params.inbox_id);
   generateQRCodes();
 });
 </script>

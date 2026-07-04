@@ -456,7 +456,9 @@ export default {
       this.$store.dispatch('agents/get');
       this.$store.dispatch('teams/get');
       this.$store.dispatch('labels/get');
-      this.$store.dispatch('inboxes/get').then(() => {
+      // The inboxes index returns a summary payload; fetch the full record so
+      // settings-only fields (working hours, CSAT, IMAP/SMTP) are present.
+      this.$store.dispatch('inboxes/show', this.currentInboxId).then(() => {
         this.avatarUrl = this.inbox.avatar_url;
         this.selectedInboxName = this.inbox.name;
         this.namingFunctionLabel = this.extractOperationalLabel(

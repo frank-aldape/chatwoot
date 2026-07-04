@@ -53,7 +53,7 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
 
   # returns online contacts
   def active
-    contacts = Current.account.contacts.where(id: ::OnlineStatusTracker
+    contacts = accessible_contacts.where(id: ::OnlineStatusTracker
                   .get_available_contact_ids(Current.account.id))
     @contacts = fetch_contacts(contacts)
     @contacts_count = @contacts.total_count
@@ -63,8 +63,8 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
 
   def filter
     result = ::Contacts::FilterService.new(Current.account, Current.user, params.permit!).perform
-    contacts = result[:contacts]
-    @contacts_count = result[:count]
+    contacts = result[:contacts].accessible_to(Current.user)
+    @contacts_count = contacts.count
     @contacts = fetch_contacts(contacts)
   rescue CustomExceptions::CustomFilter::InvalidAttribute,
          CustomExceptions::CustomFilter::InvalidOperator,
@@ -118,11 +118,17 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
 
   private
 
+  # Non-admin agents only see contacts linked to their assigned inboxes;
+  # admins keep account-wide access.
+  def accessible_contacts
+    Current.account.contacts.accessible_to(Current.user)
+  end
+
   # TODO: Move this to a finder class
   def resolved_contacts
     return @resolved_contacts if @resolved_contacts
 
-    @resolved_contacts = Current.account.contacts.resolved_contacts(use_crm_v2: Current.account.feature_enabled?('crm_v2'))
+    @resolved_contacts = accessible_contacts.resolved_contacts(use_crm_v2: Current.account.feature_enabled?('crm_v2'))
 
     @resolved_contacts = @resolved_contacts.tagged_with(params[:labels], any: true) if params[:labels].present?
     @resolved_contacts
@@ -185,7 +191,7 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
   end
 
   def fetch_contact
-    @contact = Current.account.contacts.includes(contact_inboxes: [:inbox]).find(params[:id])
+    @contact = accessible_contacts.includes(contact_inboxes: [:inbox]).find(params[:id])
   end
 
   def process_avatar_from_url

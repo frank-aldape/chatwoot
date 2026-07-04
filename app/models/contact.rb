@@ -70,6 +70,14 @@ class Contact < ApplicationRecord
 
   enum contact_type: { visitor: 0, lead: 1, customer: 2 }
 
+  # Restricts non-admin agents to contacts reachable through their assigned
+  # inboxes, so companies sharing one account can't read each other's PII.
+  scope :accessible_to, lambda { |user|
+    next all if user.administrator?
+
+    where(id: ContactInbox.where(inbox_id: user.assigned_inboxes.select(:id)).select(:contact_id))
+  }
+
   scope :order_on_last_activity_at, lambda { |direction|
     order(
       Arel::Nodes::SqlLiteral.new(

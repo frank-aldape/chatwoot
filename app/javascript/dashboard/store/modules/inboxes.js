@@ -12,6 +12,18 @@ import camelcaseKeys from 'camelcase-keys';
 import { ACCOUNT_EVENTS } from '../../helper/AnalyticsHelper/events';
 import { channelActions, buildInboxData } from './inboxes/channelActions';
 
+// Per-record camelization cache. Mutations replace record objects wholesale
+// (see MutationHelpers.update/setSingleRecord), so object identity is a safe
+// cache key: unchanged records reuse their camelized clone instead of
+// re-deep-cloning all ~1300 records whenever any single one changes.
+const camelCaseCache = new WeakMap();
+const toCamelCase = record => {
+  if (!camelCaseCache.has(record)) {
+    camelCaseCache.set(record, camelcaseKeys(record, { deep: true }));
+  }
+  return camelCaseCache.get(record);
+};
+
 export const state = {
   records: [],
   uiFlags: {
@@ -30,7 +42,7 @@ export const getters = {
     return $state.records;
   },
   getAllInboxes($state) {
-    return camelcaseKeys($state.records, { deep: true });
+    return $state.records.map(toCamelCase);
   },
   getWhatsAppTemplates: $state => inboxId => {
     const [inbox] = $state.records.filter(
@@ -129,7 +141,7 @@ export const getters = {
     const [inbox] = $state.records.filter(
       record => record.id === Number(inboxId)
     );
-    return camelcaseKeys(inbox || {}, { deep: true });
+    return inbox ? toCamelCase(inbox) : {};
   },
   getUIFlags($state) {
     return $state.uiFlags;
@@ -208,6 +220,18 @@ export const actions = {
       commit(types.default.SET_INBOXES, response.data.payload);
     } catch (error) {
       commit(types.default.SET_INBOXES_UI_FLAG, { isFetching: false });
+    }
+  },
+  // The index payload is a summary (heavy settings fields omitted); fetch the
+  // full record before rendering inbox settings screens.
+  show: async ({ commit }, inboxId) => {
+    commit(types.default.SET_INBOXES_UI_FLAG, { isFetchingItem: true });
+    try {
+      const response = await InboxesAPI.show(inboxId);
+      commit(types.default.SET_INBOX_ITEM, response.data);
+      commit(types.default.SET_INBOXES_UI_FLAG, { isFetchingItem: false });
+    } catch (error) {
+      commit(types.default.SET_INBOXES_UI_FLAG, { isFetchingItem: false });
     }
   },
   createChannel: async ({ commit }, params) => {
@@ -306,7 +330,7 @@ export const actions = {
       return response.data;
     } catch (error) {
       commit(types.default.SET_INBOXES_UI_FLAG, { isUpdatingIMAP: false });
-      throwErrorMessage(error);
+      return throwErrorMessage(error);
     }
   },
   updateInboxSMTP: async ({ commit }, { id, ...inboxParams }) => {
@@ -318,7 +342,7 @@ export const actions = {
       return response.data;
     } catch (error) {
       commit(types.default.SET_INBOXES_UI_FLAG, { isUpdatingSMTP: false });
-      throwErrorMessage(error);
+      return throwErrorMessage(error);
     }
   },
   delete: async ({ commit }, inboxId) => {
@@ -369,7 +393,7 @@ export const mutations = {
     $state.uiFlags = { ...$state.uiFlags, ...uiFlag };
   },
   [types.default.SET_INBOXES]: MutationHelpers.set,
-  [types.default.SET_INBOXES_ITEM]: MutationHelpers.setSingleRecord,
+  [types.default.SET_INBOX_ITEM]: MutationHelpers.setSingleRecord,
   [types.default.ADD_INBOXES]: MutationHelpers.create,
   [types.default.EDIT_INBOXES]: MutationHelpers.update,
   [types.default.DELETE_INBOXES]: MutationHelpers.destroy,

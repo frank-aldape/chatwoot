@@ -1,3 +1,7 @@
+# `summary: true` (used by the index list) skips settings-only heavy fields;
+# the full payload stays available via show/create/update.
+summary = local_assigns.fetch(:summary, false)
+
 json.id resource.id
 json.avatar_url resource.try(:avatar_url)
 json.channel_id resource.channel_id
@@ -8,14 +12,14 @@ json.greeting_message resource.greeting_message
 json.working_hours_enabled resource.working_hours_enabled
 json.enable_email_collect resource.enable_email_collect
 json.csat_survey_enabled resource.csat_survey_enabled
-json.csat_config resource.csat_config
+json.csat_config resource.csat_config unless summary
 json.enable_auto_assignment resource.enable_auto_assignment
-json.auto_assignment_config resource.auto_assignment_config
+json.auto_assignment_config resource.auto_assignment_config unless summary
 json.team_ids resource.team_ids
 json.managed_company_id resource.managed_company_id
 json.integration_slot resource.integration_slot
-json.out_of_office_message resource.out_of_office_message
-json.working_hours resource.weekly_schedule
+json.out_of_office_message resource.out_of_office_message unless summary
+json.working_hours resource.weekly_schedule unless summary
 json.timezone resource.timezone
 json.callback_webhook_url resource.callback_webhook_url
 json.allow_messages_after_resolved resource.allow_messages_after_resolved
@@ -50,7 +54,7 @@ json.website_url resource.channel.try(:website_url)
 json.hmac_mandatory resource.channel.try(:hmac_mandatory)
 json.welcome_title resource.channel.try(:welcome_title)
 json.welcome_tagline resource.channel.try(:welcome_tagline)
-json.web_widget_script resource.channel.try(:web_widget_script)
+json.web_widget_script resource.channel.try(:web_widget_script) unless summary
 json.website_token resource.channel.try(:website_token)
 json.selected_feature_flags resource.channel.try(:selected_feature_flags)
 json.reply_time resource.channel.try(:reply_time)
@@ -79,8 +83,8 @@ json.messaging_service_sid resource.channel.try(:messaging_service_sid)
 json.phone_number resource.channel.try(:phone_number)
 json.medium resource.channel.try(:medium) if resource.twilio?
 if resource.twilio?
-  json.content_templates resource.channel.try(:content_templates)
-  if Current.account_user&.administrator?
+  json.content_templates resource.channel.try(:content_templates) unless summary
+  if Current.account_user&.administrator? && !summary
     json.auth_token resource.channel.try(:auth_token)
     json.account_sid resource.channel.try(:account_sid)
   end
@@ -93,7 +97,7 @@ if resource.email?
   json.forward_to_email resource.channel.try(:forward_to_email) if ENV.fetch('MAILER_INBOUND_EMAIL_DOMAIN', '').present?
 
   ## IMAP
-  if Current.account_user&.administrator?
+  if Current.account_user&.administrator? && !summary
     json.imap_login resource.channel.try(:imap_login)
     json.imap_password resource.channel.try(:imap_password)
     json.imap_address resource.channel.try(:imap_address)
@@ -107,7 +111,7 @@ if resource.email?
   end
 
   ## SMTP
-  if Current.account_user&.administrator?
+  if Current.account_user&.administrator? && !summary
     json.smtp_login resource.channel.try(:smtp_login)
     json.smtp_password resource.channel.try(:smtp_password)
     json.smtp_address resource.channel.try(:smtp_address)
@@ -137,7 +141,7 @@ json.bot_name resource.channel.try(:bot_name) if resource.telegram?
 ### WhatsApp Channel
 if resource.whatsapp?
   json.message_templates resource.channel.try(:message_templates)
-  json.provider_config resource.channel.try(:provider_config) if Current.account_user&.administrator?
+  json.provider_config resource.channel.try(:provider_config) if Current.account_user&.administrator? && !summary
   json.reauthorization_required resource.channel.try(:reauthorization_required?)
 end
 
