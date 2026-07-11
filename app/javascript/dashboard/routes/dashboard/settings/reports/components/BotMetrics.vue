@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue';
-import ReportMetricCard from './ReportMetricCard.vue';
+import MetricCard from 'dashboard/components-next/metric/MetricCard.vue';
 import ReportsAPI from 'dashboard/api/reports';
 
 const props = defineProps({
@@ -40,27 +40,27 @@ onMounted(fetchMetrics);
   <div
     class="flex flex-wrap mx-0 shadow outline-1 outline outline-n-container rounded-xl bg-n-solid-2 px-6 py-5"
   >
-    <ReportMetricCard
+    <MetricCard
       :label="$t('BOT_REPORTS.METRIC.TOTAL_CONVERSATIONS.LABEL')"
-      :info-text="$t('BOT_REPORTS.METRIC.TOTAL_CONVERSATIONS.TOOLTIP')"
+      :tooltip="$t('BOT_REPORTS.METRIC.TOTAL_CONVERSATIONS.TOOLTIP')"
       :value="conversationCount"
       class="flex-1"
     />
-    <ReportMetricCard
+    <MetricCard
       :label="$t('BOT_REPORTS.METRIC.TOTAL_RESPONSES.LABEL')"
-      :info-text="$t('BOT_REPORTS.METRIC.TOTAL_RESPONSES.TOOLTIP')"
+      :tooltip="$t('BOT_REPORTS.METRIC.TOTAL_RESPONSES.TOOLTIP')"
       :value="messageCount"
       class="flex-1"
     />
-    <ReportMetricCard
+    <MetricCard
       :label="$t('BOT_REPORTS.METRIC.RESOLUTION_RATE.LABEL')"
-      :info-text="$t('BOT_REPORTS.METRIC.RESOLUTION_RATE.TOOLTIP')"
+      :tooltip="$t('BOT_REPORTS.METRIC.RESOLUTION_RATE.TOOLTIP')"
       :value="formatToPercent(resolutionRate)"
       class="flex-1"
     />
-    <ReportMetricCard
+    <MetricCard
       :label="$t('BOT_REPORTS.METRIC.HANDOFF_RATE.LABEL')"
-      :info-text="$t('BOT_REPORTS.METRIC.HANDOFF_RATE.TOOLTIP')"
+      :tooltip="$t('BOT_REPORTS.METRIC.HANDOFF_RATE.TOOLTIP')"
       :value="formatToPercent(handoffRate)"
       class="flex-1"
     />

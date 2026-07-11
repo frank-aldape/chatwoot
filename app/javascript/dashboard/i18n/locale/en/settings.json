@@ -364,6 +364,14 @@
     "SET_YOUR_AVAILABILITY": "Establece tu disponibilidad",
     "SLA": "SLA",
     "CUSTOM_ROLES": "Roles personalizados",
+    "SETTINGS_SECTIONS": {
+      "ACCOUNT": "Cuenta",
+      "PEOPLE": "Personas",
+      "INBOXES": "Bandejas y enrutamiento",
+      "AUTOMATION": "Automatización",
+      "CUSTOMIZATION": "Personalización",
+      "INTEGRATIONS": "Integraciones y SLA"
+    },
     "BETA": "Beta",
     "REPORTS_OVERVIEW": "Resumen",
     "REAUTHORIZE": "La conexión de tu bandeja de entrada ha caducado, vuelve a conectarla\n para seguir recibiendo y enviando mensajes",

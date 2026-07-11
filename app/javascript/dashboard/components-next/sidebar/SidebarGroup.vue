@@ -40,12 +40,13 @@ const hasChildren = computed(
 
 const accessibleItems = computed(() => {
   if (!hasChildren.value) return [];
-  return props.children.filter(child => {
-    // If a item has no link, it means it's just a subgroup header
-    // So we don't need to check for permissions here, because there's nothing to
-    // access here anyway
-    return child.to && isAllowed(child.to);
-  });
+  // Flatten one level of subgroups (via navigableChildren) so a group made up
+  // purely of subgroups — e.g. the sectioned Settings menu — still counts its
+  // nested accessible leaves and renders. Items without a link are subgroup
+  // headers and are skipped here since there's nothing to access on them.
+  return navigableChildren.value.filter(
+    child => child.to && isAllowed(child.to)
+  );
 });
 
 const hasAccessibleChildren = computed(() => {

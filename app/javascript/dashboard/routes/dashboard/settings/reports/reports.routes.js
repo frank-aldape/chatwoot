@@ -6,33 +6,6 @@ const meta = {
   permissions: ['administrator', 'report_manage'],
 };
 
-const oldReportRoutes = [
-  {
-    path: 'agent',
-    name: 'agent_reports',
-    meta,
-    component: () => import('./AgentReports.vue'),
-  },
-  {
-    path: 'inboxes',
-    name: 'inbox_reports',
-    meta,
-    component: () => import('./InboxReports.vue'),
-  },
-  {
-    path: 'label',
-    name: 'label_reports',
-    meta,
-    component: () => import('./LabelReports.vue'),
-  },
-  {
-    path: 'teams',
-    name: 'team_reports',
-    meta,
-    component: () => import('./TeamReports.vue'),
-  },
-];
-
 const revisedReportRoutes = [
   {
     path: 'agents_overview',
@@ -125,7 +98,6 @@ export default {
           meta,
           component: () => import('./Index.vue'),
         },
-        ...oldReportRoutes,
         ...revisedReportRoutes,
         {
           path: 'sla',
