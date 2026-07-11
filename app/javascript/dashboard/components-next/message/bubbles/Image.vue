@@ -66,6 +66,7 @@ const handleImageError = () => {
         :src="attachment.dataUrl"
         :width="attachment.width"
         :height="attachment.height"
+        :alt="$t('COMPONENTS.MEDIA.IMAGE_ALT')"
         loading="lazy"
       />
       <div

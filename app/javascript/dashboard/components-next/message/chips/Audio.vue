@@ -141,7 +141,15 @@ const downloadAudio = async () => {
     class="rounded-xl w-full gap-2 p-1.5 bg-n-alpha-white flex flex-col items-center border border-n-container shadow-[0px_2px_8px_0px_rgba(94,94,94,0.06)]"
   >
     <div class="flex gap-1 w-full flex-1 items-center justify-start">
-      <button class="p-0 border-0 size-8" @click="playOrPause">
+      <button
+        class="p-0 border-0 size-8"
+        :aria-label="
+          isPlaying
+            ? $t('COMPONENTS.AUDIO_PLAYER.PAUSE')
+            : $t('COMPONENTS.AUDIO_PLAYER.PLAY')
+        "
+        @click="playOrPause"
+      >
         <Icon
           v-if="isPlaying"
           class="size-8"
@@ -158,12 +166,14 @@ const downloadAudio = async () => {
           min="0"
           :max="duration"
           :value="currentTime"
+          :aria-label="$t('COMPONENTS.AUDIO_PLAYER.SEEK')"
           class="w-full h-1 bg-n-slate-12/40 rounded-lg appearance-none cursor-pointer accent-current"
           @input="seek"
         />
       </div>
       <button
         class="border-0 w-10 h-6 grid place-content-center bg-n-alpha-2 hover:bg-alpha-3 rounded-2xl"
+        :aria-label="$t('COMPONENTS.AUDIO_PLAYER.PLAYBACK_SPEED')"
         @click="changePlaybackSpeed"
       >
         <span class="text-xs text-n-slate-11 font-medium">
@@ -172,6 +182,11 @@ const downloadAudio = async () => {
       </button>
       <button
         class="p-0 border-0 size-8 grid place-content-center"
+        :aria-label="
+          isMuted
+            ? $t('COMPONENTS.AUDIO_PLAYER.UNMUTE')
+            : $t('COMPONENTS.AUDIO_PLAYER.MUTE')
+        "
         @click="toggleMute"
       >
         <Icon v-if="isMuted" class="size-4" icon="i-lucide-volume-off" />
@@ -179,6 +194,7 @@ const downloadAudio = async () => {
       </button>
       <button
         class="p-0 border-0 size-8 grid place-content-center"
+        :aria-label="$t('COMPONENTS.AUDIO_PLAYER.DOWNLOAD')"
         @click="downloadAudio"
       >
         <Icon class="size-4" icon="i-lucide-download" />

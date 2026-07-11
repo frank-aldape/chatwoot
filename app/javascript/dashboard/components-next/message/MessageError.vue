@@ -45,6 +45,7 @@ const canRetry = computed(() => !hasOneDayPassed(createdAt.value));
       v-if="canRetry"
       type="button"
       :disabled="status !== MESSAGE_STATUS.FAILED"
+      :aria-label="t('COMPONENTS.MESSAGE_ERROR.RETRY')"
       class="bg-n-alpha-2 rounded-md size-5 grid place-content-center cursor-pointer"
       @click="emit('retry')"
     >

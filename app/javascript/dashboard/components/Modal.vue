@@ -1,6 +1,6 @@
 <script setup>
 // [TODO] Use Teleport to move the modal to the end of the body
-import { ref, computed, defineEmits, onMounted } from 'vue';
+import { ref, computed, defineEmits, onMounted, watch, nextTick } from 'vue';
 import { useEventListener } from '@vueuse/core';
 import Button from 'dashboard/components-next/button/Button.vue';
 
@@ -47,10 +47,66 @@ const onMouseUp = () => {
   }
 };
 
+// Focus management: keep keyboard focus inside the modal while open and
+// restore it to the trigger element on close, so keyboard/screen-reader users
+// don't get stranded behind the modal.
+const containerRef = ref(null);
+let previouslyFocused = null;
+
+const getFocusableElements = () => {
+  if (!containerRef.value) return [];
+  const selector =
+    'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  return Array.from(containerRef.value.querySelectorAll(selector)).filter(
+    el => el.offsetParent !== null
+  );
+};
+
+watch(
+  show,
+  async isOpen => {
+    if (isOpen) {
+      previouslyFocused = document.activeElement;
+      await nextTick();
+      const focusable = getFocusableElements();
+      (focusable[0] ?? containerRef.value)?.focus();
+    } else if (previouslyFocused) {
+      previouslyFocused.focus?.();
+      previouslyFocused = null;
+    }
+  },
+  { immediate: true }
+);
+
+const trapFocus = e => {
+  const focusable = getFocusableElements();
+  if (!focusable.length) {
+    e.preventDefault();
+    containerRef.value?.focus();
+    return;
+  }
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const active = document.activeElement;
+  if (!containerRef.value?.contains(active)) {
+    e.preventDefault();
+    first.focus();
+  } else if (e.shiftKey && active === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && active === last) {
+    e.preventDefault();
+    first.focus();
+  }
+};
+
 const onKeydown = e => {
-  if (show.value && e.code === 'Escape') {
+  if (!show.value) return;
+  if (e.code === 'Escape') {
     close();
     e.stopPropagation();
+  } else if (e.key === 'Tab') {
+    trapFocus(e);
   }
 };
 
@@ -76,7 +132,11 @@ onMounted(() => {
       @mousedown="handleMouseDown"
     >
       <div
-        class="relative max-h-full overflow-auto bg-n-alpha-3 shadow-md modal-container rtl:text-right skip-context-menu"
+        ref="containerRef"
+        tabindex="-1"
+        role="dialog"
+        aria-modal="true"
+        class="relative max-h-full overflow-auto bg-n-alpha-3 shadow-md modal-container rtl:text-right skip-context-menu focus:outline-none"
         :class="{
           'rounded-xl w-[37.5rem]': !fullWidth,
           'items-center rounded-none flex h-full justify-center w-full':

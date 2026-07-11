@@ -283,7 +283,20 @@
     },
     "MEDIA": {
       "IMAGE_UNAVAILABLE": "Esta imagen ya no está disponible.",
-      "LOADING_FAILED": "Error al cargar"
+      "LOADING_FAILED": "Error al cargar",
+      "IMAGE_ALT": "Imagen adjunta"
+    },
+    "AUDIO_PLAYER": {
+      "PLAY": "Reproducir",
+      "PAUSE": "Pausar",
+      "MUTE": "Silenciar",
+      "UNMUTE": "Activar sonido",
+      "DOWNLOAD": "Descargar audio",
+      "PLAYBACK_SPEED": "Cambiar velocidad de reproducción",
+      "SEEK": "Avanzar o retroceder en el audio"
+    },
+    "MESSAGE_ERROR": {
+      "RETRY": "Reintentar el envío del mensaje"
     }
   },
   "CONFIRM_EMAIL": "Verificando...",
