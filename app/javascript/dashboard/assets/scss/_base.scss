@@ -213,3 +213,17 @@ code {
 table {
   @apply border-spacing-0 text-sm w-full;
 }
+
+// Accessibility: honor the user's reduced-motion preference across the app.
+// Motion-sensitive users get near-instant transitions/animations instead of
+// movement, while still allowing state changes to complete.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

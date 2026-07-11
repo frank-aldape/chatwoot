@@ -1,5 +1,5 @@
 <script setup>
-import { computed, useSlots, useAttrs } from 'vue';
+import { computed, useSlots, useAttrs, onMounted } from 'vue';
 
 import Spinner from 'dashboard/components-next/spinner/Spinner.vue';
 import Icon from 'dashboard/components-next/icon/Icon.vue';
@@ -208,6 +208,25 @@ const variantClasses = computed(() => {
 
 const isIconOnly = computed(() => !props.label && !slots.default);
 const isLink = computed(() => computedVariant.value === 'link');
+
+// An icon-only button has no visible text, so it needs an ARIA name for
+// screen-reader users. Warn in development when one is missing instead of
+// shipping an unlabelled control.
+const hasAccessibleName = computed(
+  () =>
+    Boolean(attrs['aria-label']) ||
+    Boolean(attrs['aria-labelledby']) ||
+    Boolean(attrs.title)
+);
+
+onMounted(() => {
+  if (import.meta.env.DEV && isIconOnly.value && !hasAccessibleName.value) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      '[Button] Icon-only button is missing an accessible name. Pass `aria-label` (or `title`) so screen-reader users can identify this control.'
+    );
+  }
+});
 
 const buttonClasses = computed(() => {
   const sizeConfig = isIconOnly.value ? 'iconOnly' : 'regular';

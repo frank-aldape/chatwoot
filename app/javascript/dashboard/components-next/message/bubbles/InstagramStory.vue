@@ -43,6 +43,7 @@ const onVideoLoadError = () => {
       v-if="!hasImgStoryError"
       class="rounded-lg max-w-80 skip-context-menu"
       :src="attachment.dataUrl"
+      loading="lazy"
       @error="onImageLoadError"
     />
     <video

@@ -217,7 +217,7 @@ export default {
   <ReportHeader :header-title="reportTitle" :has-back-button="hasBackButton">
     <V4Button
       :label="downloadButtonLabel"
-      icon="i-ph-download-simple"
+      icon="i-lucide-download"
       size="sm"
       @click="downloadReports"
     />

@@ -32,6 +32,7 @@ import ConversationBulkActions from './widgets/conversation/conversationBulkActi
 import IntersectionObserver from './IntersectionObserver.vue';
 import TeleportWithDirection from 'dashboard/components-next/TeleportWithDirection.vue';
 import Spinner from 'dashboard/components-next/spinner/Spinner.vue';
+import Skeleton from 'dashboard/components-next/skeleton/Skeleton.vue';
 
 import { useUISettings } from 'dashboard/composables/useUISettings';
 import { useAlert } from 'dashboard/composables';
@@ -1222,6 +1223,19 @@ watch(conversationFilters, (newVal, oldVal) => {
     >
       {{ emptyStateMessage }}
     </p>
+    <div
+      v-if="chatListLoading && !conversationList.length"
+      class="flex flex-col px-2 py-2 overflow-hidden"
+      aria-hidden="true"
+    >
+      <div v-for="n in 8" :key="n" class="flex items-center gap-3 p-2">
+        <Skeleton circle width="w-10" height="h-10" />
+        <div class="flex flex-col flex-1 gap-2">
+          <Skeleton width="w-1/2" height="h-3" />
+          <Skeleton width="w-4/5" height="h-3" />
+        </div>
+      </div>
+    </div>
     <ConversationBulkActions
       v-if="selectedConversations.length"
       :conversations="selectedConversations"
@@ -1278,7 +1292,10 @@ watch(conversationFilters, (newVal, oldVal) => {
           </DynamicScrollerItem>
         </template>
         <template #after>
-          <div v-if="chatListLoading" class="flex justify-center my-4">
+          <div
+            v-if="chatListLoading && conversationList.length"
+            class="flex justify-center my-4"
+          >
             <Spinner class="text-n-brand" />
           </div>
           <p

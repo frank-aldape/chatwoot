@@ -2,14 +2,16 @@
 import { mapGetters } from 'vuex';
 import { useReportMetrics } from 'dashboard/composables/useReportMetrics';
 import { GROUP_BY_FILTER, METRIC_CHART } from './constants';
+import { getChartSeriesColors } from 'dashboard/helper/chartColors';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import format from 'date-fns/format';
 import { formatTime } from '@chatwoot/utils';
 import ChartStats from './components/ChartElements/ChartStats.vue';
 import BarChart from 'shared/components/charts/BarChart.vue';
+import Skeleton from 'dashboard/components-next/skeleton/Skeleton.vue';
 
 export default {
-  components: { ChartStats, BarChart },
+  components: { ChartStats, BarChart, Skeleton },
   props: {
     groupBy: {
       type: Object,
@@ -90,11 +92,13 @@ export default {
         }
         return format(fromUnixTime(element.timestamp), 'dd-MMM');
       });
+      const seriesColors = getChartSeriesColors();
       const datasets = METRIC_CHART[metric.KEY].datasets.map(dataset => {
         switch (dataset.type) {
           case 'bar':
             return {
               ...dataset,
+              backgroundColor: seriesColors.bar,
               yAxisID: 'y',
               label: metric.NAME,
               data: data.map(element => element.value),
@@ -102,6 +106,8 @@ export default {
           case 'line':
             return {
               ...dataset,
+              borderColor: seriesColors.line,
+              pointBackgroundColor: seriesColors.point,
               yAxisID: 'y',
               label: this.metrics[0].NAME,
               data: data.map(element => element.count),
@@ -158,11 +164,19 @@ export default {
         :summary-fetching-key="summaryFetchingKey"
       />
       <div class="mt-4 h-72">
-        <woot-loading-state
+        <div
           v-if="accountReport.isFetching[metric.KEY]"
-          class="text-xs"
-          :message="$t('REPORT.LOADING_CHART')"
-        />
+          class="flex items-end h-full gap-2 px-1 pb-1"
+          aria-hidden="true"
+        >
+          <Skeleton width="w-full" height="h-24" rounded="rounded-t-md" />
+          <Skeleton width="w-full" height="h-40" rounded="rounded-t-md" />
+          <Skeleton width="w-full" height="h-32" rounded="rounded-t-md" />
+          <Skeleton width="w-full" height="h-52" rounded="rounded-t-md" />
+          <Skeleton width="w-full" height="h-36" rounded="rounded-t-md" />
+          <Skeleton width="w-full" height="h-44" rounded="rounded-t-md" />
+          <Skeleton width="w-full" height="h-28" rounded="rounded-t-md" />
+        </div>
         <div v-else class="flex items-center justify-center h-72">
           <BarChart
             v-if="accountReport.data[metric.KEY].length"

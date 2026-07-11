@@ -102,16 +102,15 @@ export const DATE_RANGE_OPTIONS = {
 export const CHART_FONT_FAMILY =
   'Inter,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 
+// Colors are applied at render time from design tokens (see chartColors.js /
+// ReportContainer.vue) so charts follow the brand palette and the active theme.
 export const DEFAULT_LINE_CHART = {
   type: 'line',
   fill: false,
-  borderColor: '#779BBB',
-  pointBackgroundColor: '#779BBB',
 };
 
 export const DEFAULT_BAR_CHART = {
   type: 'bar',
-  backgroundColor: 'rgb(31, 147, 255)',
 };
 
 const createChartConfig = yAxisTickCallback => ({

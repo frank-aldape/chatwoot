@@ -1,29 +1,6 @@
 import { frontendURL } from '../../../../helper/URLHelper';
 import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 
-import ReportsWrapper from './components/ReportsWrapper.vue';
-import Index from './Index.vue';
-
-import AgentReportsIndex from './AgentReportsIndex.vue';
-import InboxReportsIndex from './InboxReportsIndex.vue';
-import TeamReportsIndex from './TeamReportsIndex.vue';
-import LabelReportsIndex from './LabelReportsIndex.vue';
-
-import AgentReportsShow from './AgentReportsShow.vue';
-import InboxReportsShow from './InboxReportsShow.vue';
-import TeamReportsShow from './TeamReportsShow.vue';
-import LabelReportsShow from './LabelReportsShow.vue';
-
-import AgentReports from './AgentReports.vue';
-import InboxReports from './InboxReports.vue';
-import LabelReports from './LabelReports.vue';
-import TeamReports from './TeamReports.vue';
-
-import CsatResponses from './CsatResponses.vue';
-import BotReports from './BotReports.vue';
-import LiveReports from './LiveReports.vue';
-import SLAReports from './SLAReports.vue';
-
 const meta = {
   featureFlag: FEATURE_FLAGS.REPORTS,
   permissions: ['administrator', 'report_manage'],
@@ -34,25 +11,25 @@ const oldReportRoutes = [
     path: 'agent',
     name: 'agent_reports',
     meta,
-    component: AgentReports,
+    component: () => import('./AgentReports.vue'),
   },
   {
     path: 'inboxes',
     name: 'inbox_reports',
     meta,
-    component: InboxReports,
+    component: () => import('./InboxReports.vue'),
   },
   {
     path: 'label',
     name: 'label_reports',
     meta,
-    component: LabelReports,
+    component: () => import('./LabelReports.vue'),
   },
   {
     path: 'teams',
     name: 'team_reports',
     meta,
-    component: TeamReports,
+    component: () => import('./TeamReports.vue'),
   },
 ];
 
@@ -63,7 +40,7 @@ const revisedReportRoutes = [
     meta: {
       permissions: ['administrator', 'report_manage'],
     },
-    component: AgentReportsIndex,
+    component: () => import('./AgentReportsIndex.vue'),
   },
   {
     path: 'agents/:id',
@@ -71,7 +48,7 @@ const revisedReportRoutes = [
     meta: {
       permissions: ['administrator', 'report_manage'],
     },
-    component: AgentReportsShow,
+    component: () => import('./AgentReportsShow.vue'),
   },
 
   {
@@ -80,7 +57,7 @@ const revisedReportRoutes = [
     meta: {
       permissions: ['administrator', 'report_manage'],
     },
-    component: InboxReportsIndex,
+    component: () => import('./InboxReportsIndex.vue'),
   },
   {
     path: 'inboxes/:id',
@@ -88,7 +65,7 @@ const revisedReportRoutes = [
     meta: {
       permissions: ['administrator', 'report_manage'],
     },
-    component: InboxReportsShow,
+    component: () => import('./InboxReportsShow.vue'),
   },
   {
     path: 'teams_overview',
@@ -96,7 +73,7 @@ const revisedReportRoutes = [
     meta: {
       permissions: ['administrator', 'report_manage'],
     },
-    component: TeamReportsIndex,
+    component: () => import('./TeamReportsIndex.vue'),
   },
   {
     path: 'teams/:id',
@@ -104,7 +81,7 @@ const revisedReportRoutes = [
     meta: {
       permissions: ['administrator', 'report_manage'],
     },
-    component: TeamReportsShow,
+    component: () => import('./TeamReportsShow.vue'),
   },
   {
     path: 'labels_overview',
@@ -112,7 +89,7 @@ const revisedReportRoutes = [
     meta: {
       permissions: ['administrator', 'report_manage'],
     },
-    component: LabelReportsIndex,
+    component: () => import('./LabelReportsIndex.vue'),
   },
   {
     path: 'labels/:id',
@@ -120,7 +97,7 @@ const revisedReportRoutes = [
     meta: {
       permissions: ['administrator', 'report_manage'],
     },
-    component: LabelReportsShow,
+    component: () => import('./LabelReportsShow.vue'),
   },
 ];
 
@@ -128,7 +105,7 @@ export default {
   routes: [
     {
       path: frontendURL('accounts/:accountId/reports'),
-      component: ReportsWrapper,
+      component: () => import('./components/ReportsWrapper.vue'),
       children: [
         {
           path: '',
@@ -140,13 +117,13 @@ export default {
           path: 'overview',
           name: 'account_overview_reports',
           meta,
-          component: LiveReports,
+          component: () => import('./LiveReports.vue'),
         },
         {
           path: 'conversation',
           name: 'conversation_reports',
           meta,
-          component: Index,
+          component: () => import('./Index.vue'),
         },
         ...oldReportRoutes,
         ...revisedReportRoutes,
@@ -154,19 +131,19 @@ export default {
           path: 'sla',
           name: 'sla_reports',
           meta,
-          component: SLAReports,
+          component: () => import('./SLAReports.vue'),
         },
         {
           path: 'csat',
           name: 'csat_reports',
           meta,
-          component: CsatResponses,
+          component: () => import('./CsatResponses.vue'),
         },
         {
           path: 'bot',
           name: 'bot_reports',
           meta,
-          component: BotReports,
+          component: () => import('./BotReports.vue'),
         },
       ],
     },

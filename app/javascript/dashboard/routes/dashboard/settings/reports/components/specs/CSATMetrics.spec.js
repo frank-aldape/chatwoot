@@ -40,7 +40,7 @@ describe('CsatMetrics.vue', () => {
           $t: msg => msg,
         },
         stubs: {
-          CsatMetricCard: true,
+          MetricCard: true,
           CsatRatingDistribution: true,
         },
       },
@@ -52,7 +52,7 @@ describe('CsatMetrics.vue', () => {
   });
 
   it('renders metric cards with correct values', () => {
-    const metricCards = wrapper.findAllComponents({ name: 'CsatMetricCard' });
+    const metricCards = wrapper.findAllComponents({ name: 'MetricCard' });
     expect(metricCards).toHaveLength(3);
   });
 

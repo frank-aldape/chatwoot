@@ -13,7 +13,11 @@ defineProps({
     class="bg-n-alpha-2 divide-y divide-n-strong text-n-slate-12 rounded-xl max-w-80"
   >
     <div class="px-3 py-2.5">
-      <img :src="message.image_url" class="max-h-44 rounded-lg w-full" />
+      <img
+        :src="message.image_url"
+        class="max-h-44 rounded-lg w-full"
+        loading="lazy"
+      />
       <div class="pt-2.5 flex flex-col gap-2">
         <h6 class="font-semibold">{{ message.title }}</h6>
         <span

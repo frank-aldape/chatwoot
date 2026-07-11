@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useMapGetter } from 'dashboard/composables/store';
-import CsatMetricCard from './CsatMetricCard.vue';
+import MetricCard from 'dashboard/components-next/metric/MetricCard.vue';
 import CsatRatingDistribution from './CsatRatingDistribution.vue';
 
 const metrics = useMapGetter('csat/getMetrics');
@@ -27,7 +27,7 @@ const formatPercent = value => (value ? `${value}%` : '0%');
     <div
       class="flex sm:flex-row flex-col w-full gap-4 sm:gap-14 shadow outline-1 outline outline-n-container rounded-xl bg-n-solid-2 px-6 py-5"
     >
-      <CsatMetricCard
+      <MetricCard
         :label="$t('CSAT_REPORTS.METRIC.TOTAL_RESPONSES.LABEL')"
         :tooltip="$t('CSAT_REPORTS.METRIC.TOTAL_RESPONSES.TOOLTIP')"
         :value="responseCount"
@@ -36,7 +36,7 @@ const formatPercent = value => (value ? `${value}%` : '0%');
 
       <div class="w-full sm:w-px bg-n-strong" />
 
-      <CsatMetricCard
+      <MetricCard
         :label="$t('CSAT_REPORTS.METRIC.SATISFACTION_SCORE.LABEL')"
         :tooltip="$t('CSAT_REPORTS.METRIC.SATISFACTION_SCORE.TOOLTIP')"
         :value="formatPercent(satisfactionScore)"
@@ -45,7 +45,7 @@ const formatPercent = value => (value ? `${value}%` : '0%');
 
       <div class="w-full sm:w-px bg-n-strong" />
 
-      <CsatMetricCard
+      <MetricCard
         :label="$t('CSAT_REPORTS.METRIC.RESPONSE_RATE.LABEL')"
         :tooltip="$t('CSAT_REPORTS.METRIC.RESPONSE_RATE.TOOLTIP')"
         :value="formatPercent(responseRate)"

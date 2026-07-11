@@ -1,27 +1,17 @@
 import { FEATURE_FLAGS } from '../../../../featureFlags';
 import { frontendURL } from '../../../../helper/URLHelper';
-import SettingsWrapper from '../SettingsWrapper.vue';
-import IntegrationHooks from './IntegrationHooks.vue';
-import Index from './Index.vue';
-import Webhook from './Webhooks/Index.vue';
-import DashboardApps from './DashboardApps/Index.vue';
-import Slack from './Slack.vue';
-import SettingsContent from '../Wrapper.vue';
-import Linear from './Linear.vue';
-import Notion from './Notion.vue';
-import Shopify from './Shopify.vue';
 
 export default {
   routes: [
     {
       path: frontendURL('accounts/:accountId/settings/integrations'),
-      component: SettingsWrapper,
+      component: () => import('../SettingsWrapper.vue'),
       props: {},
       children: [
         {
           path: '',
           name: 'settings_applications',
-          component: Index,
+          component: () => import('./Index.vue'),
           meta: {
             featureFlag: FEATURE_FLAGS.INTEGRATIONS,
             permissions: ['administrator'],
@@ -29,7 +19,7 @@ export default {
         },
         {
           path: 'dashboard_apps',
-          component: DashboardApps,
+          component: () => import('./DashboardApps/Index.vue'),
           name: 'settings_integrations_dashboard_apps',
           meta: {
             featureFlag: FEATURE_FLAGS.INTEGRATIONS,
@@ -38,7 +28,7 @@ export default {
         },
         {
           path: 'webhook',
-          component: Webhook,
+          component: () => import('./Webhooks/Index.vue'),
           name: 'settings_integrations_webhook',
           meta: {
             featureFlag: FEATURE_FLAGS.INTEGRATIONS,
@@ -49,7 +39,7 @@ export default {
     },
     {
       path: frontendURL('accounts/:accountId/settings/integrations'),
-      component: SettingsContent,
+      component: () => import('../Wrapper.vue'),
       props: params => {
         const integrationId = params.params?.integration_id;
         const hideHeader = ['dialogflow'].includes(integrationId);
@@ -75,7 +65,7 @@ export default {
         {
           path: 'slack',
           name: 'settings_integrations_slack',
-          component: Slack,
+          component: () => import('./Slack.vue'),
           meta: {
             featureFlag: FEATURE_FLAGS.INTEGRATIONS,
             permissions: ['administrator'],
@@ -85,7 +75,7 @@ export default {
         {
           path: 'linear',
           name: 'settings_integrations_linear',
-          component: Linear,
+          component: () => import('./Linear.vue'),
           meta: {
             permissions: ['administrator'],
           },
@@ -94,7 +84,7 @@ export default {
         {
           path: 'notion',
           name: 'settings_integrations_notion',
-          component: Notion,
+          component: () => import('./Notion.vue'),
           meta: {
             permissions: ['administrator'],
           },
@@ -103,7 +93,7 @@ export default {
         {
           path: 'shopify',
           name: 'settings_integrations_shopify',
-          component: Shopify,
+          component: () => import('./Shopify.vue'),
           meta: {
             featureFlag: FEATURE_FLAGS.INTEGRATIONS,
             permissions: ['administrator'],
@@ -113,7 +103,7 @@ export default {
         {
           path: ':integration_id',
           name: 'settings_applications_integration',
-          component: IntegrationHooks,
+          component: () => import('./IntegrationHooks.vue'),
           meta: {
             featureFlag: FEATURE_FLAGS.INTEGRATIONS,
             permissions: ['administrator'],

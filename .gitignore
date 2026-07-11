@@ -105,3 +105,4 @@ local/
 skills-lock.json
 *.md
 *.md
+/.claude
