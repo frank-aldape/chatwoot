@@ -26,6 +26,7 @@ const handleClick = () => {
           slate
           ghost
           icon="i-lucide-chevron-right"
+          :aria-label="$t('ASSIGNMENT_POLICY.INDEX.OPEN')"
           @click.stop="handleClick"
         />
       </div>

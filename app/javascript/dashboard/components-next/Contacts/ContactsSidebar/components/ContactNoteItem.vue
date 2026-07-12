@@ -77,6 +77,7 @@ onMounted(() => {
         color="ruby"
         size="xs"
         icon="i-lucide-trash"
+        :aria-label="t('CONVERSATION.CONTEXT_MENU.DELETE')"
         class="opacity-0 group-hover/note:opacity-100"
         @click="handleDelete"
       />

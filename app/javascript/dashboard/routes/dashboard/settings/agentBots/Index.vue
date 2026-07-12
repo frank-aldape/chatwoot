@@ -145,6 +145,7 @@ onMounted(() => {
                 <Button
                   v-if="!bot.system_bot"
                   v-tooltip.top="t('AGENT_BOTS.EDIT.BUTTON_TEXT')"
+                  :aria-label="t('AGENT_BOTS.EDIT.BUTTON_TEXT')"
                   icon="i-lucide-pen"
                   slate
                   xs
@@ -155,6 +156,7 @@ onMounted(() => {
                 <Button
                   v-if="!bot.system_bot"
                   v-tooltip.top="t('AGENT_BOTS.DELETE.BUTTON_TEXT')"
+                  :aria-label="t('AGENT_BOTS.DELETE.BUTTON_TEXT')"
                   icon="i-lucide-trash-2"
                   xs
                   ruby

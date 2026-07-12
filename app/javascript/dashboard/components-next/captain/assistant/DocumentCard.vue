@@ -94,6 +94,7 @@ const handleAction = ({ action, value }) => {
             color="slate"
             size="xs"
             class="rounded-md group-hover:bg-n-alpha-2"
+            :aria-label="t('CONVERSATION.HEADER.MORE_ACTIONS')"
             @click="toggleDropdown()"
           />
           <DropdownMenu

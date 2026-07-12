@@ -184,7 +184,11 @@ export default {
             :label="$t('GENERAL_SETTINGS.FORM.LANGUAGE.LABEL')"
             :error-message="$t('GENERAL_SETTINGS.FORM.LANGUAGE.ERROR')"
           >
-            <select v-model="locale" class="!mb-0 text-sm">
+            <select
+              v-model="locale"
+              class="!mb-0 text-sm"
+              :aria-label="$t('GENERAL_SETTINGS.FORM.LANGUAGE.LABEL')"
+            >
               <option
                 v-for="lang in languagesSortedByCode"
                 :key="lang.iso_639_1_code"

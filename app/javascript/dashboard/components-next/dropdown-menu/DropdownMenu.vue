@@ -149,6 +149,9 @@ onMounted(() => {
           :placeholder="
             searchPlaceholder || t('DROPDOWN_MENU.SEARCH_PLACEHOLDER')
           "
+          :aria-label="
+            searchPlaceholder || t('DROPDOWN_MENU.SEARCH_PLACEHOLDER')
+          "
           class="reset-base w-full h-8 py-2 pl-10 pr-2 text-sm focus:outline-none border-none rounded-lg bg-n-alpha-black2 dark:bg-n-solid-1 text-n-slate-12"
           @input="handleSearchInput"
         />

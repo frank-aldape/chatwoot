@@ -272,6 +272,7 @@ export default {
           <template #trigger="{ toggle }">
             <NextButton
               v-tooltip.top-end="$t('CONTACT_PANEL.NEW_MESSAGE')"
+              :aria-label="$t('CONTACT_PANEL.NEW_MESSAGE')"
               icon="i-ph-chat-circle-dots"
               slate
               faded
@@ -291,6 +292,7 @@ export default {
         />
         <NextButton
           v-tooltip.top-end="$t('EDIT_CONTACT.BUTTON_LABEL')"
+          :aria-label="$t('EDIT_CONTACT.BUTTON_LABEL')"
           icon="i-ph-pencil-simple"
           slate
           faded
@@ -299,6 +301,7 @@ export default {
         />
         <NextButton
           v-tooltip.top-end="$t('CONTACT_PANEL.MERGE_CONTACT')"
+          :aria-label="$t('CONTACT_PANEL.MERGE_CONTACT')"
           icon="i-ph-arrows-merge"
           slate
           faded
@@ -309,6 +312,7 @@ export default {
         <NextButton
           v-if="isAdmin"
           v-tooltip.top-end="$t('DELETE_CONTACT.BUTTON_LABEL')"
+          :aria-label="$t('DELETE_CONTACT.BUTTON_LABEL')"
           icon="i-ph-trash"
           slate
           faded

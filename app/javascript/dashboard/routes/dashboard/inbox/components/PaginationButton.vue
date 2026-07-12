@@ -47,6 +47,7 @@ export default {
         xs
         slate
         faded
+        :aria-label="$t('INBOX.PAGINATION.PREVIOUS')"
         :disabled="isUpDisabled"
         @click="handleUpClick"
       />
@@ -55,6 +56,7 @@ export default {
         xs
         slate
         faded
+        :aria-label="$t('INBOX.PAGINATION.NEXT')"
         :disabled="isDownDisabled"
         @click="handleDownClick"
       />

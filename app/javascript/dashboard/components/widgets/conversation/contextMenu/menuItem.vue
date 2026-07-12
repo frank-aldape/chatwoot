@@ -15,11 +15,10 @@ defineProps({
 
 <template>
   <div class="menu text-n-slate-12 min-h-7 min-w-0" role="button">
-    <fluent-icon
+    <span
       v-if="variant === 'icon' && option.icon"
-      :icon="option.icon"
-      size="14"
-      class="flex-shrink-0"
+      class="flex-shrink-0 size-3.5"
+      :class="option.icon"
     />
     <span
       v-if="variant === 'label' && option.color"

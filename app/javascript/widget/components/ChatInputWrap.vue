@@ -4,7 +4,6 @@ import { mapGetters } from 'vuex';
 import ChatAttachmentButton from 'widget/components/ChatAttachment.vue';
 import ChatSendButton from 'widget/components/ChatSendButton.vue';
 import { useAttachments } from '../composables/useAttachments';
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import ResizableTextArea from 'shared/components/ResizableTextArea.vue';
 
 import EmojiInput from 'shared/components/emoji/EmojiInput.vue';
@@ -15,7 +14,6 @@ export default {
     ChatAttachmentButton,
     ChatSendButton,
     EmojiInput,
-    FluentIcon,
     ResizableTextArea,
   },
   props: {
@@ -160,9 +158,8 @@ export default {
         :aria-label="$t('EMOJI.ARIA_LABEL')"
         @click="toggleEmojiPicker"
       >
-        <FluentIcon
-          icon="emoji"
-          class="transition-all duration-150"
+        <span
+          class="i-lucide-smile size-5 transition-all duration-150"
           :class="{
             'text-n-slate-12': !showEmojiPicker,
             'text-n-brand': showEmojiPicker,

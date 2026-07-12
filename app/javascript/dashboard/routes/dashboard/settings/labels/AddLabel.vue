@@ -104,7 +104,12 @@ export default {
         </label>
       </div>
       <div class="flex items-center w-full gap-2">
-        <input v-model="showOnSidebar" type="checkbox" :value="true" />
+        <input
+          v-model="showOnSidebar"
+          type="checkbox"
+          :value="true"
+          :aria-label="$t('LABEL_MGMT.FORM.SHOW_ON_SIDEBAR.LABEL')"
+        />
         <label for="conversation_creation">
           {{ $t('LABEL_MGMT.FORM.SHOW_ON_SIDEBAR.LABEL') }}
         </label>

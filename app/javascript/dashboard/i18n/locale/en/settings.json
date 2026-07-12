@@ -90,6 +90,7 @@
         "NOTE": "Este token puede usarse si estás construyendo una integración basada en API",
         "COPY": "Copiar",
         "RESET": "Restablecer",
+        "TOGGLE_VISIBILITY": "Mostrar u ocultar el token",
         "CONFIRM_RESET": "¿Estás seguro?",
         "CONFIRM_HINT": "Haz clic de nuevo para confirmar",
         "RESET_SUCCESS": "El token de acceso se regeneró correctamente",
@@ -536,6 +537,7 @@
         "TOOLTIP": "Huella digital SHA-1 del certificado - Úsala para verificar el certificado en la configuración de tu IdP"
       },
       "COPY_SUCCESS": "Copiado al portapapeles",
+      "COPY": "Copiar",
       "SP_ENTITY_ID": {
         "LABEL": "ID de entidad del SP",
         "HELP": "Identificador único de esta aplicación como proveedor de servicios (generado automáticamente).",

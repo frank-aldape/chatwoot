@@ -38,6 +38,7 @@ const handleChange = value => {
       variant="faded"
       color="ruby"
       icon="i-lucide-trash"
+      :aria-label="$t('CUSTOM_ATTRIBUTES.ACTIONS.DELETE')"
       size="xs"
       class="flex-shrink-0 opacity-0 group-hover/attribute:opacity-100 hover:no-underline"
       @click="emit('delete')"

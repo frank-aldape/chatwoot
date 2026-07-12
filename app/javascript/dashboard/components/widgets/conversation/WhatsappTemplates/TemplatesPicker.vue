@@ -80,6 +80,7 @@ const refreshTemplates = async () => {
           v-model="query"
           type="search"
           :placeholder="t('WHATSAPP_TEMPLATES.PICKER.SEARCH_PLACEHOLDER')"
+          :aria-label="t('WHATSAPP_TEMPLATES.PICKER.SEARCH_PLACEHOLDER')"
           class="reset-base w-full h-9 bg-transparent text-n-slate-12 !text-sm !outline-0"
         />
       </div>

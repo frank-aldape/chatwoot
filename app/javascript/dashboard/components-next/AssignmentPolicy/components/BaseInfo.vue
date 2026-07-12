@@ -86,6 +86,7 @@ watch(
             v-model="policyName"
             type="text"
             :placeholder="namePlaceholder"
+            :aria-label="namePlaceholder"
           />
         </div>
       </WithLabel>
@@ -103,6 +104,7 @@ watch(
             v-model="description"
             type="text"
             :placeholder="descriptionPlaceholder"
+            :aria-label="descriptionPlaceholder"
           />
         </div>
       </WithLabel>

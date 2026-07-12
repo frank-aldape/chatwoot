@@ -194,6 +194,7 @@ const tableHeaders = computed(() => {
             <td class="py-4 flex justify-end gap-1">
               <Button
                 v-tooltip.top="$t('CANNED_MGMT.EDIT.BUTTON_TEXT')"
+                :aria-label="$t('CANNED_MGMT.EDIT.BUTTON_TEXT')"
                 icon="i-lucide-pen"
                 slate
                 xs
@@ -202,6 +203,7 @@ const tableHeaders = computed(() => {
               />
               <Button
                 v-tooltip.top="$t('CANNED_MGMT.DELETE.BUTTON_TEXT')"
+                :aria-label="$t('CANNED_MGMT.DELETE.BUTTON_TEXT')"
                 icon="i-lucide-trash-2"
                 xs
                 ruby

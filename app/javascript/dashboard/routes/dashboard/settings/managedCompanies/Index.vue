@@ -374,6 +374,7 @@ watch(filteredManagedCompanies, companies => {
           <Input
             v-model="searchQuery"
             type="search"
+            :aria-label="$t('MANAGED_COMPANIES_SETTINGS.SEARCH.PLACEHOLDER')"
             :placeholder="$t('MANAGED_COMPANIES_SETTINGS.SEARCH.PLACEHOLDER')"
             :custom-input-class="[
               'h-10 [&:not(.focus)]:!border-transparent bg-n-alpha-2 ltr:!pl-9 rtl:!pr-9',
@@ -491,6 +492,7 @@ watch(filteredManagedCompanies, companies => {
                 <div class="flex justify-end gap-1">
                   <Button
                     v-tooltip.top="$t('MANAGED_COMPANIES_SETTINGS.LIST.VIEW')"
+                    :aria-label="$t('MANAGED_COMPANIES_SETTINGS.LIST.VIEW')"
                     icon="i-lucide-eye"
                     slate
                     xs
@@ -500,6 +502,7 @@ watch(filteredManagedCompanies, companies => {
                   <Button
                     v-if="isAdmin"
                     v-tooltip.top="$t('MANAGED_COMPANIES_SETTINGS.LIST.EDIT')"
+                    :aria-label="$t('MANAGED_COMPANIES_SETTINGS.LIST.EDIT')"
                     icon="i-lucide-pen"
                     slate
                     xs
@@ -509,6 +512,7 @@ watch(filteredManagedCompanies, companies => {
                   <Button
                     v-if="isAdmin"
                     v-tooltip.top="$t('MANAGED_COMPANIES_SETTINGS.LIST.DELETE')"
+                    :aria-label="$t('MANAGED_COMPANIES_SETTINGS.LIST.DELETE')"
                     icon="i-lucide-trash-2"
                     xs
                     ruby

@@ -71,6 +71,7 @@ export default {
         slate
         class="ltr:-ml-1 rtl:-mr-1"
         icon="i-lucide-clipboard"
+        :aria-label="$t('CONVERSATION.CONTEXT_MENU.COPY')"
         @click="onCopy"
       />
     </a>

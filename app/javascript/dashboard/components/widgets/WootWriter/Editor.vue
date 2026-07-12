@@ -807,6 +807,7 @@ useEmitter(BUS_EVENTS.INSERT_INTO_RICH_EDITOR, insertContentIntoEditor);
       type="file"
       accept="image/png, image/jpeg, image/jpg, image/gif, image/webp"
       hidden
+      :aria-label="t('PROFILE_SETTINGS.FORM.UPLOAD_IMAGE')"
       @change="onFileChange"
     />
     <div ref="editor" />

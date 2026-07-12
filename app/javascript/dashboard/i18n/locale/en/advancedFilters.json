@@ -19,6 +19,9 @@
       "OR": "O"
     },
     "INPUT_PLACEHOLDER": "Ingresa un valor",
+    "FILTER_ATTRIBUTE_LABEL": "Propiedad del filtro",
+    "FILTER_OPERATOR_LABEL": "Operador del filtro",
+    "QUERY_OPERATOR_LABEL": "Operador de consulta",
     "OPERATOR_LABELS": {
       "equal_to": "Igual a",
       "not_equal_to": "No es igual a",

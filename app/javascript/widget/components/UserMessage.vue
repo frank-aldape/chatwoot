@@ -3,7 +3,6 @@ import UserMessageBubble from 'widget/components/UserMessageBubble.vue';
 import MessageReplyButton from 'widget/components/MessageReplyButton.vue';
 import ImageBubble from 'widget/components/ImageBubble.vue';
 import VideoBubble from 'widget/components/VideoBubble.vue';
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import FileBubble from 'widget/components/FileBubble.vue';
 import { messageStamp } from 'shared/helpers/timeHelper';
 import messageMixin from '../mixins/messageMixin';
@@ -21,7 +20,6 @@ export default {
     ImageBubble,
     VideoBubble,
     FileBubble,
-    FluentIcon,
     ReplyToChip,
     DragWrapper,
   },
@@ -173,7 +171,7 @@ export default {
             class="inline-flex items-center justify-center ltr:ml-2 rtl:mr-2"
             @click="retrySendMessage"
           >
-            <FluentIcon icon="arrow-clockwise" size="14" />
+            <span class="i-lucide-rotate-cw size-3.5" />
           </button>
         </div>
       </div>

@@ -60,6 +60,7 @@ const closeBanner = event => {
         </span>
         <button
           class="inline-flex items-center justify-center rounded hover:bg-white hover:bg-opacity-20 transition-colors p-0"
+          :aria-label="t('YEAR_IN_REVIEW.CLOSE')"
           @click="closeBanner"
         >
           <Icon

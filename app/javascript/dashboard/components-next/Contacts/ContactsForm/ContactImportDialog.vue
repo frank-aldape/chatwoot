@@ -114,6 +114,7 @@ defineExpose({ dialogRef });
             <div class="w-px h-3 bg-n-strong" />
             <Button
               icon="i-lucide-trash"
+              :aria-label="t('CONTACT_FORM.FORM.COUNTRY.REMOVE')"
               color="slate"
               variant="ghost"
               size="sm"
@@ -128,6 +129,9 @@ defineExpose({ dialogRef });
       type="file"
       accept="text/csv"
       class="hidden"
+      :aria-label="
+        t('CONTACTS_LAYOUT.HEADER.ACTIONS.IMPORT_CONTACT.CHOOSE_FILE')
+      "
       @change="handleFileChange"
     />
   </Dialog>

@@ -177,6 +177,7 @@ useEmitter(CMD_RESOLVE_CONVERSATION, onCmdResolveConversation);
         class="ltr:rounded-l-none rtl:rounded-r-none !outline-0"
         color="slate"
         trailing-icon
+        :aria-label="$t('CONVERSATION.HEADER.MORE_ACTIONS')"
         @click="openDropdown"
       />
     </ButtonGroup>

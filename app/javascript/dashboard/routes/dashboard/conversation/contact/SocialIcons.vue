@@ -36,13 +36,13 @@ export default {
       v-for="profile in availableProfiles"
       :key="profile.key"
       :href="`${profile.link}${socialProfiles[profile.key]}`"
+      :aria-label="profile.key"
       target="_blank"
       rel="noopener noreferrer nofollow"
     >
-      <fluent-icon
-        :icon="`brand-${profile.key}`"
-        size="16"
-        class="text-n-slate-11 hover:text-n-slate-10"
+      <span
+        class="size-4 text-n-slate-11 hover:text-n-slate-10"
+        :class="`i-ri-${profile.key}-fill`"
       />
     </a>
   </div>

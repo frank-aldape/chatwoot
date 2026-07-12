@@ -1,7 +1,12 @@
 {
   "INBOX": {
+    "PAGINATION": {
+      "PREVIOUS": "Anterior",
+      "NEXT": "Siguiente"
+    },
     "LIST": {
       "TITLE": "Mi bandeja de entrada",
+      "OPTIONS": "Opciones",
       "DISPLAY_DROPDOWN": "Mostrar",
       "LOADING": "Cargando notificaciones",
       "404": "No hay notificaciones activas en este grupo.",

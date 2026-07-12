@@ -1,9 +1,6 @@
 <script>
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
-
 export default {
   name: 'FooterReplyTo',
-  components: { FluentIcon },
   props: {
     inReplyTo: {
       type: Object,
@@ -36,7 +33,7 @@ export default {
       class="items-end flex-shrink-0 p-1 rounded-md hover:bg-n-slate-5"
       @click="$emit('dismiss')"
     >
-      <FluentIcon icon="dismiss" size="12" />
+      <span class="i-lucide-x size-3" />
     </button>
   </div>
 </template>

@@ -40,6 +40,7 @@
       }
     },
     "FORM": {
+      "THRESHOLD_UNIT": "Unidad de tiempo",
       "NAME": {
         "LABEL": "Nombre del SLA",
         "PLACEHOLDER": "Nombre del SLA",

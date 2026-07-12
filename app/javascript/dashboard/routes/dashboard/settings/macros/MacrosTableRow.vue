@@ -55,6 +55,7 @@ const visibilityLabel = computed(() => {
       <router-link :to="{ name: 'macros_edit', params: { macroId: macro.id } }">
         <Button
           v-tooltip.top="$t('MACROS.EDIT.TOOLTIP')"
+          :aria-label="$t('MACROS.EDIT.TOOLTIP')"
           icon="i-lucide-pen"
           slate
           xs
@@ -63,6 +64,7 @@ const visibilityLabel = computed(() => {
       </router-link>
       <Button
         v-tooltip.top="$t('MACROS.DELETE.TOOLTIP')"
+        :aria-label="$t('MACROS.DELETE.TOOLTIP')"
         icon="i-lucide-trash-2"
         xs
         ruby

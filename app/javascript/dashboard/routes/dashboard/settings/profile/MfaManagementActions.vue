@@ -155,12 +155,14 @@ defineExpose({
           v-model="disablePassword"
           type="password"
           :label="$t('MFA_SETTINGS.DISABLE.PASSWORD')"
+          :aria-label="$t('MFA_SETTINGS.DISABLE.PASSWORD')"
         />
         <Input
           v-model="disableOtpCode"
           type="text"
           maxlength="6"
           :label="$t('MFA_SETTINGS.DISABLE.OTP_CODE')"
+          :aria-label="$t('MFA_SETTINGS.DISABLE.OTP_CODE_PLACEHOLDER')"
           :placeholder="$t('MFA_SETTINGS.DISABLE.OTP_CODE_PLACEHOLDER')"
         />
       </div>
@@ -181,6 +183,7 @@ defineExpose({
         type="text"
         maxlength="6"
         :label="$t('MFA_SETTINGS.REGENERATE.OTP_CODE')"
+        :aria-label="$t('MFA_SETTINGS.REGENERATE.OTP_CODE_PLACEHOLDER')"
         :placeholder="$t('MFA_SETTINGS.REGENERATE.OTP_CODE_PLACEHOLDER')"
       />
     </Dialog>

@@ -108,6 +108,7 @@ const isInboxButtonDisabled = computed(() => {
           icon="i-lucide-x"
           color="slate"
           size="xs"
+          :aria-label="t('GENERAL.REMOVE')"
           class="flex-shrink-0"
           @click="clearSelectedCompany"
         />
@@ -151,6 +152,7 @@ const isInboxButtonDisabled = computed(() => {
         icon="i-lucide-x"
         color="slate"
         size="xs"
+        :aria-label="t('GENERAL.REMOVE')"
         class="flex-shrink-0"
         @click="emit('updateInbox', null)"
       />

@@ -1,14 +1,10 @@
 <script>
 import IntegrationAPIClient from 'widget/api/integration';
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import { buildDyteURL } from 'shared/helpers/IntegrationHelper';
 import { getContrastingTextColor } from '@chatwoot/utils';
 import { mapGetters } from 'vuex';
 
 export default {
-  components: {
-    FluentIcon,
-  },
   props: {
     messageId: {
       type: Number,
@@ -62,7 +58,7 @@ export default {
       }"
       @click="joinTheCall"
     >
-      <FluentIcon icon="video-add" class="rtl:ml-2 ltr:mr-2" />
+      <span class="i-lucide-video size-5 rtl:ml-2 ltr:mr-2" />
       {{ $t('INTEGRATIONS.DYTE.CLICK_HERE_TO_JOIN') }}
     </button>
     <div v-if="dyteAuthToken" class="video-call--container">

@@ -89,7 +89,7 @@ export default {
     :title="description"
   >
     <span v-if="icon" class="label-action--button">
-      <fluent-icon :icon="icon" size="12" class="label--icon cursor-pointer" />
+      <span :class="icon" class="label--icon size-3 cursor-pointer" />
     </span>
     <span
       v-if="['smooth', 'dashed'].includes(variant) && title && !icon"
@@ -104,6 +104,7 @@ export default {
       v-if="showClose"
       class="label-close--button p-0"
       :style="{ color: textColor }"
+      :aria-label="$t('GENERAL.CLOSE')"
       @click="onClick"
     >
       <span class="i-lucide-x size-3 close--icon" />

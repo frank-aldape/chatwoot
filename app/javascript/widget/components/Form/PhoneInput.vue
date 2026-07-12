@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, watch, useTemplateRef, nextTick, unref } from 'vue';
 import countriesList from 'shared/constants/countries.js';
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import {
   getActiveCountryCode,
   getActiveDialCode,
@@ -180,8 +179,8 @@ function onSelect() {
         <h5 v-if="activeCountry.emoji" class="mb-0 text-xl">
           {{ activeCountry.emoji }}
         </h5>
-        <FluentIcon v-else icon="globe" class="fluent-icon" size="20" />
-        <FluentIcon icon="chevron-down" class="fluent-icon" size="12" />
+        <span v-else class="i-lucide-globe size-5 fluent-icon" />
+        <span class="i-lucide-chevron-down size-3 fluent-icon" />
       </div>
       <span
         v-if="activeDialCode"

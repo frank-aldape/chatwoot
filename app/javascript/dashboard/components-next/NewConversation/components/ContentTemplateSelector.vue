@@ -82,6 +82,9 @@ const handleSendMessage = template => {
           :placeholder="
             t('COMPOSE_NEW_CONVERSATION.FORM.TWILIO_OPTIONS.SEARCH_PLACEHOLDER')
           "
+          :aria-label="
+            t('COMPOSE_NEW_CONVERSATION.FORM.TWILIO_OPTIONS.SEARCH_PLACEHOLDER')
+          "
           custom-input-class="ltr:pl-10 rtl:pr-10"
         >
           <template #prefix>

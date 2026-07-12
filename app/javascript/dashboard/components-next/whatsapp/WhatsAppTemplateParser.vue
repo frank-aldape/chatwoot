@@ -233,6 +233,11 @@ defineExpose({
                 type: formatType,
               })
             "
+            :aria-label="
+              t('WHATSAPP_TEMPLATES.PARSER.MEDIA_URL_LABEL', {
+                type: formatType,
+              })
+            "
             @update:model-value="updateMediaUrl"
           />
         </div>
@@ -242,6 +247,9 @@ defineExpose({
             type="text"
             class="flex-1"
             :placeholder="
+              t('WHATSAPP_TEMPLATES.PARSER.DOCUMENT_NAME_PLACEHOLDER')
+            "
+            :aria-label="
               t('WHATSAPP_TEMPLATES.PARSER.DOCUMENT_NAME_PLACEHOLDER')
             "
             @update:model-value="updateMediaName"
@@ -268,6 +276,11 @@ defineExpose({
                 variable: key,
               })
             "
+            :aria-label="
+              t('WHATSAPP_TEMPLATES.PARSER.VARIABLE_PLACEHOLDER', {
+                variable: key,
+              })
+            "
           />
         </div>
       </div>
@@ -287,6 +300,7 @@ defineExpose({
             type="text"
             class="flex-1"
             :placeholder="t('WHATSAPP_TEMPLATES.PARSER.BUTTON_PARAMETER')"
+            :aria-label="t('WHATSAPP_TEMPLATES.PARSER.BUTTON_PARAMETER')"
           />
         </div>
       </div>

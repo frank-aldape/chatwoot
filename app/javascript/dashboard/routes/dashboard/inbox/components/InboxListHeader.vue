@@ -108,6 +108,7 @@ export default {
         slate
         xs
         faded
+        :aria-label="$t('INBOX.LIST.OPTIONS')"
         @click="openInboxOptionsMenu"
       />
       <InboxOptionMenu

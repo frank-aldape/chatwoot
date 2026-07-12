@@ -162,6 +162,7 @@ const updateArticleStatus = async ({ value }) => {
                 size="sm"
                 :disabled="!articleId"
                 no-animation
+                :aria-label="t('CONVERSATION.HEADER.MORE_ACTIONS')"
                 class="ltr:rounded-l-none rtl:rounded-r-none"
                 @click.stop="showArticleActionMenu = !showArticleActionMenu"
               />

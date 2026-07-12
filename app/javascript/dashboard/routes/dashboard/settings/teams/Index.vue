@@ -114,6 +114,7 @@ const confirmPlaceHolderText = computed(() =>
                 <Button
                   v-if="isAdmin"
                   v-tooltip.top="$t('TEAMS_SETTINGS.LIST.EDIT_TEAM')"
+                  :aria-label="$t('TEAMS_SETTINGS.LIST.EDIT_TEAM')"
                   icon="i-lucide-settings"
                   slate
                   xs
@@ -124,6 +125,7 @@ const confirmPlaceHolderText = computed(() =>
               <Button
                 v-if="isAdmin"
                 v-tooltip.top="$t('TEAMS_SETTINGS.DELETE.BUTTON_TEXT')"
+                :aria-label="$t('TEAMS_SETTINGS.DELETE.BUTTON_TEXT')"
                 icon="i-lucide-trash-2"
                 xs
                 ruby

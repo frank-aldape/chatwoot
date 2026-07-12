@@ -46,6 +46,8 @@
       "LAST_90_DAYS": "Últimos 90 días",
       "CUSTOM_RANGE": "Rango personalizado:",
       "CREATED_BETWEEN": "Creado entre",
+      "FROM_DATE": "Fecha de inicio",
+      "TO_DATE": "Fecha de fin",
       "AND": "y",
       "APPLY": "Aplicar",
       "BEFORE_DATE": "Antes de {date}",

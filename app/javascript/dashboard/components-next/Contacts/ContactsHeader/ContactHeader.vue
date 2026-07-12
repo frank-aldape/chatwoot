@@ -45,6 +45,7 @@ const emit = defineEmits([
             :model-value="searchValue"
             type="search"
             :placeholder="$t('CONTACTS_LAYOUT.HEADER.SEARCH_PLACEHOLDER')"
+            :aria-label="$t('CONTACTS_LAYOUT.HEADER.SEARCH_PLACEHOLDER')"
             :custom-input-class="[
               'h-8 [&:not(.focus)]:!border-transparent bg-n-alpha-2 dark:bg-n-solid-1 ltr:!pl-8 !py-1 rtl:!pr-8',
             ]"
@@ -88,6 +89,11 @@ const emit = defineEmits([
                 !isActiveView
               "
               icon="i-lucide-save"
+              :aria-label="
+                $t(
+                  'CONTACTS_LAYOUT.HEADER.ACTIONS.FILTERS.CREATE_SEGMENT.CONFIRM'
+                )
+              "
               color="slate"
               size="sm"
               variant="ghost"
@@ -96,6 +102,11 @@ const emit = defineEmits([
             <Button
               v-if="isSegmentsView && !isLabelView && !isActiveView"
               icon="i-lucide-trash"
+              :aria-label="
+                $t(
+                  'CONTACTS_LAYOUT.HEADER.ACTIONS.FILTERS.DELETE_SEGMENT.CONFIRM'
+                )
+              "
               color="slate"
               size="sm"
               variant="ghost"

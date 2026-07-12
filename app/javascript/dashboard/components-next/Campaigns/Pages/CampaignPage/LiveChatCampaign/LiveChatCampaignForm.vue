@@ -257,6 +257,7 @@ defineExpose({ prepareCampaignDetails, isSubmitDisabled });
       v-model="state.endPoint"
       type="url"
       :label="t('CAMPAIGN.LIVE_CHAT.CREATE.FORM.END_POINT.LABEL')"
+      :aria-label="t('CAMPAIGN.LIVE_CHAT.CREATE.FORM.END_POINT.LABEL')"
       :placeholder="t('CAMPAIGN.LIVE_CHAT.CREATE.FORM.END_POINT.PLACEHOLDER')"
       :message="formErrors.endPoint"
       :message-type="formErrors.endPoint ? 'error' : 'info'"
@@ -266,6 +267,7 @@ defineExpose({ prepareCampaignDetails, isSubmitDisabled });
       v-model="state.timeOnPage"
       type="number"
       :label="t('CAMPAIGN.LIVE_CHAT.CREATE.FORM.TIME_ON_PAGE.LABEL')"
+      :aria-label="t('CAMPAIGN.LIVE_CHAT.CREATE.FORM.TIME_ON_PAGE.LABEL')"
       :placeholder="
         t('CAMPAIGN.LIVE_CHAT.CREATE.FORM.TIME_ON_PAGE.PLACEHOLDER')
       "

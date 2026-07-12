@@ -64,6 +64,7 @@ const closeMacroPreview = () => {
     <div class="flex items-center gap-1 justify-end">
       <NextButton
         v-tooltip.left-start="$t('MACROS.EXECUTE.PREVIEW')"
+        :aria-label="$t('MACROS.EXECUTE.PREVIEW')"
         icon="i-lucide-info"
         slate
         faded
@@ -72,6 +73,7 @@ const closeMacroPreview = () => {
       />
       <NextButton
         v-tooltip.left-start="$t('MACROS.EXECUTE.BUTTON_TOOLTIP')"
+        :aria-label="$t('MACROS.EXECUTE.BUTTON_TOOLTIP')"
         icon="i-lucide-play"
         slate
         faded

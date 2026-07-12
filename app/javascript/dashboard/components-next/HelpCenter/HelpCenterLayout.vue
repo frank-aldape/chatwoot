@@ -78,6 +78,7 @@ const togglePortalSwitcher = () => {
                 variant="ghost"
                 color="slate"
                 size="xs"
+                :aria-label="$t('HELP_CENTER.PORTAL_SWITCHER.PORTALS')"
                 class="rounded-md group-hover:bg-n-slate-3 hover:bg-n-slate-3"
                 @click="togglePortalSwitcher"
               />

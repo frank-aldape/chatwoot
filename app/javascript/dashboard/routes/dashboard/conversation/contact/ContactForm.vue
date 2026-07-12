@@ -406,6 +406,7 @@ export default {
           v-model="socialProfileUserNames[socialProfile.key]"
           class="input-group-field ltr:!rounded-l-none rtl:!rounded-r-none !mb-0"
           type="text"
+          :aria-label="socialProfile.key"
         />
       </div>
     </div>

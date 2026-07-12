@@ -215,6 +215,7 @@ useEventListener(document, 'paste', onPaste);
           icon="i-lucide-smile-plus"
           color="slate"
           size="sm"
+          :aria-label="t('CONVERSATION.REPLYBOX.TIP_EMOJI_ICON')"
           class="!w-10"
           @click="isEmojiPickerOpen = !isEmojiPickerOpen"
         />
@@ -243,6 +244,7 @@ useEventListener(document, 'paste', onPaste);
           icon="i-lucide-plus"
           color="slate"
           size="sm"
+          :aria-label="t('CONVERSATION.REPLYBOX.TIP_ATTACH_ICON')"
           class="!w-10 relative"
         />
       </FileUpload>
@@ -252,6 +254,7 @@ useEventListener(document, 'paste', onPaste);
         color="slate"
         size="sm"
         class="!w-10"
+        :aria-label="t('CONVERSATION.REPLYBOX.TIP_SIGNATURE_ICON')"
         @click="toggleMessageSignature"
       />
     </div>

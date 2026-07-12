@@ -267,6 +267,7 @@ export default {
             <input
               v-model="regexEnabled"
               type="checkbox"
+              :aria-label="$t('ATTRIBUTES_MGMT.ADD.FORM.ENABLE_REGEX.LABEL')"
               @input="toggleRegexEnabled"
             />
             {{ $t('ATTRIBUTES_MGMT.ADD.FORM.ENABLE_REGEX.LABEL') }}

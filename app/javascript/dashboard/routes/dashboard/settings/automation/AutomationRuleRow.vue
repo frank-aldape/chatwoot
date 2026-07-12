@@ -51,6 +51,7 @@ const automationActive = computed({
       <div class="flex gap-1 justify-end flex-shrink-0">
         <Button
           v-tooltip.top="$t('AUTOMATION.FORM.EDIT')"
+          :aria-label="$t('AUTOMATION.FORM.EDIT')"
           icon="i-lucide-pen"
           slate
           xs
@@ -60,6 +61,7 @@ const automationActive = computed({
         />
         <Button
           v-tooltip.top="$t('AUTOMATION.CLONE.TOOLTIP')"
+          :aria-label="$t('AUTOMATION.CLONE.TOOLTIP')"
           icon="i-lucide-copy-plus"
           xs
           faded
@@ -68,6 +70,7 @@ const automationActive = computed({
         />
         <Button
           v-tooltip.top="$t('AUTOMATION.FORM.DELETE')"
+          :aria-label="$t('AUTOMATION.FORM.DELETE')"
           :is-loading="loading"
           icon="i-lucide-trash-2"
           xs

@@ -49,6 +49,7 @@ const onClickClose = () => {
         slate
         icon="i-lucide-x"
         class="!text-sm !text-n-slate-11 flex-shrink-0"
+        :aria-label="t('GENERAL.CLOSE')"
         @click="onClickClose"
       />
     </div>

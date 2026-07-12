@@ -85,38 +85,38 @@ export default {
       STATUS_TYPE: wootConstants.STATUS_TYPE,
       readOption: {
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.MARK_AS_READ'),
-        icon: 'mail',
+        icon: 'i-lucide-mail-open',
       },
       unreadOption: {
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.MARK_AS_UNREAD'),
-        icon: 'mail-unread',
+        icon: 'i-lucide-mail',
       },
       statusMenuConfig: [
         {
           key: wootConstants.STATUS_TYPE.RESOLVED,
           label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.RESOLVED'),
-          icon: 'checkmark',
+          icon: 'i-lucide-check',
         },
         {
           key: wootConstants.STATUS_TYPE.OPEN,
           label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.REOPEN'),
-          icon: 'arrow-redo',
+          icon: 'i-lucide-rotate-ccw',
         },
         {
           key: wootConstants.STATUS_TYPE.PENDING,
           label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.PENDING'),
-          icon: 'book-clock',
+          icon: 'i-lucide-clock',
         },
       ],
       snoozeOption: {
         key: wootConstants.STATUS_TYPE.SNOOZED,
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.SNOOZE.TITLE'),
-        icon: 'snooze',
+        icon: 'i-lucide-alarm-clock',
       },
       priorityConfig: {
         key: MENU.PRIORITY,
         label: this.$t('CONVERSATION.PRIORITY.TITLE'),
-        icon: 'warning',
+        icon: 'i-lucide-alert-triangle',
         options: [
           {
             label: this.$t('CONVERSATION.PRIORITY.OPTIONS.NONE'),
@@ -142,32 +142,32 @@ export default {
       },
       labelMenuConfig: {
         key: MENU.LABEL,
-        icon: 'tag',
+        icon: 'i-lucide-tag',
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.ASSIGN_LABEL'),
       },
       agentMenuConfig: {
         key: MENU.AGENT,
-        icon: 'person-add',
+        icon: 'i-lucide-user-plus',
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.ASSIGN_AGENT'),
       },
       teamMenuConfig: {
         key: MENU.TEAM,
-        icon: 'people-team-add',
+        icon: 'i-lucide-users',
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.ASSIGN_TEAM'),
       },
       deleteOption: {
         key: MENU.DELETE,
-        icon: 'delete',
+        icon: 'i-lucide-trash-2',
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.DELETE'),
       },
       openInNewTabOption: {
         key: MENU.OPEN_NEW_TAB,
-        icon: 'open',
+        icon: 'i-lucide-external-link',
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.OPEN_IN_NEW_TAB'),
       },
       copyLinkOption: {
         key: MENU.COPY_LINK,
-        icon: 'copy',
+        icon: 'i-lucide-copy',
         label: this.$t('CONVERSATION.CARD_CONTEXT_MENU.COPY_LINK'),
       },
     };

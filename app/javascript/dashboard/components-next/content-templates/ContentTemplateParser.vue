@@ -231,6 +231,10 @@ defineExpose({
               templateMediaUrl ||
               t('CONTENT_TEMPLATES.PARSER.MEDIA_URL_PLACEHOLDER')
             "
+            :aria-label="
+              templateMediaUrl ||
+              t('CONTENT_TEMPLATES.PARSER.MEDIA_URL_PLACEHOLDER')
+            "
           />
         </div>
       </div>
@@ -250,6 +254,11 @@ defineExpose({
             type="text"
             class="flex-1"
             :placeholder="
+              t('CONTENT_TEMPLATES.PARSER.VARIABLE_PLACEHOLDER', {
+                variable: variable,
+              })
+            "
+            :aria-label="
               t('CONTENT_TEMPLATES.PARSER.VARIABLE_PLACEHOLDER', {
                 variable: variable,
               })

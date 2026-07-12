@@ -78,6 +78,7 @@ const handleDelete = itemId => {
       <div class="col-span-1 justify-end flex items-center">
         <Button
           icon="i-lucide-trash"
+          :aria-label="$t('GENERAL.REMOVE')"
           slate
           ghost
           sm

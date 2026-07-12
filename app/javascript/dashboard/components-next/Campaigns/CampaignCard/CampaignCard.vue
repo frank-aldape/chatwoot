@@ -123,6 +123,7 @@ const inboxIcon = computed(() => {
         size="sm"
         color="slate"
         icon="i-lucide-sliders-vertical"
+        :aria-label="t('CAMPAIGN.LIVE_CHAT.EDIT.TITLE')"
         @click="emit('edit')"
       />
       <Button
@@ -130,6 +131,7 @@ const inboxIcon = computed(() => {
         color="ruby"
         size="sm"
         icon="i-lucide-trash"
+        :aria-label="t('CAMPAIGN.CONFIRM_DELETE.CONFIRM')"
         @click="emit('delete')"
       />
     </div>

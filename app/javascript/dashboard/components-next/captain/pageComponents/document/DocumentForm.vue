@@ -165,6 +165,7 @@ const handleSubmit = async () => {
           type="file"
           accept=".pdf"
           class="hidden"
+          :aria-label="t('CAPTAIN.DOCUMENTS.FORM.PDF_FILE.LABEL')"
           @change="handleFileChange"
         />
         <Button

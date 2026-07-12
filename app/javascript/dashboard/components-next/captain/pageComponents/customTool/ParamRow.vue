@@ -100,6 +100,7 @@ defineExpose({ validate });
         slate
         icon="i-lucide-trash"
         class="flex-shrink-0"
+        :aria-label="t('GENERAL.REMOVE')"
         @click.stop="emit('remove')"
       />
     </div>

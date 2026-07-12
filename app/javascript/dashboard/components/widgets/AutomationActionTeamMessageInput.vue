@@ -48,6 +48,7 @@ export default {
         v-model="message"
         rows="4"
         :placeholder="$t('AUTOMATION.ACTION.TEAM_MESSAGE_INPUT_PLACEHOLDER')"
+        :aria-label="$t('AUTOMATION.ACTION.TEAM_MESSAGE_INPUT_PLACEHOLDER')"
         @input="updateValue"
       />
     </div>

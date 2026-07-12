@@ -221,6 +221,7 @@ const onClickSend = email => {
               sm
               link
               icon="i-lucide-refresh-ccw"
+              :aria-label="t('NETWORK.BUTTON.REFRESH')"
               :class="isFetchingStatus && 'animate-spin'"
               @click="onClickRefreshSSLStatus"
             />

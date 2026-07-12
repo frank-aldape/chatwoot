@@ -2,7 +2,6 @@
 import { mapGetters } from 'vuex';
 import configMixin from '../mixins/configMixin';
 import { ON_UNREAD_MESSAGE_CLICK } from '../constants/widgetBusEvents';
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import UnreadMessage from 'widget/components/UnreadMessage.vue';
 import { isWidgetColorLighter } from 'shared/helpers/colorHelper';
 import { emitter } from 'shared/helpers/mitt';
@@ -10,7 +9,6 @@ import { emitter } from 'shared/helpers/mitt';
 export default {
   name: 'Unread',
   components: {
-    FluentIcon,
     UnreadMessage,
   },
   mixins: [configMixin],
@@ -60,7 +58,7 @@ export default {
     <div class="close-unread-wrap">
       <button class="button small close-unread-button" @click="closeFullView">
         <span class="flex items-center">
-          <FluentIcon class="mr-1" icon="dismiss" size="12" />
+          <span class="i-lucide-x size-3 mr-1" />
           {{ $t('UNREAD_VIEW.CLOSE_MESSAGES_BUTTON') }}
         </span>
       </button>
@@ -93,7 +91,7 @@ export default {
             color: widgetColor,
           }"
         >
-          <FluentIcon class="mr-2" size="16" icon="arrow-right" />
+          <span class="i-lucide-arrow-right size-4 mr-2" />
           {{ $t('UNREAD_VIEW.VIEW_MESSAGES_BUTTON') }}
         </span>
       </button>

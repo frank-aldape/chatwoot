@@ -69,6 +69,9 @@ export default {
           <input
             v-model="item['required']"
             type="checkbox"
+            :aria-label="
+              $t('INBOX_MGMT.PRE_CHAT_FORM.SET_FIELDS_HEADER.REQUIRED')
+            "
             :value="`${item.name}-required`"
             :disabled="!item['enabled']"
             @click="handlePreChatFieldOptions($event, 'required', item)"
@@ -81,6 +84,7 @@ export default {
           <input
             v-model="item.label"
             type="text"
+            :aria-label="$t('INBOX_MGMT.PRE_CHAT_FORM.SET_FIELDS_HEADER.LABEL')"
             :disabled="isFieldEditable(item)"
           />
         </td>
@@ -91,6 +95,9 @@ export default {
           <input
             v-model="item.placeholder"
             type="text"
+            :aria-label="
+              $t('INBOX_MGMT.PRE_CHAT_FORM.SET_FIELDS_HEADER.PLACE_HOLDER')
+            "
             :disabled="isFieldEditable(item)"
           />
         </td>

@@ -213,6 +213,7 @@ const handleTryAnotherMethod = () => {
               maxlength="1"
               pattern="[0-9]"
               inputmode="numeric"
+              :aria-label="$t('MFA_VERIFICATION.ENTER_OTP_CODE')"
               class="w-12 h-12 text-center text-lg font-semibold border-2 border-n-weak hover:border-n-strong rounded-lg focus:border-n-brand bg-n-alpha-black2 text-n-slate-12 placeholder:text-n-slate-10"
               @input="handleOtpInput(i)"
               @keydown.left.prevent="focusInput(i - 1)"

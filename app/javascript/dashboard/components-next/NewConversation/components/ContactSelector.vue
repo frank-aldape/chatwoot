@@ -130,6 +130,7 @@ const handleInput = value => {
           color="slate"
           :disabled="contactId"
           size="xs"
+          :aria-label="t('GENERAL.REMOVE')"
           @click="emit('clearSelectedContact')"
         />
       </div>

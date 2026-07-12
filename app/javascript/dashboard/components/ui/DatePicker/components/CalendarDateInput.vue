@@ -67,6 +67,7 @@ const validateDate = () => {
       type="text"
       class="!text-sm !mb-0 disabled:!outline-n-strong"
       :placeholder="dateFormat"
+      :aria-label="dateFormat"
       :disabled="isDisabled"
       @keypress.enter="validateDate"
     />

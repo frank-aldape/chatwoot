@@ -191,6 +191,7 @@ defineExpose({ validate });
           :type="inputFieldType"
           class="[&>input]:h-8 [&>input]:py-1.5 [&>input]:outline-offset-0"
           :placeholder="t('FILTER.INPUT_PLACEHOLDER')"
+          :aria-label="t('FILTER.INPUT_PLACEHOLDER')"
         />
       </template>
       <Button
@@ -198,6 +199,7 @@ defineExpose({ validate });
         solid
         slate
         icon="i-lucide-trash"
+        :aria-label="t('GENERAL.REMOVE')"
         class="flex-shrink-0"
         @click.stop="emit('remove')"
       />

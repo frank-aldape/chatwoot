@@ -85,6 +85,7 @@ const pageInfo = computed(() => {
         size="sm"
         color="slate"
         class="!w-8 !h-6"
+        :aria-label="t('PAGINATION_FOOTER.FIRST_PAGE')"
         :disabled="isFirstPage"
         @click="changePage(1)"
       />
@@ -94,6 +95,7 @@ const pageInfo = computed(() => {
         color="slate"
         size="sm"
         class="!w-8 !h-6"
+        :aria-label="t('PAGINATION_FOOTER.PREVIOUS_PAGE')"
         :disabled="isFirstPage"
         @click="changePage(currentPage - 1)"
       />
@@ -111,6 +113,7 @@ const pageInfo = computed(() => {
         color="slate"
         size="sm"
         class="!w-8 !h-6"
+        :aria-label="t('PAGINATION_FOOTER.NEXT_PAGE')"
         :disabled="isLastPage"
         @click="changePage(currentPage + 1)"
       />
@@ -120,6 +123,7 @@ const pageInfo = computed(() => {
         color="slate"
         size="sm"
         class="!w-8 !h-6"
+        :aria-label="t('PAGINATION_FOOTER.LAST_PAGE')"
         :disabled="isLastPage"
         @click="changePage(totalPages)"
       />

@@ -135,6 +135,7 @@ onBeforeMount(() => {
               <div class="flex gap-1 justify-end">
                 <Button
                   v-tooltip.top="$t('LABEL_MGMT.FORM.EDIT')"
+                  :aria-label="$t('LABEL_MGMT.FORM.EDIT')"
                   icon="i-lucide-pen"
                   slate
                   xs
@@ -144,6 +145,7 @@ onBeforeMount(() => {
                 />
                 <Button
                   v-tooltip.top="$t('LABEL_MGMT.FORM.DELETE')"
+                  :aria-label="$t('LABEL_MGMT.FORM.DELETE')"
                   icon="i-lucide-trash-2"
                   xs
                   ruby

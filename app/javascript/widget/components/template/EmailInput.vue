@@ -4,12 +4,10 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, email } from '@vuelidate/validators';
 import { getContrastingTextColor } from '@chatwoot/utils';
 
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import Spinner from 'shared/components/Spinner.vue';
 
 export default {
   components: {
-    FluentIcon,
     Spinner,
   },
   props: {
@@ -96,7 +94,7 @@ export default {
           color: textColor,
         }"
       >
-        <FluentIcon v-if="!isUpdating" icon="chevron-right" />
+        <span v-if="!isUpdating" class="i-lucide-chevron-right size-5" />
         <Spinner v-else class="mx-2" />
       </button>
     </form>

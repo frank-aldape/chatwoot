@@ -1,7 +1,9 @@
 {
   "PAGINATION_FOOTER": {
     "SHOWING": "Mostrando {startItem} - {endItem} de {totalItems} elemento | Mostrando {startItem} - {endItem} de {totalItems} elementos",
-    "CURRENT_PAGE_INFO": "Página {currentPage} de {totalPages} | Página {currentPage} de {totalPages}"
+    "CURRENT_PAGE_INFO": "Página {currentPage} de {totalPages} | Página {currentPage} de {totalPages}",
+    "FIRST_PAGE": "Primera página",
+    "LAST_PAGE": "Última página"
   },
   "COMBOBOX": {
     "PLACEHOLDER": "Selecciona una opción...",
@@ -48,7 +50,11 @@
     "MINUTES": "Minutos",
     "HOURS": "Horas",
     "DAYS": "Días",
-    "PLACEHOLDER": "Ingresa la duración"
+    "PLACEHOLDER": "Ingresa la duración",
+    "UNIT": "Unidad de duración"
+  },
+  "AVATAR": {
+    "UPLOAD_IMAGE": "Subir imagen de perfil"
   },
   "CHANNEL_SELECTOR": {
     "COMING_SOON": "¡Próximamente!"

@@ -288,6 +288,7 @@ const openDelete = inbox => {
         <Input
           v-model="searchQuery"
           type="search"
+          :aria-label="$t('INBOX_MGMT.SEARCH.PLACEHOLDER')"
           :placeholder="$t('INBOX_MGMT.SEARCH.PLACEHOLDER')"
           class="max-w-md"
           :custom-input-class="[
@@ -417,6 +418,7 @@ const openDelete = inbox => {
                       <Button
                         v-if="isAdmin"
                         v-tooltip.top="$t('INBOX_MGMT.SETTINGS')"
+                        :aria-label="$t('INBOX_MGMT.SETTINGS')"
                         icon="i-lucide-settings"
                         slate
                         xs
@@ -426,6 +428,7 @@ const openDelete = inbox => {
                     <Button
                       v-if="isAdmin"
                       v-tooltip.top="$t('INBOX_MGMT.DELETE.BUTTON_TEXT')"
+                      :aria-label="$t('INBOX_MGMT.DELETE.BUTTON_TEXT')"
                       icon="i-lucide-trash-2"
                       xs
                       ruby

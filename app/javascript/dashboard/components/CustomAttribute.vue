@@ -208,6 +208,7 @@ export default {
             v-model="editedValue"
             class="!my-0 ltr:mr-2 ltr:ml-0 rtl:mr-0 rtl:ml-2"
             type="checkbox"
+            :aria-label="label"
             @change="onUpdate"
           />
         </div>
@@ -246,6 +247,7 @@ export default {
             :type="inputType"
             class="!h-8 ltr:!rounded-r-none rtl:!rounded-l-none !mb-0 !text-sm"
             autofocus="true"
+            :aria-label="label"
             :class="{ error: v$.editedValue.$error }"
             @blur="v$.editedValue.$touch"
             @keyup.enter="onUpdate"
@@ -255,6 +257,7 @@ export default {
               sm
               icon="i-lucide-check"
               class="ltr:rounded-l-none rtl:rounded-r-none h-[34px]"
+              :aria-label="$t('CUSTOM_ATTRIBUTES.ACTIONS.UPDATE')"
               @click="onUpdate"
             />
           </div>

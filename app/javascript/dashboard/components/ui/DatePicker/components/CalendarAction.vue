@@ -46,6 +46,7 @@ const onClickSetView = (type, mode) => {
       xs
       icon="i-lucide-chevron-left"
       class="rtl:rotate-180"
+      :aria-label="$t('GENERAL.PREVIOUS')"
       @click="onClickPrev(calendarType)"
     />
     <div class="flex items-center gap-1">
@@ -71,6 +72,7 @@ const onClickSetView = (type, mode) => {
       xs
       icon="i-lucide-chevron-right"
       class="rtl:rotate-180"
+      :aria-label="$t('GENERAL.NEXT')"
       @click="onClickNext(calendarType)"
     />
   </div>

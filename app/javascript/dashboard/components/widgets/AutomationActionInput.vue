@@ -11,11 +11,6 @@ export default {
     WootMessageEditor,
     NextButton,
   },
-  data() {
-    return {
-      dropdownSearchQuery: '',
-    };
-  },
   props: {
     modelValue: {
       type: Object,
@@ -47,6 +42,11 @@ export default {
     },
   },
   emits: ['update:modelValue', 'input', 'removeAction', 'resetAction'],
+  data() {
+    return {
+      dropdownSearchQuery: '',
+    };
+  },
   computed: {
     action_name: {
       get() {
@@ -131,114 +131,119 @@ export default {
         class="filter-inputs-row"
         :class="{ 'filter-inputs-row--stacked': shouldShowDropdownSearch }"
       >
-      <select
-        v-model="action_name"
-        class="action__question"
-        :class="{
-          'full-width': !showActionInput || shouldShowDropdownSearch,
-        }"
-        @change="resetAction()"
-      >
-        <option
-          v-for="attribute in actionTypes"
-          :key="attribute.key"
-          :value="attribute.key"
+        <select
+          v-model="action_name"
+          class="action__question"
+          :aria-label="$t('AUTOMATION.ADD.FORM.ACTIONS.LABEL')"
+          :class="{
+            'full-width': !showActionInput || shouldShowDropdownSearch,
+          }"
+          @change="resetAction()"
         >
-          {{ attribute.label }}
-        </option>
-      </select>
-      <div v-if="showActionInput" class="filter__answer--wrap">
-        <div v-if="inputType" class="w-full">
-          <div v-if="shouldShowDropdownSearch" class="search-input-wrap">
+          <option
+            v-for="attribute in actionTypes"
+            :key="attribute.key"
+            :value="attribute.key"
+          >
+            {{ attribute.label }}
+          </option>
+        </select>
+        <div v-if="showActionInput" class="filter__answer--wrap">
+          <div v-if="inputType" class="w-full">
+            <div v-if="shouldShowDropdownSearch" class="search-input-wrap">
+              <input
+                v-model="dropdownSearchQuery"
+                type="text"
+                class="answer--text-input !mb-2 search-input"
+                :placeholder="$t('AUTOMATION.SEARCH_OPTIONS_PLACEHOLDER')"
+                :aria-label="$t('AUTOMATION.SEARCH_OPTIONS_PLACEHOLDER')"
+              />
+              <p
+                v-if="dropdownSearchQuery && !filteredDropdownValues.length"
+                class="search-empty-state"
+              >
+                {{ $t('AUTOMATION.SEARCH_OPTIONS_EMPTY') }}
+              </p>
+            </div>
+            <div
+              v-if="inputType === 'search_select'"
+              class="multiselect-wrap--small"
+            >
+              <multiselect
+                v-model="action_params"
+                track-by="id"
+                label="name"
+                :placeholder="$t('FORMS.MULTISELECT.SELECT')"
+                selected-label
+                :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
+                deselect-label=""
+                :max-height="160"
+                :options="filteredDropdownValues"
+                :allow-empty="false"
+                :option-height="104"
+                :searchable="false"
+              >
+                <template #noOptions>
+                  {{ $t('FORMS.MULTISELECT.NO_OPTIONS') }}
+                </template>
+              </multiselect>
+            </div>
+            <div
+              v-else-if="inputType === 'multi_select'"
+              class="multiselect-wrap--small"
+            >
+              <multiselect
+                v-model="action_params"
+                track-by="id"
+                label="name"
+                :placeholder="$t('FORMS.MULTISELECT.SELECT')"
+                multiple
+                selected-label
+                :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
+                deselect-label=""
+                :max-height="160"
+                :options="filteredDropdownValues"
+                :allow-empty="false"
+                :option-height="104"
+                :searchable="false"
+              >
+                <template #noOptions>
+                  {{ $t('FORMS.MULTISELECT.NO_OPTIONS') }}
+                </template>
+              </multiselect>
+            </div>
             <input
-              v-model="dropdownSearchQuery"
-              type="text"
-              class="answer--text-input !mb-2 search-input"
-              :placeholder="$t('AUTOMATION.SEARCH_OPTIONS_PLACEHOLDER')"
+              v-else-if="inputType === 'email'"
+              v-model="action_params"
+              type="email"
+              class="answer--text-input"
+              :placeholder="$t('AUTOMATION.ACTION.EMAIL_INPUT_PLACEHOLDER')"
+              :aria-label="$t('AUTOMATION.ACTION.EMAIL_INPUT_PLACEHOLDER')"
             />
-            <p
-              v-if="dropdownSearchQuery && !filteredDropdownValues.length"
-              class="search-empty-state"
-            >
-              {{ $t('AUTOMATION.SEARCH_OPTIONS_EMPTY') }}
-            </p>
-          </div>
-          <div
-            v-if="inputType === 'search_select'"
-            class="multiselect-wrap--small"
-          >
-            <multiselect
+            <input
+              v-else-if="inputType === 'url'"
               v-model="action_params"
-              track-by="id"
-              label="name"
-              :placeholder="$t('FORMS.MULTISELECT.SELECT')"
-              selected-label
-              :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
-              deselect-label=""
-              :max-height="160"
-              :options="filteredDropdownValues"
-              :allow-empty="false"
-              :option-height="104"
-              :searchable="false"
-            >
-              <template #noOptions>
-                {{ $t('FORMS.MULTISELECT.NO_OPTIONS') }}
-              </template>
-            </multiselect>
-          </div>
-          <div
-            v-else-if="inputType === 'multi_select'"
-            class="multiselect-wrap--small"
-          >
-            <multiselect
+              type="url"
+              class="answer--text-input"
+              :placeholder="$t('AUTOMATION.ACTION.URL_INPUT_PLACEHOLDER')"
+              :aria-label="$t('AUTOMATION.ACTION.URL_INPUT_PLACEHOLDER')"
+            />
+            <AutomationActionFileInput
+              v-if="inputType === 'attachment'"
               v-model="action_params"
-              track-by="id"
-              label="name"
-              :placeholder="$t('FORMS.MULTISELECT.SELECT')"
-              multiple
-              selected-label
-              :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
-              deselect-label=""
-              :max-height="160"
-              :options="filteredDropdownValues"
-              :allow-empty="false"
-              :option-height="104"
-              :searchable="false"
-            >
-              <template #noOptions>
-                {{ $t('FORMS.MULTISELECT.NO_OPTIONS') }}
-              </template>
-            </multiselect>
+              :initial-file-name="initialFileName"
+            />
           </div>
-          <input
-            v-else-if="inputType === 'email'"
-            v-model="action_params"
-            type="email"
-            class="answer--text-input"
-            :placeholder="$t('AUTOMATION.ACTION.EMAIL_INPUT_PLACEHOLDER')"
-          />
-          <input
-            v-else-if="inputType === 'url'"
-            v-model="action_params"
-            type="url"
-            class="answer--text-input"
-            :placeholder="$t('AUTOMATION.ACTION.URL_INPUT_PLACEHOLDER')"
-          />
-          <AutomationActionFileInput
-            v-if="inputType === 'attachment'"
-            v-model="action_params"
-            :initial-file-name="initialFileName"
-          />
         </div>
-      </div>
-      <NextButton
-        v-if="!isMacro"
-        icon="i-lucide-x"
-        slate
-        ghost
-        class="flex-shrink-0"
-        @click="removeAction"
-      />
+        <NextButton
+          v-if="!isMacro"
+          icon="i-lucide-x"
+          slate
+          ghost
+          class="flex-shrink-0"
+          :aria-label="$t('GENERAL.REMOVE')"
+          @click="removeAction"
+        />
       </div>
     </div>
     <AutomationActionTeamMessageInput

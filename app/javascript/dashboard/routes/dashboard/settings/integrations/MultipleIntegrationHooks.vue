@@ -112,6 +112,7 @@ export default {
             <td class="flex justify-end gap-1">
               <NextButton
                 v-tooltip.top="$t('INTEGRATION_APPS.LIST.DELETE.BUTTON_TEXT')"
+                :aria-label="$t('INTEGRATION_APPS.LIST.DELETE.BUTTON_TEXT')"
                 icon="i-lucide-trash-2"
                 xs
                 ruby

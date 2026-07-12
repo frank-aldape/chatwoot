@@ -50,7 +50,14 @@ useKeyboardEvents(keyboardEvents);
       <h3 class="text-base text-n-slate-12">
         {{ title }}
       </h3>
-      <Button ghost xs slate icon="i-lucide-x" @click="onClose" />
+      <Button
+        ghost
+        xs
+        slate
+        icon="i-lucide-x"
+        :aria-label="$t('HELP_CENTER.ARTICLE_SEARCH.CLOSE')"
+        @click="onClose"
+      />
     </div>
 
     <div class="relative">
@@ -62,6 +69,7 @@ useKeyboardEvents(keyboardEvents);
       <input
         ref="searchInputRef"
         type="text"
+        :aria-label="$t('HELP_CENTER.ARTICLE_SEARCH.PLACEHOLDER')"
         :placeholder="$t('HELP_CENTER.ARTICLE_SEARCH.PLACEHOLDER')"
         class="block w-full !h-9 ltr:!pl-8 rtl:!pr-8 dark:!bg-n-slate-2 !border-n-weak !bg-n-slate-2 text-sm rounded-md leading-8 text-n-slate-12 shadow-sm ring-2 ring-transparent ring-n-weak border border-solid placeholder:text-n-slate-10 focus:border-n-brand focus:ring-n-brand !mb-0"
         :value="searchQuery"

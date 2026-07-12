@@ -1,6 +1,7 @@
 {
   "INBOX_ASSIGNMENT": {
     "HEADER": "Asignación de Canales",
+    "SELECT_ALL": "Seleccionar todos los canales",
     "DESCRIPTION": "Busca canales de cualquier compañía y asígnalos en bloque a un equipo, sin perder las asignaciones que el equipo ya tenía.",
     "LOADING": "Cargando canales...",
     "EMPTY": "No encontramos canales con ese criterio de búsqueda.",

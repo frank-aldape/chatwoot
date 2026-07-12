@@ -34,6 +34,11 @@ const appliedSLA = computed(() => props.chat?.applied_sla);
 const slaEvents = computed(() => props.chat?.sla_events);
 const hasSlaThreshold = computed(() => slaStatus.value?.threshold);
 const isSlaMissed = computed(() => slaStatus.value?.isSlaMissed);
+// The SLA util returns icon "flame" (missed) or "alarm" (due); derive the
+// matching lucide class from the same isSlaMissed flag.
+const slaIconClass = computed(() =>
+  isSlaMissed.value ? 'i-lucide-flame' : 'i-lucide-alarm-clock'
+);
 const slaTextStyles = computed(() =>
   isSlaMissed.value ? 'text-n-ruby-11' : 'text-n-amber-11'
 );
@@ -108,13 +113,9 @@ onUnmounted(() => {
       :class="showExtendedInfo ? '' : 'gap-1'"
     >
       <div class="flex items-center gap-1" :class="slaPopoverClass">
-        <fluent-icon
-          size="12"
-          :icon="slaStatus.icon"
-          type="outline"
-          :icon-lib="isSlaMissed ? 'lucide' : 'fluent'"
-          class="flex-shrink-0"
-          :class="slaTextStyles"
+        <span
+          class="flex-shrink-0 size-3"
+          :class="[slaIconClass, slaTextStyles]"
         />
         <span
           v-if="showExtendedInfo && parentWidth > 650"

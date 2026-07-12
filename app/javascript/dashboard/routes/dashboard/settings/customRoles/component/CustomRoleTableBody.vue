@@ -48,6 +48,7 @@ const getFormattedPermissions = role => {
       <td class="flex justify-end gap-1 py-4">
         <Button
           v-tooltip.top="$t('CUSTOM_ROLE.EDIT.BUTTON_TEXT')"
+          :aria-label="$t('CUSTOM_ROLE.EDIT.BUTTON_TEXT')"
           icon="i-lucide-pen"
           slate
           xs
@@ -56,6 +57,7 @@ const getFormattedPermissions = role => {
         />
         <Button
           v-tooltip.top="$t('CUSTOM_ROLE.DELETE.BUTTON_TEXT')"
+          :aria-label="$t('CUSTOM_ROLE.DELETE.BUTTON_TEXT')"
           icon="i-lucide-trash-2"
           xs
           ruby

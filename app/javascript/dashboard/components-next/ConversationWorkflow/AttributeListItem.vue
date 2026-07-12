@@ -66,6 +66,7 @@ const attributeIcon = computed(() => {
         />
         <Button
           icon="i-lucide-pencil-line"
+          :aria-label="$t('ATTRIBUTES_MGMT.LIST.BUTTONS.EDIT')"
           size="sm"
           color="slate"
           ghost
@@ -74,6 +75,7 @@ const attributeIcon = computed(() => {
         <div class="w-px h-3 bg-n-strong" />
         <Button
           icon="i-lucide-trash"
+          :aria-label="$t('ATTRIBUTES_MGMT.LIST.BUTTONS.DELETE')"
           size="sm"
           color="slate"
           ghost

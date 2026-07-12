@@ -222,6 +222,7 @@ const onToggleDropdown = () => {
 
           <input
             v-model="customFrom"
+            :aria-label="t('SEARCH.DATE_RANGE.FROM_DATE')"
             type="date"
             :min="minDate"
             :max="customTo || maxDate"
@@ -238,6 +239,7 @@ const onToggleDropdown = () => {
 
           <input
             v-model="customTo"
+            :aria-label="t('SEARCH.DATE_RANGE.TO_DATE')"
             type="date"
             :min="customFrom || minDate"
             :max="maxDate"

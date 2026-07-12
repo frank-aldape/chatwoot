@@ -128,6 +128,7 @@ const tableHeaders = computed(() => {
             <div class="flex gap-1 justify-end">
               <Button
                 v-tooltip.top="$t('ATTRIBUTES_MGMT.LIST.BUTTONS.EDIT')"
+                :aria-label="$t('ATTRIBUTES_MGMT.LIST.BUTTONS.EDIT')"
                 icon="i-lucide-pen"
                 slate
                 xs
@@ -136,6 +137,7 @@ const tableHeaders = computed(() => {
               />
               <Button
                 v-tooltip.top="$t('ATTRIBUTES_MGMT.LIST.BUTTONS.DELETE')"
+                :aria-label="$t('ATTRIBUTES_MGMT.LIST.BUTTONS.DELETE')"
                 icon="i-lucide-trash-2"
                 xs
                 ruby

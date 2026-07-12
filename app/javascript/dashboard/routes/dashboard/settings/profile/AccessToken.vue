@@ -47,6 +47,9 @@ const onReset = () => {
         <button
           class="absolute top-0 bottom-0 ltr:right-0.5 rtl:left-0.5"
           type="button"
+          :aria-label="
+            $t('PROFILE_SETTINGS.FORM.ACCESS_TOKEN.TOGGLE_VISIBILITY')
+          "
           @click="toggleMasked"
         >
           <span :class="maskIcon" class="size-4" />

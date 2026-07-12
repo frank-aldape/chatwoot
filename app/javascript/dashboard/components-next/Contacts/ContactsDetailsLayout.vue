@@ -164,6 +164,7 @@ const closeMobileSidebar = () => {
               ? 'i-lucide-panel-right-close'
               : 'i-lucide-panel-right-open'
           "
+          :aria-label="t('CONTACTS_LAYOUT.DETAILS.TOGGLE_SIDEBAR')"
           data-contact-sidebar-toggle
           @click="handleConversationSidebarToggle"
         />

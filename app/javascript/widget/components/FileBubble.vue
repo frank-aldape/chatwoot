@@ -1,11 +1,7 @@
 <script>
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import { getContrastingTextColor } from '@chatwoot/utils';
 
 export default {
-  components: {
-    FluentIcon,
-  },
   props: {
     url: {
       type: String,
@@ -54,7 +50,7 @@ export default {
 <template>
   <div class="file flex flex-row items-center p-3 cursor-pointer">
     <div class="icon-wrap" :style="{ color: textColor }">
-      <FluentIcon icon="document" size="28" />
+      <span class="i-lucide-file-text size-[28px]" />
     </div>
     <div class="ltr:pr-1 rtl:pl-1">
       <div

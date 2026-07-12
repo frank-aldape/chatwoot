@@ -732,6 +732,7 @@ const menuItems = computed(() => {
           <template #trigger="{ toggle }">
             <Button
               icon="i-lucide-pen-line"
+              :aria-label="t('NEW_CONVERSATION.TITLE')"
               color="slate"
               size="sm"
               class="!h-7 !bg-n-solid-3 dark:!bg-n-black/30 !outline-n-weak !text-n-slate-11"

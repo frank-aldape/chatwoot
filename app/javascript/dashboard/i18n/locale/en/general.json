@@ -6,6 +6,10 @@
       "EMPTY_STATE": "No se encontraron resultados"
     },
     "CLOSE": "Cerrar",
+    "PREVIOUS": "Anterior",
+    "NEXT": "Siguiente",
+    "REMOVE": "Quitar",
+    "EXPAND": "Expandir",
     "BETA": "Beta",
     "BETA_DESCRIPTION": "Esta función está en beta y puede cambiar a medida que la mejoramos.",
     "PREFERRED": "Preferido"

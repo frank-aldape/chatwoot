@@ -222,6 +222,7 @@ onMounted(() => {
               icon="i-lucide-zoom-in"
               slate
               ghost
+              :aria-label="t('GALLERY_VIEW.ZOOM_IN')"
               @click="onZoom(0.1)"
             />
             <NextButton
@@ -229,6 +230,7 @@ onMounted(() => {
               icon="i-lucide-zoom-out"
               slate
               ghost
+              :aria-label="t('GALLERY_VIEW.ZOOM_OUT')"
               @click="onZoom(-0.1)"
             />
             <NextButton
@@ -236,6 +238,7 @@ onMounted(() => {
               icon="i-lucide-rotate-ccw"
               slate
               ghost
+              :aria-label="t('GALLERY_VIEW.ROTATE_LEFT')"
               @click="onRotate('counter-clockwise')"
             />
             <NextButton
@@ -243,17 +246,25 @@ onMounted(() => {
               icon="i-lucide-rotate-cw"
               slate
               ghost
+              :aria-label="t('GALLERY_VIEW.ROTATE_RIGHT')"
               @click="onRotate('clockwise')"
             />
             <NextButton
               icon="i-lucide-download"
               slate
               ghost
+              :aria-label="t('GALLERY_VIEW.DOWNLOAD')"
               :is-loading="isDownloading"
               :disabled="isDownloading"
               @click="onClickDownload"
             />
-            <NextButton icon="i-lucide-x" slate ghost @click="onClose" />
+            <NextButton
+              icon="i-lucide-x"
+              slate
+              ghost
+              :aria-label="t('GENERAL.CLOSE')"
+              @click="onClose"
+            />
           </div>
         </header>
 
@@ -266,6 +277,7 @@ onMounted(() => {
               blue
               faded
               lg
+              :aria-label="t('GENERAL.PREVIOUS')"
               :disabled="activeImageIndex === 0"
               @click.stop="
                 onClickChangeAttachment(
@@ -332,6 +344,7 @@ onMounted(() => {
               blue
               faded
               lg
+              :aria-label="t('GENERAL.NEXT')"
               :disabled="activeImageIndex === allAttachments.length - 1"
               @click.stop="
                 onClickChangeAttachment(

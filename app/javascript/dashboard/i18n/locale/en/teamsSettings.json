@@ -136,6 +136,7 @@
         "SELECT_COMPANY_FIRST": "Selecciona una compañía para ver sus canales disponibles.",
         "CHANNEL_PRESET": "{channel} ({selected}/{total})",
         "SEARCH_INBOXES": "Buscar por canal, correo, teléfono o nombre",
+        "TOGGLE_INBOXES": "Mostrar u ocultar canales",
         "NO_MATCHES": "No hay canales que coincidan con esa búsqueda."
       },
       "SUBMIT_CREATE": "Crear equipo"

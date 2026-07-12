@@ -159,6 +159,7 @@ const handleInputUpdate = async () => {
         variant="faded"
         color="slate"
         icon="i-lucide-pencil"
+        :aria-label="t('CUSTOM_ATTRIBUTES.ACTIONS.EDIT')"
         size="xs"
         class="flex-shrink-0 opacity-0 group-hover/attribute:opacity-100 hover:no-underline"
         @click="toggleEditValue(true)"
@@ -167,6 +168,7 @@ const handleInputUpdate = async () => {
         variant="faded"
         color="ruby"
         icon="i-lucide-trash"
+        :aria-label="t('CUSTOM_ATTRIBUTES.ACTIONS.DELETE')"
         size="xs"
         class="flex-shrink-0 opacity-0 group-hover/attribute:opacity-100 hover:no-underline"
         @click="emit('delete')"
@@ -181,6 +183,7 @@ const handleInputUpdate = async () => {
       <Input
         v-model="editedValue"
         :placeholder="t('CONTACTS_LAYOUT.SIDEBAR.ATTRIBUTES.TRIGGER.INPUT')"
+        :aria-label="t('CONTACTS_LAYOUT.SIDEBAR.ATTRIBUTES.TRIGGER.INPUT')"
         :type="getInputType"
         class="w-full [&>p]:absolute [&>p]:mt-0.5 [&>p]:top-8 ltr:[&>p]:left-0 rtl:[&>p]:right-0"
         autofocus
@@ -191,6 +194,7 @@ const handleInputUpdate = async () => {
       />
       <Button
         icon="i-lucide-check"
+        :aria-label="t('DATE_PICKER.APPLY_BUTTON')"
         :color="hasError ? 'ruby' : 'blue'"
         size="sm"
         class="flex-shrink-0 ltr:rounded-l-none rtl:rounded-r-none"

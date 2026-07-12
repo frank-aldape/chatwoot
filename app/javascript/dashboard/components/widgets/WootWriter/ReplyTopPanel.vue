@@ -108,6 +108,7 @@ export default {
       ghost
       class="ltr:rounded-bl-md rtl:rounded-br-md ltr:rounded-br-none rtl:rounded-bl-none ltr:rounded-tl-none rtl:rounded-tr-none text-n-slate-11 ltr:rounded-tr-[11px] rtl:rounded-tl-[11px]"
       icon="i-lucide-maximize-2"
+      :aria-label="$t('GENERAL.EXPAND')"
       @click="$emit('togglePopout')"
     />
   </div>

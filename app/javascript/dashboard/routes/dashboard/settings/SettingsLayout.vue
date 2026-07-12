@@ -1,4 +1,6 @@
 <script setup>
+import Skeleton from 'dashboard/components-next/skeleton/Skeleton.vue';
+
 defineProps({
   isLoading: {
     type: Boolean,
@@ -26,7 +28,18 @@ defineProps({
     <main>
       <slot name="preBody" />
       <slot v-if="isLoading" name="loading">
-        <woot-loading-state :message="loadingMessage" />
+        <div
+          class="flex flex-col gap-3 py-4"
+          role="status"
+          :aria-label="loadingMessage"
+        >
+          <Skeleton
+            v-for="n in 6"
+            :key="n"
+            height="h-12"
+            rounded="rounded-lg"
+          />
+        </div>
       </slot>
       <p
         v-else-if="noRecordsFound"

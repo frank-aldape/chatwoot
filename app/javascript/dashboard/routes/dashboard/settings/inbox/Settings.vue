@@ -918,7 +918,11 @@ export default {
             <label>
               {{ $t('INBOX_MGMT.HELP_CENTER.LABEL') }}
             </label>
-            <select v-model="selectedPortalSlug" class="filter__question">
+            <select
+              v-model="selectedPortalSlug"
+              class="filter__question"
+              :aria-label="$t('INBOX_MGMT.HELP_CENTER.LABEL')"
+            >
               <option value="">
                 {{ $t('INBOX_MGMT.HELP_CENTER.PLACEHOLDER') }}
               </option>
@@ -957,6 +961,7 @@ export default {
               v-model="selectedFeatureFlags"
               type="checkbox"
               value="attachments"
+              :aria-label="$t('INBOX_MGMT.FEATURES.DISPLAY_FILE_PICKER')"
               @input="handleFeatureFlag"
             />
             <label for="attachments">
@@ -968,6 +973,7 @@ export default {
               v-model="selectedFeatureFlags"
               type="checkbox"
               value="emoji_picker"
+              :aria-label="$t('INBOX_MGMT.FEATURES.DISPLAY_EMOJI_PICKER')"
               @input="handleFeatureFlag"
             />
             <label for="emoji_picker">
@@ -979,6 +985,7 @@ export default {
               v-model="selectedFeatureFlags"
               type="checkbox"
               value="end_conversation"
+              :aria-label="$t('INBOX_MGMT.FEATURES.ALLOW_END_CONVERSATION')"
               @input="handleFeatureFlag"
             />
             <label for="end_conversation">
@@ -990,6 +997,7 @@ export default {
               v-model="selectedFeatureFlags"
               type="checkbox"
               value="use_inbox_avatar_for_bot"
+              :aria-label="$t('INBOX_MGMT.FEATURES.USE_INBOX_AVATAR_FOR_BOT')"
               @input="handleFeatureFlag"
             />
             <label for="use_inbox_avatar_for_bot">
@@ -1024,6 +1032,11 @@ export default {
                 <input
                   ref="businessNameInput"
                   v-model="businessName"
+                  :aria-label="
+                    $t(
+                      'INBOX_MGMT.EDIT.SENDER_NAME_SECTION.BUSINESS_NAME.PLACEHOLDER'
+                    )
+                  "
                   :placeholder="
                     $t(
                       'INBOX_MGMT.EDIT.SENDER_NAME_SECTION.BUSINESS_NAME.PLACEHOLDER'

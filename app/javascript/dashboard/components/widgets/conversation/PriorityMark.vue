@@ -44,11 +44,12 @@ export default {
       'bg-n-slate-4 text-n-slate-11': !isUrgent,
     }"
   >
-    <fluent-icon
-      :icon="`priority-${priority.toLowerCase()}`"
-      :size="isUrgent ? 12 : 14"
+    <span
       class="flex-shrink-0"
-      view-box="0 0 14 14"
+      :class="[
+        `i-woot-priority-${priority.toLowerCase()}`,
+        isUrgent ? 'size-3' : 'size-3.5',
+      ]"
     />
   </span>
 </template>

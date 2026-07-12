@@ -130,7 +130,7 @@ onMounted(() => {
         :title="t('CAPTAIN_SETTINGS.TITLE')"
         :description="t('CAPTAIN_SETTINGS.DESCRIPTION')"
         :link-text="t('CAPTAIN_SETTINGS.LINK_TEXT')"
-        icon-name="captain"
+        icon-name="i-woot-captain"
         feature-name="captain_billing"
       />
     </template>

@@ -127,6 +127,7 @@ onMounted(() => {
             slate
             sm
             class="!size-6"
+            :aria-label="t('PAGINATION_FOOTER.FIRST_PAGE')"
             :disabled="!table.getCanPreviousPage()"
             @click="table.setPageIndex(0)"
           />
@@ -136,6 +137,7 @@ onMounted(() => {
             slate
             sm
             class="!size-6"
+            :aria-label="t('GENERAL.PREVIOUS')"
             :disabled="!table.getCanPreviousPage()"
             @click="table.previousPage()"
           />
@@ -161,6 +163,7 @@ onMounted(() => {
             slate
             sm
             class="!size-6"
+            :aria-label="t('GENERAL.NEXT')"
             :disabled="!table.getCanNextPage()"
             @click="table.nextPage()"
           />
@@ -170,6 +173,7 @@ onMounted(() => {
             slate
             sm
             class="!size-6"
+            :aria-label="t('PAGINATION_FOOTER.LAST_PAGE')"
             :disabled="!table.getCanNextPage()"
             @click="table.setPageIndex(table.getPageCount() - 1)"
           />

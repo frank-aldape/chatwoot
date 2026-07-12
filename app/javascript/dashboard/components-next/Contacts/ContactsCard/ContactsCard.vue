@@ -195,6 +195,7 @@ const handleAvatarHover = isHovered => {
 
       <Button
         icon="i-lucide-chevron-down"
+        :aria-label="t('CONTACTS_LAYOUT.SIDEBAR.NOTES.EXPAND')"
         variant="ghost"
         color="slate"
         size="xs"

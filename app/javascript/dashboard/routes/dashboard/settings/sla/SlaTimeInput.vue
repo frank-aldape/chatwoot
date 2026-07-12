@@ -105,6 +105,7 @@ export default {
       <select
         v-model="thresholdUnitValue"
         class="px-4 py-1.5 min-w-[6.5rem] h-10 text-sm font-medium border-0 rounded-xl hover:cursor-pointer pr-7"
+        :aria-label="$t('SLA.FORM.THRESHOLD_UNIT')"
         @change="onThresholdUnitChange"
       >
         <option

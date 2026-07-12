@@ -59,6 +59,7 @@ const toggleSidebar = () => {
     >
       <Button
         icon="i-woot-captain"
+        :aria-label="$t('SIDEBAR.CAPTAIN')"
         no-animation
         class="!rounded-full !bg-n-solid-3 dark:!bg-n-alpha-2 !text-n-slate-12 text-xl transition-all duration-200 ease-out hover:brightness-110"
         lg

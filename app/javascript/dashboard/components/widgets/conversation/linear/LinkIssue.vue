@@ -65,7 +65,7 @@ const onSearch = async value => {
     issues.value = response.data.map(issue => ({
       id: issue.identifier,
       name: `${issue.identifier} ${issue.title}`,
-      icon: 'status',
+      icon: 'i-lucide-circle-dot',
       iconColor: issue.state.color,
     }));
   } catch (error) {

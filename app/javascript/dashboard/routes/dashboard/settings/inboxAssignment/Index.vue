@@ -218,6 +218,7 @@ onMounted(fetchData);
           <Input
             v-model="searchQuery"
             type="search"
+            :aria-label="t('INBOX_ASSIGNMENT.SEARCH_PLACEHOLDER')"
             :placeholder="t('INBOX_ASSIGNMENT.SEARCH_PLACEHOLDER')"
             :custom-input-class="[
               'h-10 [&:not(.focus)]:!border-transparent bg-n-alpha-2 ltr:!pl-9 rtl:!pr-9',
@@ -275,6 +276,7 @@ onMounted(fetchData);
                 <input
                   type="checkbox"
                   :checked="isPageFullySelected"
+                  :aria-label="t('INBOX_ASSIGNMENT.SELECT_ALL')"
                   @change="togglePageSelection"
                 />
               </th>
@@ -295,6 +297,7 @@ onMounted(fetchData);
                 <input
                   type="checkbox"
                   :checked="isRowSelected(row.id)"
+                  :aria-label="row.name"
                   @change="toggleRow(row.id)"
                 />
               </td>

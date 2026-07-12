@@ -116,12 +116,14 @@ watch(
       <div class="flex shrink-0 gap-2">
         <button
           class="flex justify-center items-center w-10 h-10 bg-n-ruby-9 hover:bg-n-ruby-10 rounded-full transition-colors"
+          :aria-label="$t('CONVERSATION.VOICE_WIDGET.REJECT_CALL')"
           @click="dismissCall(call.callSid)"
         >
           <i class="text-lg text-white i-ph-phone-x-bold" />
         </button>
         <button
           class="flex justify-center items-center w-10 h-10 bg-n-teal-9 hover:bg-n-teal-10 rounded-full transition-colors"
+          :aria-label="$t('CONVERSATION.VOICE_WIDGET.JOIN_CALL')"
           @click="handleJoinCall(call)"
         >
           <i class="text-lg text-white i-ph-phone-bold" />
@@ -163,6 +165,11 @@ watch(
       <div class="flex shrink-0 gap-2">
         <button
           class="flex justify-center items-center w-10 h-10 bg-n-ruby-9 hover:bg-n-ruby-10 rounded-full transition-colors"
+          :aria-label="
+            hasActiveCall
+              ? $t('CONVERSATION.VOICE_WIDGET.END_CALL')
+              : $t('CONVERSATION.VOICE_WIDGET.REJECT_CALL')
+          "
           @click="
             hasActiveCall
               ? handleEndCall()
@@ -174,6 +181,7 @@ watch(
         <button
           v-if="!hasActiveCall"
           class="flex justify-center items-center w-10 h-10 bg-n-teal-9 hover:bg-n-teal-10 rounded-full transition-colors"
+          :aria-label="$t('CONVERSATION.VOICE_WIDGET.JOIN_CALL')"
           @click="handleJoinCall(incomingCalls[0])"
         >
           <i class="text-lg text-white i-ph-phone-bold" />

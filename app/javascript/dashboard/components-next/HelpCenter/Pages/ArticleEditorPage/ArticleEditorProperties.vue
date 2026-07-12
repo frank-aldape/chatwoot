@@ -67,6 +67,7 @@ onMounted(() => {
         size="sm"
         variant="ghost"
         color="slate"
+        :aria-label="t('GENERAL.CLOSE')"
         class="hover:text-n-slate-11"
         @click="emit('close')"
       />

@@ -57,6 +57,7 @@ const removeAttachment = id => {
           variant="ghost"
           icon="i-lucide-trash"
           color="slate"
+          :aria-label="$t('GENERAL.REMOVE')"
           class="absolute top-1 ltr:right-1 rtl:left-1 !w-5 !h-5 transition-opacity duration-150 ease-in-out opacity-0 group-hover/image:opacity-100"
           @click="removeAttachment(attachment.resource.id)"
         />
@@ -79,6 +80,7 @@ const removeAttachment = id => {
           icon="i-lucide-x"
           color="slate"
           size="xs"
+          :aria-label="$t('GENERAL.REMOVE')"
           class="shrink-0 !h-5 !w-5"
           @click="removeAttachment(attachment.resource.id)"
         />

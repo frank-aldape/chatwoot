@@ -57,6 +57,7 @@ const onLastPage = () => {
       slate
       icon="i-lucide-chevrons-left"
       class="ltr:rounded-l-lg ltr:rounded-r-none rtl:rounded-r-lg rtl:rounded-l-none"
+      :aria-label="$t('PAGINATION_FOOTER.FIRST_PAGE')"
       :disabled="hasFirstPage"
       @click="onFirstPage"
     />
@@ -69,6 +70,7 @@ const onLastPage = () => {
       slate
       icon="i-lucide-chevron-left"
       class="rounded-none"
+      :aria-label="$t('GENERAL.PREVIOUS')"
       :disabled="hasPrevPage"
       @click="onPrevPage"
     />
@@ -89,6 +91,7 @@ const onLastPage = () => {
       slate
       icon="i-lucide-chevron-right"
       class="rounded-none"
+      :aria-label="$t('GENERAL.NEXT')"
       :disabled="hasNextPage"
       @click="onNextPage"
     />
@@ -101,6 +104,7 @@ const onLastPage = () => {
       slate
       icon="i-lucide-chevrons-right"
       class="ltr:rounded-r-lg ltr:rounded-l-none rtl:rounded-l-lg rtl:rounded-r-none"
+      :aria-label="$t('PAGINATION_FOOTER.LAST_PAGE')"
       :disabled="hasLastPage"
       @click="onLastPage"
     />

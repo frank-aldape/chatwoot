@@ -7,14 +7,13 @@ import {
 } from 'shared/helpers/FileHelper';
 import { ALLOWED_FILE_TYPES } from 'shared/constants/messages';
 import { BUS_EVENTS } from 'shared/constants/busEvents';
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import { DirectUpload } from 'activestorage';
 import { mapGetters } from 'vuex';
 import { emitter } from 'shared/helpers/mitt';
 import { useAttachments } from '../composables/useAttachments';
 
 export default {
-  components: { FluentIcon, FileUpload, Spinner },
+  components: { FileUpload, Spinner },
   props: {
     onAttach: {
       type: Function,
@@ -160,7 +159,7 @@ export default {
     @input-file="onFileUpload"
   >
     <button class="min-h-8 min-w-8 flex items-center justify-center">
-      <FluentIcon v-if="!isUploading.image" icon="attach" />
+      <span v-if="!isUploading.image" class="i-lucide-paperclip size-5" />
       <Spinner v-if="isUploading" size="small" />
     </button>
   </FileUpload>

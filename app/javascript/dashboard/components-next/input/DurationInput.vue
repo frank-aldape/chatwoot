@@ -65,11 +65,13 @@ watch(unit, () => {
     autocomplete="off"
     :disabled="disabled"
     :placeholder="t('DURATION_INPUT.PLACEHOLDER')"
+    :aria-label="t('DURATION_INPUT.PLACEHOLDER')"
     class="flex-grow w-full disabled:"
   />
   <select
     v-model="unit"
     :disabled="disabled"
+    :aria-label="t('DURATION_INPUT.UNIT')"
     class="mb-0 text-sm disabled:outline-n-weak disabled:opacity-40"
   >
     <option :value="DURATION_UNITS.MINUTES">

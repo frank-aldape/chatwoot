@@ -454,6 +454,7 @@
     },
     "ARTICLE_SEARCH": {
       "TITLE": "Buscar artículos",
+      "CLOSE": "Cerrar",
       "PLACEHOLDER": "Buscar artículos",
       "NO_RESULT": "No se encontraron artículos",
       "SEARCHING": "Buscando...",

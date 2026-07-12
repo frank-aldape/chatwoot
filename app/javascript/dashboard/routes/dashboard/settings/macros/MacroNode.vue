@@ -86,6 +86,7 @@ const dropdownValues = () => {
     <NextButton
       v-if="!singleNode"
       v-tooltip="$t('MACROS.EDITOR.DELETE_BTN_TOOLTIP')"
+      :aria-label="$t('MACROS.EDITOR.DELETE_BTN_TOOLTIP')"
       icon="i-lucide-trash-2"
       sm
       faded

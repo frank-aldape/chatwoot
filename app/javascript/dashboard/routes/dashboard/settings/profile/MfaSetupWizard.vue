@@ -213,6 +213,7 @@ defineExpose({
             maxlength="6"
             pattern="[0-9]{6}"
             :label="$t('MFA_SETTINGS.SETUP.ENTER_CODE')"
+            :aria-label="$t('MFA_SETTINGS.SETUP.ENTER_CODE_PLACEHOLDER')"
             :placeholder="$t('MFA_SETTINGS.SETUP.ENTER_CODE_PLACEHOLDER')"
             :message="verificationError"
             :message-type="verificationError ? 'error' : 'info'"

@@ -94,6 +94,7 @@ const handleCopy = async text => {
           sm
           slate
           icon="i-lucide-copy"
+          :aria-label="t('SECURITY_SETTINGS.SAML.COPY')"
           @click="handleCopy(item.value)"
         />
       </div>

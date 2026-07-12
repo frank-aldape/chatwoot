@@ -435,6 +435,11 @@
     "TRY_THESE_PROMPTS": "Prueba estas sugerencias"
   },
   "GALLERY_VIEW": {
-    "ERROR_DOWNLOADING": "No se pudo descargar el archivo adjunto. Intenta de nuevo"
+    "ERROR_DOWNLOADING": "No se pudo descargar el archivo adjunto. Intenta de nuevo",
+    "ZOOM_IN": "Acercar",
+    "ZOOM_OUT": "Alejar",
+    "ROTATE_LEFT": "Girar a la izquierda",
+    "ROTATE_RIGHT": "Girar a la derecha",
+    "DOWNLOAD": "Descargar"
   }
 }

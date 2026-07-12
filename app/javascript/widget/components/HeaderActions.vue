@@ -2,13 +2,11 @@
 import { mapGetters } from 'vuex';
 import { IFrameHelper, RNHelper } from 'widget/helpers/utils';
 import { popoutChatWindow } from '../helpers/popoutHelper';
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import configMixin from 'widget/mixins/configMixin';
 import { CONVERSATION_STATUS } from 'shared/constants/messages';
 
 export default {
   name: 'HeaderActions',
-  components: { FluentIcon },
   mixins: [configMixin],
   props: {
     showPopoutButton: {
@@ -91,14 +89,14 @@ export default {
       :title="$t('END_CONVERSATION')"
       @click="resolveConversation"
     >
-      <FluentIcon icon="sign-out" size="22" class="text-n-slate-12" />
+      <span class="i-lucide-log-out size-[22px] text-n-slate-12" />
     </button>
     <button
       v-if="showPopoutButton"
       class="button transparent compact new-window--button"
       @click="popoutWindow"
     >
-      <FluentIcon icon="open" size="22" class="text-n-slate-12" />
+      <span class="i-lucide-external-link size-[22px] text-n-slate-12" />
     </button>
     <button
       class="button transparent compact close-button"
@@ -107,7 +105,7 @@ export default {
       }"
       @click="closeWindow"
     >
-      <FluentIcon icon="dismiss" size="24" class="text-n-slate-12" />
+      <span class="i-lucide-x size-6 text-n-slate-12" />
     </button>
   </div>
 </template>

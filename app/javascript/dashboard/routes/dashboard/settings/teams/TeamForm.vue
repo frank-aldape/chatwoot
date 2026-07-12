@@ -406,7 +406,12 @@ export default {
         @blur="v$.description.$touch"
       />
       <div class="w-full flex items-center gap-2">
-        <input v-model="state.allowAutoAssign" type="checkbox" :value="true" />
+        <input
+          v-model="state.allowAutoAssign"
+          type="checkbox"
+          :value="true"
+          :aria-label="$t('TEAMS_SETTINGS.FORM.AUTO_ASSIGN.LABEL')"
+        />
         <label for="conversation_creation">
           {{ $t('TEAMS_SETTINGS.FORM.AUTO_ASSIGN.LABEL') }}
         </label>
@@ -530,6 +535,9 @@ export default {
                       ? 'i-lucide-chevron-down'
                       : 'i-lucide-chevron-up'
                   "
+                  :aria-label="
+                    $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.TOGGLE_INBOXES')
+                  "
                   @click="toggleAssignmentCollapse(index)"
                 />
               </div>
@@ -591,6 +599,9 @@ export default {
                 v-model="assignment.inboxSearchQuery"
                 type="search"
                 class="h-10 rounded-lg border border-n-weak bg-n-alpha-1 px-3 text-sm text-n-slate-12"
+                :aria-label="
+                  $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SEARCH_INBOXES')
+                "
                 :placeholder="
                   $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SEARCH_INBOXES')
                 "

@@ -335,6 +335,9 @@ watch(
                     ? 'bg-white w-8'
                     : 'bg-white bg-opacity-50'
                 "
+                :aria-label="
+                  t('YEAR_IN_REVIEW.NAVIGATION.GO_TO_SLIDE', { number: index })
+                "
                 @click="goToSlide(index - 1)"
               />
             </div>
@@ -369,6 +372,7 @@ watch(
 
           <button
             class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full text-n-slate-12 dark:text-n-slate-1 hover:bg-white hover:bg-opacity-20 transition-colors"
+            :aria-label="t('YEAR_IN_REVIEW.CLOSE')"
             @click="close"
           >
             <i class="i-lucide-x w-6 h-6" />

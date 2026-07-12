@@ -27,6 +27,7 @@ function openNotificationPanel() {
 <template>
   <button
     class="size-8 rounded-lg hover:bg-n-alpha-1 flex-shrink-0 grid place-content-center relative"
+    :aria-label="$t('SIDEBAR.NOTIFICATIONS')"
     @click="openNotificationPanel"
   >
     <span class="i-lucide-bell size-4" />

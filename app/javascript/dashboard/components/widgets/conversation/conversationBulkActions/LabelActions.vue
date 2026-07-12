@@ -57,7 +57,14 @@ const handleAssign = () => {
       <span class="text-sm font-medium">{{
         t('BULK_ACTION.LABELS.ASSIGN_LABELS')
       }}</span>
-      <NextButton ghost xs slate icon="i-lucide-x" @click="onClose" />
+      <NextButton
+        ghost
+        xs
+        slate
+        icon="i-lucide-x"
+        :aria-label="t('GENERAL.CLOSE')"
+        @click="onClose"
+      />
     </div>
     <div class="flex flex-col max-h-60 min-h-0">
       <header class="py-2 px-2.5">

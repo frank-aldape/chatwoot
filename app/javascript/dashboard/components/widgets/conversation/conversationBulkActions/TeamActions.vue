@@ -45,7 +45,14 @@ export default {
     </div>
     <div class="flex items-center justify-between header">
       <span>{{ $t('BULK_ACTION.TEAMS.TEAM_SELECT_LABEL') }}</span>
-      <NextButton ghost xs slate icon="i-lucide-x" @click="onClose" />
+      <NextButton
+        ghost
+        xs
+        slate
+        icon="i-lucide-x"
+        :aria-label="$t('GENERAL.CLOSE')"
+        @click="onClose"
+      />
     </div>
     <div class="container">
       <div class="team__list-container">
@@ -59,6 +66,7 @@ export default {
                 v-model="query"
                 type="search"
                 :placeholder="$t('BULK_ACTION.SEARCH_INPUT_PLACEHOLDER')"
+                :aria-label="$t('BULK_ACTION.SEARCH_INPUT_PLACEHOLDER')"
                 class="reset-base !outline-0 !text-sm agent--search_input"
               />
             </div>

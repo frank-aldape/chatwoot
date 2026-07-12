@@ -92,6 +92,9 @@ const updateIntegration = async () => {
         <select
           v-model="selectedChannelId"
           class="h-8 py-1 mr-4 text-xs leading-4 border border-n-amber-10"
+          :aria-label="
+            $t('INTEGRATION_SETTINGS.SLACK.SELECT_CHANNEL.OPTION_LABEL')
+          "
         >
           <option value="">
             {{ $t('INTEGRATION_SETTINGS.SLACK.SELECT_CHANNEL.OPTION_LABEL') }}

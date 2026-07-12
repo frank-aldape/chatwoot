@@ -136,6 +136,7 @@ onBeforeUnmount(() => {
           amber
           icon="i-lucide-x"
           class="!text-n-amber-12 dark:!text-n-amber-9"
+          :aria-label="t('GENERAL.CLOSE')"
           @click="closeNotification"
         />
       </div>

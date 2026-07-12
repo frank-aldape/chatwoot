@@ -201,6 +201,7 @@ defineExpose({ handleOpen });
           </h3>
           <button
             class="w-10 h-10 flex items-center justify-center rounded-full text-white hover:bg-white hover:bg-opacity-20 transition-colors"
+            :aria-label="t('YEAR_IN_REVIEW.CLOSE')"
             @click="close"
           >
             <i class="i-lucide-x w-6 h-6" />
@@ -228,6 +229,7 @@ defineExpose({ handleOpen });
 
           <button
             class="w-10 h-10 flex items-center justify-center rounded-full text-white bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
+            :aria-label="t('YEAR_IN_REVIEW.NAVIGATION.SHARE')"
             @click="shareImage"
           >
             <i class="i-lucide-share-2 w-5 h-5" />

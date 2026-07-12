@@ -152,6 +152,7 @@ onMounted(() => {
           slate
           icon="i-lucide-x"
           class="absolute z-10 ltr:right-2 rtl:left-2 top-2"
+          :aria-label="$t('GENERAL.CLOSE')"
           @click="close"
         />
         <slot />

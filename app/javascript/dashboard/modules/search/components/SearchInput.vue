@@ -103,6 +103,7 @@ onUnmounted(() => {
         v-model="searchQuery"
         type="search"
         class="reset-base outline-none w-full m-0 bg-transparent border-transparent shadow-none text-n-slate-12 dark:text-n-slate-12 active:border-transparent active:shadow-none hover:border-transparent hover:shadow-none focus:border-transparent focus:shadow-none placeholder:text-n-slate-10 text-base"
+        :aria-label="$t('SEARCH.INPUT_PLACEHOLDER')"
         :placeholder="$t('SEARCH.INPUT_PLACEHOLDER')"
         @focus="onFocus"
         @blur="onBlur"

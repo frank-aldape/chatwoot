@@ -282,6 +282,7 @@ watch(
             type="file"
             accept="image/png, image/jpeg, image/jpg, image/gif, image/webp"
             class="hidden"
+            :aria-label="t('AVATAR.UPLOAD_IMAGE')"
             @change="handleImageUpload"
           />
         </div>

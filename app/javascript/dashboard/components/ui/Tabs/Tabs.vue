@@ -72,6 +72,7 @@ watch(
     <button
       v-if="hasScroll"
       class="items-center rounded-none cursor-pointer flex h-auto justify-center min-w-8"
+      :aria-label="$t('GENERAL.PREVIOUS')"
       @click="onScrollClick('left')"
     >
       <span class="i-lucide-chevron-left size-4" />
@@ -88,6 +89,7 @@ watch(
     <button
       v-if="hasScroll"
       class="items-center rounded-none cursor-pointer flex h-auto justify-center min-w-8"
+      :aria-label="$t('GENERAL.NEXT')"
       @click="onScrollClick('right')"
     >
       <span class="i-lucide-chevron-right size-4" />

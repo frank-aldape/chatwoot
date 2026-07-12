@@ -113,6 +113,7 @@ export default {
         v-model="searchQuery"
         type="search"
         class="h-10 rounded-lg border border-n-weak bg-n-alpha-1 px-3 text-sm text-n-slate-12"
+        :aria-label="$t('TEAMS_SETTINGS.AGENTS.SEARCH_PLACEHOLDER')"
         :placeholder="$t('TEAMS_SETTINGS.AGENTS.SEARCH_PLACEHOLDER')"
       />
     </div>
@@ -128,6 +129,7 @@ export default {
                 type="checkbox"
                 :checked="allAgentsSelected ? 'checked' : ''"
                 :title="$t('TEAMS_SETTINGS.AGENTS.SELECT_ALL')"
+                :aria-label="$t('TEAMS_SETTINGS.AGENTS.SELECT_ALL')"
                 @click.self="selectAllAgents"
               />
             </div>
@@ -152,6 +154,7 @@ export default {
               <input
                 type="checkbox"
                 :checked="isAgentSelected(agent.id)"
+                :aria-label="agent.name"
                 @click.self="() => handleSelectAgent(agent.id)"
               />
             </div>

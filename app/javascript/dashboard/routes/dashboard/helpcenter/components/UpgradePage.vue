@@ -22,7 +22,7 @@ export default {
         {
           key: 2,
           title: this.$t('HELP_CENTER.UPGRADE_PAGE.FEATURES.LOCALES.TITLE'),
-          icon: 'globe-line',
+          icon: 'globe',
           description: this.$t(
             'HELP_CENTER.UPGRADE_PAGE.FEATURES.LOCALES.DESCRIPTION'
           ),
@@ -112,11 +112,9 @@ export default {
       >
         <div class="flex gap-2 flex-row">
           <div>
-            <fluent-icon
-              :icon="feature.icon"
-              icon-lib="lucide"
-              :size="26"
-              class="mt-px text-n-slate-12"
+            <span
+              class="size-[26px] mt-px text-n-slate-12"
+              :class="`i-lucide-${feature.icon}`"
             />
           </div>
           <div>

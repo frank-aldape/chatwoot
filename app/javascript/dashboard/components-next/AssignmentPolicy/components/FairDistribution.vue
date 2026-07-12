@@ -57,6 +57,11 @@ onMounted(() => {
           placeholder="100"
           max="100000"
           class="w-full"
+          :aria-label="
+            t(
+              'ASSIGNMENT_POLICY.AGENT_ASSIGNMENT_POLICY.FORM.FAIR_DISTRIBUTION.INPUT_MAX'
+            )
+          "
         />
       </div>
     </div>

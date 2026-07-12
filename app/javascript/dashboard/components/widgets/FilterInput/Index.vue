@@ -6,11 +6,6 @@ export default {
   components: {
     NextButton,
   },
-  data() {
-    return {
-      dropdownSearchQuery: '',
-    };
-  },
   props: {
     modelValue: {
       type: Object,
@@ -58,6 +53,11 @@ export default {
     },
   },
   emits: ['update:modelValue', 'removeFilter', 'resetFilter'],
+  data() {
+    return {
+      dropdownSearchQuery: '',
+    };
+  },
   computed: {
     attributeKey: {
       get() {
@@ -177,143 +177,159 @@ export default {
           class="gap-1"
           :class="shouldShowDropdownSearch ? 'flex items-start' : 'flex'"
         >
-        <select
-          v-if="groupedFilters"
-          v-model="attributeKey"
-          class="mb-0 mr-1"
-          :class="shouldShowDropdownSearch ? 'w-full max-w-full' : 'max-w-[30%]'"
-          @change="resetFilter()"
-        >
-          <optgroup
-            v-for="(group, i) in filterGroups"
-            :key="i"
-            :label="group.name"
+          <select
+            v-if="groupedFilters"
+            v-model="attributeKey"
+            class="mb-0 mr-1"
+            :aria-label="$t('FILTER.FILTER_ATTRIBUTE_LABEL')"
+            :class="
+              shouldShowDropdownSearch ? 'w-full max-w-full' : 'max-w-[30%]'
+            "
+            @change="resetFilter()"
+          >
+            <optgroup
+              v-for="(group, i) in filterGroups"
+              :key="i"
+              :label="group.name"
+            >
+              <option
+                v-for="attribute in group.attributes"
+                :key="attribute.key"
+                :value="attribute.key"
+                :selected="true"
+              >
+                {{ attribute.name }}
+              </option>
+            </optgroup>
+          </select>
+          <select
+            v-else
+            v-model="attributeKey"
+            class="mb-0 mr-1"
+            :aria-label="$t('FILTER.FILTER_ATTRIBUTE_LABEL')"
+            :class="
+              shouldShowDropdownSearch ? 'w-full max-w-full' : 'max-w-[30%]'
+            "
+            @change="resetFilter()"
           >
             <option
-              v-for="attribute in group.attributes"
+              v-for="attribute in filterAttributes"
               :key="attribute.key"
               :value="attribute.key"
-              :selected="true"
+              :disabled="attribute.disabled"
             >
               {{ attribute.name }}
             </option>
-          </optgroup>
-        </select>
-        <select
-          v-else
-          v-model="attributeKey"
-          class="mb-0 mr-1"
-          :class="shouldShowDropdownSearch ? 'w-full max-w-full' : 'max-w-[30%]'"
-          @change="resetFilter()"
-        >
-          <option
-            v-for="attribute in filterAttributes"
-            :key="attribute.key"
-            :value="attribute.key"
-            :disabled="attribute.disabled"
-          >
-            {{ attribute.name }}
-          </option>
-        </select>
+          </select>
 
-        <select
-          v-model="filterOperator"
-          class="mb-0 mr-1"
-          :class="shouldShowDropdownSearch ? 'w-full max-w-full' : 'max-w-[20%]'"
-        >
-          <option
-            v-for="(operator, o) in operators"
-            :key="o"
-            :value="operator.value"
+          <select
+            v-model="filterOperator"
+            class="mb-0 mr-1"
+            :aria-label="$t('FILTER.FILTER_OPERATOR_LABEL')"
+            :class="
+              shouldShowDropdownSearch ? 'w-full max-w-full' : 'max-w-[20%]'
+            "
           >
-            {{ $t(`FILTER.OPERATOR_LABELS.${operator.value}`) }}
-          </option>
-        </select>
+            <option
+              v-for="(operator, o) in operators"
+              :key="o"
+              :value="operator.value"
+            >
+              {{ $t(`FILTER.OPERATOR_LABELS.${operator.value}`) }}
+            </option>
+          </select>
 
-        <div v-if="showUserInput" class="flex-grow mr-1 filter__answer--wrap">
-          <div v-if="shouldShowDropdownSearch" class="search-input-wrap">
+          <div v-if="showUserInput" class="flex-grow mr-1 filter__answer--wrap">
+            <div v-if="shouldShowDropdownSearch" class="search-input-wrap">
+              <input
+                v-model="dropdownSearchQuery"
+                type="text"
+                class="!mb-2 search-input"
+                :placeholder="$t('AUTOMATION.SEARCH_OPTIONS_PLACEHOLDER')"
+                :aria-label="$t('AUTOMATION.SEARCH_OPTIONS_PLACEHOLDER')"
+              />
+              <p
+                v-if="dropdownSearchQuery && !filteredDropdownValues.length"
+                class="search-empty-state"
+              >
+                {{ $t('AUTOMATION.SEARCH_OPTIONS_EMPTY') }}
+              </p>
+            </div>
+            <div
+              v-if="inputType === 'multi_select'"
+              class="multiselect-wrap--small"
+            >
+              <multiselect
+                v-model="values"
+                track-by="id"
+                label="name"
+                :placeholder="$t('FORMS.MULTISELECT.SELECT')"
+                multiple
+                selected-label
+                :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
+                deselect-label=""
+                :max-height="160"
+                :options="filteredDropdownValues"
+                :allow-empty="false"
+                :searchable="false"
+              >
+                <template #noOptions>
+                  {{ $t('FORMS.MULTISELECT.NO_OPTIONS') }}
+                </template>
+              </multiselect>
+            </div>
+            <div
+              v-else-if="inputType === 'search_select'"
+              class="multiselect-wrap--small"
+            >
+              <multiselect
+                v-model="values"
+                track-by="id"
+                label="name"
+                :placeholder="$t('FORMS.MULTISELECT.SELECT')"
+                selected-label
+                :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
+                deselect-label=""
+                :max-height="160"
+                :options="filteredDropdownValues"
+                :allow-empty="false"
+                :option-height="104"
+                :searchable="false"
+              >
+                <template #noOptions>
+                  {{ $t('FORMS.MULTISELECT.NO_OPTIONS') }}
+                </template>
+              </multiselect>
+            </div>
+            <div
+              v-else-if="inputType === 'date'"
+              class="multiselect-wrap--small"
+            >
+              <input
+                v-model="values"
+                type="date"
+                :editable="false"
+                class="!mb-0 datepicker"
+                :aria-label="$t('FILTER.INPUT_PLACEHOLDER')"
+              />
+            </div>
             <input
-              v-model="dropdownSearchQuery"
+              v-else
+              v-model="values"
               type="text"
-              class="!mb-2 search-input"
-              :placeholder="$t('AUTOMATION.SEARCH_OPTIONS_PLACEHOLDER')"
-            />
-            <p
-              v-if="dropdownSearchQuery && !filteredDropdownValues.length"
-              class="search-empty-state"
-            >
-              {{ $t('AUTOMATION.SEARCH_OPTIONS_EMPTY') }}
-            </p>
-          </div>
-          <div
-            v-if="inputType === 'multi_select'"
-            class="multiselect-wrap--small"
-          >
-            <multiselect
-              v-model="values"
-              track-by="id"
-              label="name"
-              :placeholder="$t('FORMS.MULTISELECT.SELECT')"
-              multiple
-              selected-label
-              :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
-              deselect-label=""
-              :max-height="160"
-              :options="filteredDropdownValues"
-              :allow-empty="false"
-              :searchable="false"
-            >
-              <template #noOptions>
-                {{ $t('FORMS.MULTISELECT.NO_OPTIONS') }}
-              </template>
-            </multiselect>
-          </div>
-          <div
-            v-else-if="inputType === 'search_select'"
-            class="multiselect-wrap--small"
-          >
-            <multiselect
-              v-model="values"
-              track-by="id"
-              label="name"
-              :placeholder="$t('FORMS.MULTISELECT.SELECT')"
-              selected-label
-              :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
-              deselect-label=""
-              :max-height="160"
-              :options="filteredDropdownValues"
-              :allow-empty="false"
-              :option-height="104"
-              :searchable="false"
-            >
-              <template #noOptions>
-                {{ $t('FORMS.MULTISELECT.NO_OPTIONS') }}
-              </template>
-            </multiselect>
-          </div>
-          <div v-else-if="inputType === 'date'" class="multiselect-wrap--small">
-            <input
-              v-model="values"
-              type="date"
-              :editable="false"
-              class="!mb-0 datepicker"
+              class="!mb-0"
+              :placeholder="$t('FILTER.INPUT_PLACEHOLDER')"
+              :aria-label="$t('FILTER.INPUT_PLACEHOLDER')"
             />
           </div>
-          <input
-            v-else
-            v-model="values"
-            type="text"
-            class="!mb-0"
-            :placeholder="$t('FILTER.INPUT_PLACEHOLDER')"
+          <NextButton
+            icon="i-lucide-x"
+            slate
+            ghost
+            class="flex-shrink-0"
+            :aria-label="$t('GENERAL.REMOVE')"
+            @click="removeFilter"
           />
-        </div>
-        <NextButton
-          icon="i-lucide-x"
-          slate
-          ghost
-          class="flex-shrink-0"
-          @click="removeFilter"
-        />
         </div>
       </div>
       <p v-if="errorMessage" class="filter-error">
@@ -329,6 +345,7 @@ export default {
       <select
         v-model="query_operator"
         class="relative w-auto mb-0 bg-n-background text-n-slate-12 border-n-weak"
+        :aria-label="$t('FILTER.QUERY_OPERATOR_LABEL')"
       >
         <option value="and">
           {{ $t('FILTER.QUERY_DROPDOWN_LABELS.AND') }}

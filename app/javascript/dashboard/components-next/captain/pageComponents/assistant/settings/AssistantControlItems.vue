@@ -32,6 +32,7 @@ const onClick = name => {
           slate
           ghost
           xs
+          :aria-label="controlItem.name"
           @click="onClick(controlItem.routeName)"
         />
       </div>

@@ -146,6 +146,7 @@ const handleClick = id => {
             icon="i-lucide-ellipsis-vertical"
             color="slate"
             size="xs"
+            :aria-label="t('CONVERSATION.HEADER.MORE_ACTIONS')"
             class="rounded-md group-hover:bg-n-alpha-2"
             @click="toggleDropdown()"
           />

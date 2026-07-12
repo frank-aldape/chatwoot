@@ -143,6 +143,7 @@ watch(
           max="1"
           step="0.1"
           class="w-full"
+          :aria-label="t('CAPTAIN.ASSISTANTS.FORM.TEMPERATURE.LABEL')"
         />
         <span class="text-sm text-n-slate-12">{{ state.temperature }}</span>
       </div>

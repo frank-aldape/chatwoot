@@ -1,7 +1,6 @@
 <script setup>
 import { toRef } from 'vue';
 import { useRouter } from 'vue-router';
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
 import HeaderActions from './HeaderActions.vue';
 import AvailabilityContainer from 'widget/components/Availability/AvailabilityContainer.vue';
 import { useAvailability } from 'widget/composables/useAvailability';
@@ -32,7 +31,7 @@ const onBackButtonClick = () => {
         class="px-2 ltr:-ml-3 rtl:-mr-3"
         @click="onBackButtonClick"
       >
-        <FluentIcon icon="chevron-left" size="24" class="text-n-slate-12" />
+        <span class="i-lucide-chevron-left size-6 text-n-slate-12" />
       </button>
       <img
         v-if="avatarUrl"

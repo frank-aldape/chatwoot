@@ -877,7 +877,8 @@
       "TITLE": "Habilitar CSAT",
       "SUBTITLE": "Activa automáticamente encuestas de CSAT al final de las conversaciones para entender cómo se sienten los clientes con su experiencia de soporte. Monitorea las tendencias de satisfacción e identifica áreas de mejora a lo largo del tiempo.",
       "DISPLAY_TYPE": {
-        "LABEL": "Tipo de visualización"
+        "LABEL": "Tipo de visualización",
+        "STAR": "Valoración por estrellas"
       },
       "MESSAGE": {
         "LABEL": "Mensaje",

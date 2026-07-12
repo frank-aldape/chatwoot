@@ -50,6 +50,7 @@ const handleMouseEnter = () => {
         xs
         faded
         icon="i-lucide-x"
+        :aria-label="$t('CONTACT_FORM.FORM.COUNTRY.REMOVE')"
         @click="handleRemoveLabel"
       />
     </div>

@@ -235,6 +235,7 @@ const confirmDeletion = () => {
         <Input
           v-model="searchQuery"
           type="search"
+          :aria-label="$t('AGENT_MGMT.SEARCH.PLACEHOLDER')"
           :placeholder="$t('AGENT_MGMT.SEARCH.PLACEHOLDER')"
           :custom-input-class="[
             'h-10 [&:not(.focus)]:!border-transparent bg-n-alpha-2 ltr:!pl-9 rtl:!pr-9',
@@ -329,6 +330,7 @@ const confirmDeletion = () => {
                 <Button
                   v-if="showResendInvitationAction(agent)"
                   v-tooltip.top="$t('AGENT_MGMT.RESEND_INVITATION.BUTTON_TEXT')"
+                  :aria-label="$t('AGENT_MGMT.RESEND_INVITATION.BUTTON_TEXT')"
                   icon="i-lucide-mail"
                   slate
                   xs
@@ -339,6 +341,7 @@ const confirmDeletion = () => {
                 <Button
                   v-if="showEditAction(agent)"
                   v-tooltip.top="$t('AGENT_MGMT.EDIT.BUTTON_TEXT')"
+                  :aria-label="$t('AGENT_MGMT.EDIT.BUTTON_TEXT')"
                   icon="i-lucide-pen"
                   slate
                   xs
@@ -348,6 +351,7 @@ const confirmDeletion = () => {
                 <Button
                   v-if="showDeleteAction(agent)"
                   v-tooltip.top="$t('AGENT_MGMT.DELETE.BUTTON_TEXT')"
+                  :aria-label="$t('AGENT_MGMT.DELETE.BUTTON_TEXT')"
                   icon="i-lucide-trash-2"
                   xs
                   ruby

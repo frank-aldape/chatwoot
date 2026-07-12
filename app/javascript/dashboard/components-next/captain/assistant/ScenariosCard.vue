@@ -153,13 +153,23 @@ const renderInstruction = instruction => () =>
         <div class="flex items-center gap-2">
           <!-- <Button label="Test" slate xs ghost class="!text-sm" />
           <span class="w-px h-4 bg-n-weak" /> -->
-          <Button icon="i-lucide-pen" slate xs ghost @click="startEdit" />
+          <Button
+            icon="i-lucide-pen"
+            slate
+            xs
+            ghost
+            :aria-label="t('CAPTAIN.FORM.EDIT')"
+            @click="startEdit"
+          />
           <span class="w-px h-4 bg-n-weak" />
           <Button
             icon="i-lucide-trash"
             slate
             xs
             ghost
+            :aria-label="
+              t('CAPTAIN.ASSISTANTS.SCENARIOS.BULK_ACTION.BULK_DELETE_BUTTON')
+            "
             @click="emit('delete', id)"
           />
         </div>

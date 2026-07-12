@@ -1172,6 +1172,7 @@ watch(conversationFilters, (newVal, oldVal) => {
           type="search"
           class="min-w-0 flex-1 appearance-none border-0 bg-transparent p-0 text-sm leading-5 text-n-slate-12 shadow-none outline-none placeholder:text-n-slate-10 focus:border-0 focus:ring-0 focus:outline-none"
           :placeholder="$t('CHAT_LIST.SMART_FILTER.PLACEHOLDER')"
+          :aria-label="$t('CHAT_LIST.SMART_FILTER.PLACEHOLDER')"
           @input="onSmartFilterInput"
           @keydown.enter.prevent="applySmartFilter"
           @keydown.esc.prevent="clearSmartFilter"

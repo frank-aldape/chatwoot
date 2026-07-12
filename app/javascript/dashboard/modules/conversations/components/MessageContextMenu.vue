@@ -188,6 +188,7 @@ export default {
       sm
       icon="i-lucide-ellipsis-vertical"
       class="invisible group-hover/context-menu:visible"
+      :aria-label="$t('CONVERSATION.HEADER.MORE_ACTIONS')"
       @click="handleOpen"
     />
     <ContextMenu

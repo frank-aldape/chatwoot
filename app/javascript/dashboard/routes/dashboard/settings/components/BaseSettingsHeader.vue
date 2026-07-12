@@ -56,11 +56,9 @@ const openInNewTab = url => {
           <div
             class="flex items-center justify-center w-full h-full rounded-full bg-n-blue-3"
           >
-            <fluent-icon
-              size="14"
-              :icon="iconName"
-              type="outline"
-              class="flex-shrink-0 text-n-brand"
+            <span
+              class="flex-shrink-0 size-3.5 text-n-brand"
+              :class="iconName"
             />
           </div>
         </div>

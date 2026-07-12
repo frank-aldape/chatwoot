@@ -125,6 +125,7 @@ async function createChannel() {
         v-model="state.authToken"
         type="password"
         :label="t('INBOX_MGMT.ADD.VOICE.TWILIO.AUTH_TOKEN.LABEL')"
+        :aria-label="t('INBOX_MGMT.ADD.VOICE.TWILIO.AUTH_TOKEN.LABEL')"
         :placeholder="t('INBOX_MGMT.ADD.VOICE.TWILIO.AUTH_TOKEN.PLACEHOLDER')"
         :message="formErrors.authToken"
         :message-type="formErrors.authToken ? 'error' : 'info'"
@@ -144,6 +145,7 @@ async function createChannel() {
         v-model="state.apiKeySecret"
         type="password"
         :label="t('INBOX_MGMT.ADD.VOICE.TWILIO.API_KEY_SECRET.LABEL')"
+        :aria-label="t('INBOX_MGMT.ADD.VOICE.TWILIO.API_KEY_SECRET.LABEL')"
         :placeholder="
           t('INBOX_MGMT.ADD.VOICE.TWILIO.API_KEY_SECRET.PLACEHOLDER')
         "

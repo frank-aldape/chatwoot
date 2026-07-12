@@ -30,6 +30,7 @@ const value = defineModel({
       <input
         v-model="value"
         :placeholder="inputPlaceholder"
+        :aria-label="inputPlaceholder"
         type="text"
         class="w-full mb-0 text-sm !outline-0 bg-transparent text-n-slate-12 placeholder:text-n-slate-10 reset-base"
       />

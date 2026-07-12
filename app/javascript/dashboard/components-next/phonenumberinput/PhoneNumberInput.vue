@@ -170,6 +170,7 @@ watch(
         v-model="phoneNumber"
         type="tel"
         :placeholder="placeholder"
+        :aria-label="placeholder"
         :disabled="disabled"
         custom-input-class="!border-0 !outline-none h-8 !py-0.5 !bg-transparent ltr:!pl-1 rtl:!pr-1"
         class="w-full !flex-row"

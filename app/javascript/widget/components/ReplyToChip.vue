@@ -1,11 +1,6 @@
 <script>
-import FluentIcon from 'shared/components/FluentIcon/Index.vue';
-
 export default {
   name: 'AgentMessage',
-  components: {
-    FluentIcon,
-  },
   props: {
     replyTo: {
       type: Object,
@@ -52,7 +47,7 @@ export default {
     class="px-1.5 py-0.5 rounded-md text-n-slate-11 bg-n-slate-4 opacity-60 hover:opacity-100 cursor-pointer flex items-center gap-1.5"
     @click="navigateTo(replyTo.id)"
   >
-    <FluentIcon icon="arrow-reply" size="12" class="flex-shrink-0" />
+    <span class="i-lucide-reply size-3 flex-shrink-0" />
     <div class="truncate max-w-[8rem]">
       {{ replyTo.content || replyToAttachment }}
     </div>

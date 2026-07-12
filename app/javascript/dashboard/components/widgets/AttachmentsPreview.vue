@@ -80,6 +80,7 @@ const fileName = file => {
           slate
           xs
           icon="i-lucide-x"
+          :aria-label="$t('GENERAL.REMOVE')"
           @click="onRemoveAttachment(index)"
         />
       </div>

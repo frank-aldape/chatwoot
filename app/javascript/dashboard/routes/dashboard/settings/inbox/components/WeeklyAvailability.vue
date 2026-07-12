@@ -155,7 +155,14 @@ export default {
                 :min-height="4"
               />
             </div>
-            <textarea v-else v-model="unavailableMessage" type="text" />
+            <textarea
+              v-else
+              v-model="unavailableMessage"
+              type="text"
+              :aria-label="
+                $t('INBOX_MGMT.BUSINESS_HOURS.UNAVAILABLE_MESSAGE_LABEL')
+              "
+            />
           </div>
           <div class="timezone-input-wrap">
             <label>

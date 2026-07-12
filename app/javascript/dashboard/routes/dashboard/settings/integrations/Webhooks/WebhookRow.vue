@@ -59,6 +59,7 @@ const subscribedEvents = computed(() => {
       <div class="flex justify-end gap-1">
         <Button
           v-tooltip.top="$t('INTEGRATION_SETTINGS.WEBHOOK.EDIT.BUTTON_TEXT')"
+          :aria-label="$t('INTEGRATION_SETTINGS.WEBHOOK.EDIT.BUTTON_TEXT')"
           icon="i-lucide-pen"
           slate
           xs
@@ -67,6 +68,7 @@ const subscribedEvents = computed(() => {
         />
         <Button
           v-tooltip.top="$t('INTEGRATION_SETTINGS.WEBHOOK.DELETE.BUTTON_TEXT')"
+          :aria-label="$t('INTEGRATION_SETTINGS.WEBHOOK.DELETE.BUTTON_TEXT')"
           icon="i-lucide-trash-2"
           xs
           ruby

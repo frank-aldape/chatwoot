@@ -111,6 +111,7 @@ const redirectToPortalHomePage = () => {
             color="slate"
             icon-lib="lucide"
             size="sm"
+            :aria-label="t('HELP_CENTER.EDIT_HEADER.PREVIEW')"
             class="!w-6 !h-6 hover:bg-n-slate-2 text-n-slate-11 !p-0.5 rounded-md"
             @click="onClickPreviewPortal"
           />

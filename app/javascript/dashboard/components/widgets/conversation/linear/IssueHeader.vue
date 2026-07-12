@@ -29,12 +29,7 @@ const openIssue = () => {
       class="flex items-center gap-2 px-2 py-1.5 border rounded-lg border-n-strong"
     >
       <div class="flex items-center gap-1">
-        <fluent-icon
-          icon="linear"
-          size="16"
-          class="text-[#5E6AD2]"
-          view-box="0 0 19 19"
-        />
+        <span class="i-logos-linear size-4" />
         <span class="text-xs font-medium text-n-slate-12">
           {{ identifier }}
         </span>

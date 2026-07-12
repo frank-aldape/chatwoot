@@ -159,6 +159,11 @@ const getInboxName = inboxId => {
               :placeholder="
                 t(`${BASE_KEY}.FORM.INBOX_CAPACITY_LIMIT.FIELD.SET_LIMIT`)
               "
+              :aria-label="
+                t(
+                  `${BASE_KEY}.FORM.INBOX_CAPACITY_LIMIT.FIELD.MAX_CONVERSATIONS`
+                )
+              "
               @blur="handleLimitChange(limit)"
             />
           </div>
@@ -167,6 +172,7 @@ const getInboxName = inboxId => {
             type="button"
             slate
             icon="i-lucide-trash"
+            :aria-label="t('GENERAL.REMOVE')"
             class="flex-shrink-0"
             @click="handleRemoveLimit(limit.id)"
           />

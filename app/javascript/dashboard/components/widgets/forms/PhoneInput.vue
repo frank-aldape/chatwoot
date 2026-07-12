@@ -204,6 +204,7 @@ export default {
         type="tel"
         class="no-margin !rounded-tl-none !rounded-bl-none !outline-none !border-0 font-normal !w-full !bg-transparent text-base !px-1.5 placeholder:font-normal"
         :placeholder="placeholder"
+        :aria-label="placeholder"
         :readonly="readonly"
         :style="styles"
         @input="onChange"
@@ -230,6 +231,7 @@ export default {
           v-model="searchCountry"
           type="text"
           :placeholder="$t('GENERAL.PHONE_INPUT.PLACEHOLDER')"
+          :aria-label="$t('GENERAL.PHONE_INPUT.PLACEHOLDER')"
           class="!h-8 !mb-0 !text-sm !outline-n-brand dark:!outline-n-brand"
           @input="onSearchCountry"
         />

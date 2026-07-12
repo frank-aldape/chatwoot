@@ -44,7 +44,7 @@ const submenuPosition = computed(() => [
     :class="!subMenuAvailable ? 'opacity-50 cursor-not-allowed' : ''"
   >
     <div class="flex items-center h-4">
-      <fluent-icon :icon="option.icon" size="14" class="menu-icon" />
+      <span class="menu-icon size-3.5" :class="option.icon" />
       <p class="my-0 mx-2 text-xs">{{ option.label }}</p>
     </div>
     <span class="i-lucide-chevron-right size-3" />
