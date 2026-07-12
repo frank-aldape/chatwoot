@@ -17,7 +17,7 @@ const toggleMasked = () => {
 };
 
 const maskIcon = computed(() => {
-  return inputType.value === 'password' ? 'eye-hide' : 'eye-show';
+  return inputType.value === 'password' ? 'i-lucide-eye-off' : 'i-lucide-eye';
 });
 
 const onClick = () => {
@@ -49,7 +49,7 @@ const onReset = () => {
           type="button"
           @click="toggleMasked"
         >
-          <fluent-icon :icon="maskIcon" :size="16" />
+          <span :class="maskIcon" class="size-4" />
         </button>
       </template>
     </woot-input>

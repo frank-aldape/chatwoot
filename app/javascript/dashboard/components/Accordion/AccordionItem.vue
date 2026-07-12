@@ -48,8 +48,8 @@ const onToggle = () => {
       <div class="flex flex-row">
         <slot name="button" />
         <div class="flex justify-end w-3 text-n-blue-text cursor-pointer">
-          <fluent-icon v-if="isOpen" size="24" icon="subtract" type="solid" />
-          <fluent-icon v-else size="24" icon="add" type="solid" />
+          <span v-if="isOpen" class="i-lucide-minus size-6" />
+          <span v-else class="i-lucide-plus size-6" />
         </div>
       </div>
     </button>

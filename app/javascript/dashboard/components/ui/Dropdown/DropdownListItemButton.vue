@@ -33,11 +33,9 @@ defineProps({
       <span class="text-sm font-medium truncate text-n-slate-12">
         {{ buttonText }}
       </span>
-      <fluent-icon
+      <span
         v-if="isActive"
-        icon="checkmark"
-        size="18"
-        class="flex-shrink-0 text-n-slate-12"
+        class="i-lucide-check size-[18px] flex-shrink-0 text-n-slate-12"
       />
     </div>
     <slot name="dropdown" />

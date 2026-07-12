@@ -57,18 +57,14 @@ export default {
       @change="onChangeFile"
     />
     <Spinner v-if="uploadState === 'processing'" />
-    <fluent-icon v-if="uploadState === 'idle'" icon="file-upload" />
-    <fluent-icon
+    <span v-if="uploadState === 'idle'" class="i-lucide-file-up size-5" />
+    <span
       v-if="uploadState === 'uploaded'"
-      icon="checkmark-circle"
-      type="outline"
-      class="success-icon"
+      class="i-lucide-circle-check size-5 success-icon"
     />
-    <fluent-icon
+    <span
       v-if="uploadState === 'failed'"
-      icon="dismiss-circle"
-      type="outline"
-      class="error-icon"
+      class="i-lucide-circle-x size-5 error-icon"
     />
     <p class="file-button">{{ label }}</p>
   </label>

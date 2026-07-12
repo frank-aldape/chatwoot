@@ -16,7 +16,7 @@ const emit = defineEmits(['dismiss']);
   <div
     class="reply-editor bg-n-slate-9/10 rounded-md py-1 pl-2 pr-1 text-xs tracking-wide mt-2 flex items-center gap-1.5 -mx-2"
   >
-    <fluent-icon class="flex-shrink-0 icon" icon="arrow-reply" size="14" />
+    <span class="i-lucide-reply size-3.5 flex-shrink-0 icon" />
     <div class="flex-grow gap-1 mt-px text-xs truncate">
       {{ $t('CONVERSATION.REPLYBOX.REPLYING_TO') }}
       <MessagePreview

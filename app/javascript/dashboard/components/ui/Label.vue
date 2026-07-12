@@ -106,7 +106,7 @@ export default {
       :style="{ color: textColor }"
       @click="onClick"
     >
-      <fluent-icon icon="dismiss" size="12" class="close--icon" />
+      <span class="i-lucide-x size-3 close--icon" />
     </button>
   </div>
 </template>

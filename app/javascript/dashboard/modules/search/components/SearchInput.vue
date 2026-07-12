@@ -89,9 +89,8 @@ onUnmounted(() => {
   >
     <div class="flex items-center w-full h-[3.25rem] px-4 gap-2">
       <div class="flex items-center">
-        <fluent-icon
-          icon="search"
-          class="icon"
+        <span
+          class="i-lucide-search size-5 icon"
           aria-hidden="true"
           :class="{
             'text-n-blue-text': isInputFocused,

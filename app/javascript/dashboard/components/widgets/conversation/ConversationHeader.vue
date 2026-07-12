@@ -131,12 +131,10 @@ const hasSlaPolicyId = computed(() => props.chat?.sla_policy_id);
           >
             {{ currentContact.name }}
           </span>
-          <fluent-icon
+          <span
             v-if="!isHMACVerified"
             v-tooltip="$t('CONVERSATION.UNVERIFIED_SESSION')"
-            size="14"
-            class="text-n-amber-10 my-0 mx-0 min-w-[14px] flex-shrink-0"
-            icon="warning"
+            class="i-lucide-alert-triangle size-3.5 text-n-amber-10 my-0 mx-0 min-w-[14px] flex-shrink-0"
           />
         </div>
 
@@ -147,10 +145,8 @@ const hasSlaPolicyId = computed(() => props.chat?.sla_policy_id);
             v-if="managedCompany"
             class="inline-flex items-center max-w-full px-2 py-0.5 rounded-full bg-n-alpha-2 text-n-slate-11"
           >
-            <fluent-icon
-              icon="building-bank"
-              size="12"
-              class="flex-shrink-0 ltr:mr-1 rtl:ml-1"
+            <span
+              class="i-lucide-landmark size-3 flex-shrink-0 ltr:mr-1 rtl:ml-1"
             />
             <span class="truncate">{{ managedCompany.name }}</span>
           </span>

@@ -132,10 +132,8 @@ export default {
         <div
           class="w-8 relative text-base text-n-strong after:content-[''] after:h-12 after:w-0 ltr:after:left-4 rtl:after:right-4 after:absolute after:border-l after:border-solid after:border-n-strong before:content-[''] before:h-0 before:w-4 ltr:before:left-4 rtl:before:right-4 before:top-12 before:absolute before:border-b before:border-solid before:border-n-strong"
         >
-          <fluent-icon
-            icon="arrow-up"
-            class="absolute -top-1 ltr:left-2 rtl:right-2"
-            size="17"
+          <span
+            class="i-lucide-arrow-up size-[17px] absolute -top-1 ltr:left-2 rtl:right-2"
           />
         </div>
         <div class="flex flex-col w-full ltr:pl-8 rtl:pr-8">

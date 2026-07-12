@@ -63,30 +63,22 @@ export default {
 <template>
   <div class="overflow-hidden text-ellipsis whitespace-nowrap">
     <template v-if="showMessageType">
-      <fluent-icon
+      <span
         v-if="isMessagePrivate"
-        size="16"
-        class="-mt-0.5 align-middle text-n-slate-11 inline-block"
-        icon="lock-closed"
+        class="i-lucide-lock size-4 -mt-0.5 align-middle text-n-slate-11 inline-block"
       />
-      <fluent-icon
+      <span
         v-else-if="messageByAgent"
-        size="16"
-        class="-mt-0.5 align-middle text-n-slate-11 inline-block"
-        icon="arrow-reply"
+        class="i-lucide-reply size-4 -mt-0.5 align-middle text-n-slate-11 inline-block"
       />
-      <fluent-icon
+      <span
         v-else-if="isMessageAnActivity"
-        size="16"
-        class="-mt-0.5 align-middle text-n-slate-11 inline-block"
-        icon="info"
+        class="i-lucide-info size-4 -mt-0.5 align-middle text-n-slate-11 inline-block"
       />
     </template>
     <span v-if="message.content && isMessageSticker">
-      <fluent-icon
-        size="16"
-        class="-mt-0.5 align-middle inline-block text-n-slate-11"
-        icon="image"
+      <span
+        class="i-lucide-image size-4 -mt-0.5 align-middle inline-block text-n-slate-11"
       />
       {{ $t('CHAT_LIST.ATTACHMENTS.image.CONTENT') }}
     </span>
@@ -94,11 +86,10 @@ export default {
       {{ parsedLastMessage }}
     </span>
     <span v-else-if="message.attachments">
-      <fluent-icon
+      <span
         v-if="attachmentIcon && showMessageType"
-        size="16"
-        class="-mt-0.5 align-middle inline-block text-n-slate-11"
-        :icon="attachmentIcon"
+        class="size-4 -mt-0.5 align-middle inline-block text-n-slate-11"
+        :class="attachmentIcon"
       />
       {{ $t(`${attachmentMessageContent}`) }}
     </span>

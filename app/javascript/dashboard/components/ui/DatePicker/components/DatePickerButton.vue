@@ -51,13 +51,13 @@ const openDatePicker = () => {
     class="inline-flex relative items-center rounded-lg gap-2 py-1.5 px-3 h-8 bg-n-alpha-2 hover:bg-n-alpha-1 active:bg-n-alpha-1"
     @click="openDatePicker"
   >
-    <fluent-icon class="text-n-slate-12" icon="calendar" size="16" />
+    <span class="i-lucide-calendar size-4 text-n-slate-12" />
     <span class="text-sm font-medium text-n-slate-12">
       {{ $t(activeDateRange) }}
     </span>
     <span class="text-sm font-medium text-n-slate-11">
       {{ formatDateRange }}
     </span>
-    <fluent-icon class="text-n-slate-12" icon="chevron-down" size="14" />
+    <span class="i-lucide-chevron-down size-3.5 text-n-slate-12" />
   </button>
 </template>

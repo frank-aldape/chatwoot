@@ -189,8 +189,8 @@ export default {
         <h5 v-if="activeCountry" class="mb-0">
           {{ activeCountry.emoji }}
         </h5>
-        <fluent-icon v-else icon="globe" class="fluent-icon" size="16" />
-        <fluent-icon icon="chevron-down" class="fluent-icon" size="12" />
+        <span v-else class="i-lucide-globe size-4 fluent-icon" />
+        <span class="i-lucide-chevron-down size-3 fluent-icon" />
       </div>
       <span
         v-if="activeDialCode"

@@ -166,9 +166,13 @@ const tableHeaders = computed(() => {
               <span class="mb-0">
                 {{ thHeader }}
               </span>
-              <fluent-icon
+              <span
                 class="ml-2 size-4"
-                :icon="sortOrder === 'desc' ? 'chevron-up' : 'chevron-down'"
+                :class="
+                  sortOrder === 'desc'
+                    ? 'i-lucide-chevron-up'
+                    : 'i-lucide-chevron-down'
+                "
               />
             </button>
           </th>

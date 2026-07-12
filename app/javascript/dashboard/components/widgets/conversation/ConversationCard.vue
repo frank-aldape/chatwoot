@@ -298,7 +298,7 @@ const deleteConversation = () => {
           v-if="managedCompany"
           class="inline-flex items-center gap-1 max-w-full px-2 py-0.5 rounded-full bg-n-alpha-2 text-n-slate-11 text-xs font-medium"
         >
-          <fluent-icon icon="building-bank" size="12" class="flex-shrink-0" />
+          <span class="i-lucide-landmark size-3 flex-shrink-0" />
           <span class="truncate">{{ managedCompany.name }}</span>
         </span>
         <InboxName v-if="showInboxName" :inbox="inbox" class="flex-1 min-w-0" />
@@ -312,7 +312,7 @@ const deleteConversation = () => {
             v-if="showAssignee && assignee.name"
             class="text-n-slate-11 text-xs font-medium leading-3 py-0.5 px-0 inline-flex items-center truncate"
           >
-            <fluent-icon icon="person" size="12" class="text-n-slate-11" />
+            <span class="i-lucide-user size-3 text-n-slate-11" />
             {{ assignee.name }}
           </span>
           <PriorityMark :priority="chat.priority" class="flex-shrink-0" />
@@ -344,10 +344,8 @@ const deleteConversation = () => {
         class="text-n-slate-11 text-sm my-0 mx-2 leading-6 h-6 flex-1 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
         :class="messagePreviewClass"
       >
-        <fluent-icon
-          size="16"
-          class="-mt-0.5 align-middle inline-block text-n-slate-10"
-          icon="info"
+        <span
+          class="i-lucide-info size-4 -mt-0.5 align-middle inline-block text-n-slate-10"
         />
         <span class="mx-0.5">
           {{ $t(`CHAT_LIST.NO_MESSAGES`) }}

@@ -37,11 +37,11 @@ defineProps({
       </h5>
       <p class="option__body">
         <span v-if="email" class="email-icon-wrap">
-          <fluent-icon class="merge-contact--icon" icon="mail" size="12" />
+          <span class="i-lucide-mail size-3 merge-contact--icon" />
           {{ email }}
         </span>
         <span v-if="phoneNumber" class="phone-icon-wrap">
-          <fluent-icon class="merge-contact--icon" icon="call" size="12" />
+          <span class="i-lucide-phone size-3 merge-contact--icon" />
           {{ phoneNumber }}
         </span>
         <span v-if="!phoneNumber && !email">{{ '---' }}</span>

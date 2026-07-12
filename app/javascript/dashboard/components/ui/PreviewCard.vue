@@ -37,13 +37,7 @@ export default {
       }"
     >
       <div class="flex items-center p-1 text-sm font-medium">{{ heading }}</div>
-      <fluent-icon
-        v-if="active"
-        icon="checkmark-circle"
-        type="solid"
-        size="24"
-        class="text-n-brand"
-      />
+      <span v-if="active" class="i-lucide-circle-check size-6 text-n-brand" />
     </div>
     <div
       class="text-n-slate-11 text-xs leading-[1.4] px-3 pt-3 pb-0 text-start"

@@ -89,9 +89,11 @@ const onShowLabels = e => {
         class="h-5 py-0 px-1 flex-shrink-0 mr-6 ml-0 rtl:ml-6 rtl:mr-0 rtl:rotate-180 text-n-slate-11 border-n-strong dark:border-n-strong"
         @click="onShowLabels"
       >
-        <fluent-icon
-          :icon="showAllLabels ? 'chevron-left' : 'chevron-right'"
-          size="12"
+        <span
+          class="size-3"
+          :class="
+            showAllLabels ? 'i-lucide-chevron-left' : 'i-lucide-chevron-right'
+          "
         />
       </button>
     </div>

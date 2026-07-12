@@ -74,7 +74,7 @@ watch(
       class="items-center rounded-none cursor-pointer flex h-auto justify-center min-w-8"
       @click="onScrollClick('left')"
     >
-      <fluent-icon icon="chevron-left" :size="16" />
+      <span class="i-lucide-chevron-left size-4" />
     </button>
     <ul
       ref="tabsList"
@@ -90,7 +90,7 @@ watch(
       class="items-center rounded-none cursor-pointer flex h-auto justify-center min-w-8"
       @click="onScrollClick('right')"
     >
-      <fluent-icon icon="chevron-right" :size="16" />
+      <span class="i-lucide-chevron-right size-4" />
     </button>
   </div>
 </template>

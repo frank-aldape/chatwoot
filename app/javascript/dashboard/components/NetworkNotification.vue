@@ -30,7 +30,9 @@ const bannerText = computed(() => {
   return t('NETWORK.NOTIFICATION.OFFLINE');
 });
 
-const iconName = computed(() => (isReconnected.value ? 'wifi' : 'wifi-off'));
+const iconName = computed(() =>
+  isReconnected.value ? 'i-lucide-wifi' : 'i-lucide-wifi-off'
+);
 const canRefresh = computed(
   () => !isReconnecting.value && !isReconnected.value
 );
@@ -113,7 +115,7 @@ onBeforeUnmount(() => {
       <div
         class="relative flex items-center justify-between w-full px-2 py-1 bg-n-amber-4 dark:bg-n-amber-8 rounded-lg shadow-lg"
       >
-        <fluent-icon :icon="iconName" class="text-n-amber-12" size="18" />
+        <span :class="iconName" class="size-[18px] text-n-amber-12" />
         <span class="px-2 text-xs font-medium tracking-wide text-n-amber-12">
           {{ bannerText }}
         </span>

@@ -152,12 +152,12 @@ export const MESSAGE_VARIABLES = [
 ];
 
 export const ATTACHMENT_ICONS = {
-  image: 'image',
-  audio: 'headphones-sound-wave',
-  video: 'video',
-  file: 'document',
-  location: 'location',
-  fallback: 'link',
+  image: 'i-lucide-image',
+  audio: 'i-lucide-headphones',
+  video: 'i-lucide-video',
+  file: 'i-lucide-file-text',
+  location: 'i-lucide-map-pin',
+  fallback: 'i-lucide-link',
 };
 
 export const TWILIO_CONTENT_TEMPLATE_TYPES = {
