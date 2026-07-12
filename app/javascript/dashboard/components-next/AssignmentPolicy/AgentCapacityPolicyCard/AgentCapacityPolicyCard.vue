@@ -75,7 +75,14 @@ const handleFetchUsers = () => {
             @click="handleEdit"
           />
           <div class="w-px h-2.5 bg-n-slate-5" />
-          <Button icon="i-lucide-trash" sm slate ghost @click="handleDelete" />
+          <Button
+            icon="i-lucide-trash"
+            :aria-label="t('GENERAL.REMOVE')"
+            sm
+            slate
+            ghost
+            @click="handleDelete"
+          />
         </div>
       </div>
       <p class="text-n-slate-11 text-sm line-clamp-1 mb-0 py-1">

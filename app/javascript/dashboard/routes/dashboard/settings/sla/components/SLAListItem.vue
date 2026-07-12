@@ -59,6 +59,7 @@ const emit = defineEmits(['delete']);
     <template #actions>
       <Button
         v-tooltip.top="$t('SLA.FORM.DELETE')"
+        :aria-label="$t('SLA.FORM.DELETE')"
         faded
         ruby
         xs
