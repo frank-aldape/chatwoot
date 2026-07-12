@@ -145,6 +145,7 @@ export default {
         class="m-0"
         type="checkbox"
         :title="$t('INBOX_MGMT.BUSINESS_HOURS.DAY.ENABLE')"
+        :aria-label="$t('INBOX_MGMT.BUSINESS_HOURS.DAY.ENABLE')"
       />
     </div>
     <div
@@ -164,6 +165,7 @@ export default {
             class="enable-checkbox text-sm font-medium"
             type="checkbox"
             :title="$t('INBOX_MGMT.BUSINESS_HOURS.ALL_DAY')"
+            :aria-label="$t('INBOX_MGMT.BUSINESS_HOURS.ALL_DAY')"
           />
           <span class="text-sm font-medium ml-1">{{
             $t('INBOX_MGMT.BUSINESS_HOURS.ALL_DAY')
