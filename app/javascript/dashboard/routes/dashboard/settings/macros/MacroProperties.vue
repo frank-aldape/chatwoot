@@ -57,11 +57,9 @@ export default {
           :class="isActive('global')"
           @click="onUpdateVisibility('global')"
         >
-          <fluent-icon
+          <span
             v-if="macroVisibility === 'global'"
-            icon="checkmark-circle"
-            type="solid"
-            class="absolute text-n-brand top-2 right-2"
+            class="i-lucide-circle-check size-5 absolute text-n-brand top-2 right-2"
           />
           <p
             class="block m-0 text-sm font-medium leading-[1.8] text-n-slate-12"
@@ -77,11 +75,9 @@ export default {
           :class="isActive('personal')"
           @click="onUpdateVisibility('personal')"
         >
-          <fluent-icon
+          <span
             v-if="macroVisibility === 'personal'"
-            icon="checkmark-circle"
-            type="solid"
-            class="absolute text-n-brand top-2 right-2"
+            class="i-lucide-circle-check size-5 absolute text-n-brand top-2 right-2"
           />
           <p
             class="block m-0 text-sm font-medium leading-[1.8] text-n-slate-12"
@@ -96,7 +92,7 @@ export default {
       <div
         class="mt-2 flex items-start p-2 bg-n-slate-3 dark:bg-n-solid-3 rounded-md"
       >
-        <fluent-icon icon="info" size="16" class="flex-shrink-0 mt-0.5" />
+        <span class="i-lucide-info size-4 flex-shrink-0 mt-0.5" />
         <p class="ml-2 rtl:ml-0 rtl:mr-2 mb-0 text-n-slate-11">
           {{ $t('MACROS.ORDER_INFO') }}
         </p>

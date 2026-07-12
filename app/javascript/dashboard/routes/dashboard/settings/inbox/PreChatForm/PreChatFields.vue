@@ -44,7 +44,9 @@ export default {
   >
     <template #item="{ element: item }">
       <tr class="border-b border-n-weak">
-        <td class="pre-chat-field"><fluent-icon icon="drag" /></td>
+        <td class="pre-chat-field">
+          <span class="i-lucide-grip-vertical size-5" />
+        </td>
         <td class="pre-chat-field">
           <ToggleSwitch
             :model-value="item['enabled']"

@@ -26,6 +26,8 @@ module.exports = {
         // Story files can have static strings, it doesn't need to handle i18n always.
         'vue/no-bare-strings-in-template': 'off',
         'no-console': 'off',
+        // Stories are dev-only component playgrounds, not shipped UI.
+        'vuejs-accessibility/form-control-has-label': 'off',
       },
     },
   ],

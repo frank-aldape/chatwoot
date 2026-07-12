@@ -86,7 +86,14 @@ const actionLabel = key => {
       <span class="text-sm font-medium text-n-slate-12">
         {{ $t('BULK_ACTION.UPDATE.CHANGE_STATUS') }}
       </span>
-      <Button ghost xs slate icon="i-lucide-x" @click="onClose" />
+      <Button
+        ghost
+        xs
+        slate
+        icon="i-lucide-x"
+        :aria-label="$t('CONVERSATION.HEADER.CLOSE')"
+        @click="onClose"
+      />
     </div>
     <div class="px-2.5 pt-0 pb-2.5">
       <WootDropdownMenu class="m-0 list-none">

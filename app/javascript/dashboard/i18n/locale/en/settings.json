@@ -284,7 +284,9 @@
     "MEDIA": {
       "IMAGE_UNAVAILABLE": "Esta imagen ya no está disponible.",
       "LOADING_FAILED": "Error al cargar",
-      "IMAGE_ALT": "Imagen adjunta"
+      "IMAGE_ALT": "Imagen adjunta",
+      "EXPAND": "Ampliar imagen",
+      "DOWNLOAD": "Descargar imagen"
     },
     "AUDIO_PLAYER": {
       "PLAY": "Reproducir",

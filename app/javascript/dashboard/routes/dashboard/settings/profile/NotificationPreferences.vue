@@ -275,11 +275,7 @@ export default {
       class="flex items-center justify-between w-full gap-2 p-4 border border-solid border-n-weak rounded-xl"
     >
       <div class="flex flex-row items-center gap-2">
-        <fluent-icon
-          icon="alert"
-          class="flex-shrink-0 text-n-slate-12"
-          size="18"
-        />
+        <span class="i-lucide-bell size-[18px] flex-shrink-0 text-n-slate-12" />
         <span class="text-sm text-n-slate-12">
           {{ $t('PROFILE_SETTINGS.FORM.NOTIFICATIONS.BROWSER_PERMISSION') }}
         </span>

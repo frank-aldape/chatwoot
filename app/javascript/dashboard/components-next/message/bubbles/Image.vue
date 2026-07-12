@@ -73,13 +73,21 @@ const handleImageError = () => {
         class="inset-0 p-2 pointer-events-none absolute bg-gradient-to-tl from-n-slate-12/30 dark:from-n-slate-1/50 via-transparent to-transparent hidden group-hover:flex"
       />
       <div class="absolute right-2 bottom-2 hidden group-hover:flex gap-2">
-        <Button xs solid slate icon="i-lucide-expand" class="opacity-60" />
+        <Button
+          xs
+          solid
+          slate
+          icon="i-lucide-expand"
+          class="opacity-60"
+          :aria-label="$t('COMPONENTS.MEDIA.EXPAND')"
+        />
         <Button
           xs
           solid
           slate
           icon="i-lucide-download"
           class="opacity-60"
+          :aria-label="$t('COMPONENTS.MEDIA.DOWNLOAD')"
           :is-loading="isDownloading"
           :disabled="isDownloading"
           @click.stop="downloadAttachment"

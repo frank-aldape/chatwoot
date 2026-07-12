@@ -241,6 +241,8 @@
     },
     "LINEAR": {
       "ADD_OR_LINK_BUTTON": "Crear/vincular incidencia de Linear",
+      "OPEN_ISSUE": "Abrir incidencia en Linear",
+      "UNLINK_ISSUE": "Desvincular incidencia",
       "LOADING": "Obteniendo incidencias de Linear...",
       "LOADING_ERROR": "Ocurrió un error al obtener las incidencias de Linear, intenta de nuevo",
       "CREATE": "Crear",

@@ -47,10 +47,18 @@ const openIssue = () => {
         slate
         icon="i-lucide-arrow-up-right"
         class="!size-4"
+        :aria-label="$t('INTEGRATION_SETTINGS.LINEAR.OPEN_ISSUE')"
         @click="openIssue"
       />
     </div>
 
-    <Button ghost xs slate icon="i-lucide-unlink" @click="unlinkIssue" />
+    <Button
+      ghost
+      xs
+      slate
+      icon="i-lucide-unlink"
+      :aria-label="$t('INTEGRATION_SETTINGS.LINEAR.UNLINK_ISSUE')"
+      @click="unlinkIssue"
+    />
   </div>
 </template>

@@ -180,7 +180,7 @@ export default {
           :disabled="isOpenAllDay"
         />
         <div class="separator-icon flex items-center py-0 px-3">
-          <fluent-icon icon="subtract" type="solid" size="16" />
+          <span class="i-lucide-minus size-4" />
         </div>
         <multiselect
           v-model="toTime"
