@@ -1162,9 +1162,9 @@ watch(conversationFilters, (newVal, oldVal) => {
       @basic-filter-change="onBasicFilterChange"
     />
 
-    <div class="border-b border-n-weak px-4 pb-3 pt-1">
+    <div class="border-b border-n-weak px-4 py-2">
       <div
-        class="flex h-10 items-center gap-2 rounded-md border border-n-weak bg-n-alpha-2 px-3 text-n-slate-10 transition-colors focus-within:border-n-brand focus-within:bg-n-solid-2 focus-within:text-n-slate-12"
+        class="flex h-9 items-center gap-2 rounded-lg bg-n-alpha-black2 px-3 text-n-slate-11 outline outline-1 outline-n-weak transition-colors focus-within:outline-n-brand focus-within:text-n-slate-12"
       >
         <span class="i-lucide-search size-4 flex-shrink-0" aria-hidden="true" />
         <input
