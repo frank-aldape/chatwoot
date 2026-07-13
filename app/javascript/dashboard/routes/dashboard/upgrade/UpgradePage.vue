@@ -103,7 +103,9 @@ const routeToBilling = () => {
 };
 
 onMounted(() => {
-  if (isEnterprise) {
+  // The limits endpoint only responds on Chatwoot Cloud; on self-hosted it
+  // always 404s, so skip the request entirely.
+  if (isEnterprise && isOnChatwootCloud.value) {
     fetchLimits();
   }
 });
