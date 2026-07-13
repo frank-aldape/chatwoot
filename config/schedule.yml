@@ -2,11 +2,12 @@
 # use https://crontab.guru/ to validate
 # validations for this file exist in /spec/configs/schedule_spec.rb
 
-# executed At 12:00 on every day-of-month.
-internal_check_new_versions_job:
-  cron: '0 12 */1 * *'
-  class: 'Internal::CheckNewVersionsJob'
-  queue: scheduled_jobs
+# internal_check_new_versions_job intentionally disabled.
+# It pinged Chatwoot Hub daily, overwrote INSTALLATION_PRICING_PLAN with the
+# hub-reported plan, and ran Internal::ReconcilePlanConfigService which force-
+# disables premium features on the community plan. Removing it keeps the locally
+# set pricing plan and enabled features stable. Trade-off: no "new version
+# available" notice (deploys are driven by CI) and no hub telemetry.
 # # executed At every 5th minute..
 trigger_scheduled_items_job:
   cron: '*/5 * * * *'
