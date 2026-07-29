@@ -115,6 +115,11 @@ const handleSelectedContact = async ({ value, action, ...rest }) => {
       isCreatingContact.value = false;
     } catch (error) {
       isCreatingContact.value = false;
+      useAlert(
+        t(
+          'COMPOSE_NEW_CONVERSATION.FORM.CONTACT_SELECTOR.CONTACT_ERROR_MESSAGE'
+        )
+      );
       return;
     }
   } else {

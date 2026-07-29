@@ -86,7 +86,8 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
 
   def create
     ActiveRecord::Base.transaction do
-      @contact = Current.account.contacts.new(permitted_params.except(:avatar_url))
+      @reused_contact = existing_contact
+      @contact = @reused_contact || Current.account.contacts.new(permitted_params.except(:avatar_url))
       @contact.save!
       @contact_inbox = build_contact_inbox
       process_avatar_from_url
@@ -122,6 +123,26 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
   # admins keep account-wide access.
   def accessible_contacts
     Current.account.contacts.accessible_to(Current.user)
+  end
+
+  # Emails and phone numbers are unique per account, so composing to an address
+  # another company already registered failed with a duplicate error the agent
+  # could not resolve, since accessible_to hides that contact from them. Reuse
+  # the hidden record instead; its attributes are left untouched. Duplicates the
+  # user can already see still raise, so the contacts page keeps its error.
+  def existing_contact
+    contact = duplicate_contact
+    return if contact.nil? || accessible_contacts.exists?(id: contact.id)
+
+    contact
+  end
+
+  def duplicate_contact
+    email = permitted_params[:email].presence
+    return Current.account.contacts.find_by(email: email.downcase) if email
+
+    phone_number = permitted_params[:phone_number].presence
+    Current.account.contacts.find_by(phone_number: phone_number) if phone_number
   end
 
   # TODO: Move this to a finder class
@@ -191,7 +212,14 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
   end
 
   def fetch_contact
-    @contact = accessible_contacts.includes(contact_inboxes: [:inbox]).find(params[:id])
+    @contact = contact_scope_for_action.includes(contact_inboxes: [:inbox]).find(params[:id])
+  end
+
+  # contactable_inboxes only returns inboxes the agent can already access, so it
+  # resolves account-wide: an agent must be able to pick a channel for a contact
+  # owned by another company without gaining access to the contact record itself.
+  def contact_scope_for_action
+    action_name == 'contactable_inboxes' ? Current.account.contacts : accessible_contacts
   end
 
   def process_avatar_from_url

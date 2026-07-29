@@ -611,7 +611,8 @@
       "CONTACT_SELECTOR": {
         "LABEL": "Para:",
         "TAG_INPUT_PLACEHOLDER": "Busca un contacto por nombre, correo electrónico o número de teléfono",
-        "CONTACT_CREATING": "Creando contacto..."
+        "CONTACT_CREATING": "Creando contacto...",
+        "CONTACT_ERROR_MESSAGE": "No pudimos agregar este destinatario. Revisa la dirección e intenta de nuevo."
       },
       "COMPANY_SELECTOR": {
         "BUTTON": "Elegir compañía",
