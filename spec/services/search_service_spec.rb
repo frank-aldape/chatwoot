@@ -249,7 +249,8 @@ describe SearchService do
         conv2 = create(:conversation, contact: harry, inbox: inbox, account: account)
         params = { q: 'Harry' }
         search = described_class.new(current_user: user, current_account: account, params: params, search_type: 'Conversation')
-        expect(search.perform[:conversations].map(&:id)).to eq([conv2.id, conversation.id])
+        # message.conversation matches through the message content
+        expect(search.perform[:conversations].map(&:id)).to eq([conv2.id, message.conversation_id, conversation.id])
       end
 
       it 'searches across conversations with display id' do

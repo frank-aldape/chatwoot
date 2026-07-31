@@ -1,4 +1,44 @@
 class SearchService
+  MESSAGE_SEARCH_WINDOW = 3.months
+
+  COMPANY_NAME_CONDITIONS = <<~SQL.squish
+    contacts.company_id IN (SELECT companies.id FROM companies WHERE companies.name ILIKE :search)
+    OR %<table_name>s.inbox_id IN (
+      SELECT inboxes.id FROM inboxes
+      INNER JOIN managed_companies ON managed_companies.id = inboxes.managed_company_id
+      WHERE managed_companies.name ILIKE :search
+    )
+  SQL
+
+  CONTACT_CONDITIONS = <<~SQL.squish
+    contacts.name ILIKE :search OR contacts.email ILIKE :search OR contacts.phone_number ILIKE :search
+    OR contacts.identifier ILIKE :search OR contacts.additional_attributes::text ILIKE :search
+    OR contacts.custom_attributes::text ILIKE :search
+  SQL
+
+  CONVERSATION_CONDITIONS = <<~SQL.squish
+    cast(conversations.display_id as text) ILIKE :search
+    OR conversations.additional_attributes ->> 'mail_subject' ILIKE :search
+    OR conversations.custom_attributes::text ILIKE :search
+    OR #{CONTACT_CONDITIONS}
+    OR #{format(COMPANY_NAME_CONDITIONS, table_name: 'conversations')}
+    OR conversations.id IN (
+      SELECT messages.conversation_id FROM messages
+      WHERE messages.account_id = :account_id AND messages.created_at >= :message_since
+        AND (messages.content ILIKE :search OR messages.processed_message_content ILIKE :search
+             OR messages.content_attributes -> 'email' ->> 'subject' ILIKE :search)
+    )
+  SQL
+
+  MESSAGE_CONDITIONS = <<~SQL.squish
+    messages.content ILIKE :search OR messages.processed_message_content ILIKE :search
+    OR messages.content_attributes -> 'email' ->> 'subject' ILIKE :search
+    OR conversations.additional_attributes ->> 'mail_subject' ILIKE :search
+    OR conversations.custom_attributes::text ILIKE :search
+    OR #{CONTACT_CONDITIONS}
+    OR #{format(COMPANY_NAME_CONDITIONS, table_name: 'messages')}
+  SQL
+
   pattr_initialize [:current_user!, :current_account!, :params!, :search_type!]
 
   def account_user
@@ -30,20 +70,22 @@ class SearchService
     @search_query ||= params[:q].to_s.strip
   end
 
+  def search_conditions
+    {
+      search: "%#{search_query}%",
+      account_id: current_account.id,
+      message_since: MESSAGE_SEARCH_WINDOW.ago
+    }
+  end
+
   def filter_conversations
     conversations_query = current_account.conversations.where(inbox_id: accessable_inbox_ids)
 
     conversations_query = if use_gin_search
                             conversations_query.search_by_term(search_query)
                           else
-                            conversations_query.joins('INNER JOIN contacts ON conversations.contact_id = contacts.id')
-                                               .where(
-                                                 "cast(conversations.display_id as text) ILIKE :search OR contacts.name ILIKE :search OR
-                                                  contacts.email ILIKE :search OR contacts.phone_number ILIKE :search OR
-                                                  contacts.identifier ILIKE :search OR conversations.custom_attributes::text ILIKE :search OR
-                                                  contacts.additional_attributes::text ILIKE :search OR contacts.custom_attributes::text ILIKE :search",
-                                                 search: "%#{search_query}%"
-                                               )
+                            conversations_query.joins('LEFT JOIN contacts ON conversations.contact_id = contacts.id')
+                                               .where(CONVERSATION_CONDITIONS, search_conditions)
                           end
 
     if current_account.feature_enabled?('advanced_search')
@@ -93,21 +135,16 @@ class SearchService
   def filter_messages_with_like
     base_query = message_base_query
     base_query = apply_message_filters(base_query)
-    base_query.joins(conversation: :contact)
-              .where(
-                "messages.content ILIKE :search OR messages.processed_message_content ILIKE :search OR
-                 conversations.custom_attributes::text ILIKE :search OR contacts.name ILIKE :search OR
-                 contacts.email ILIKE :search OR contacts.phone_number ILIKE :search OR contacts.identifier ILIKE :search OR
-                 contacts.additional_attributes::text ILIKE :search OR contacts.custom_attributes::text ILIKE :search",
-                search: "%#{search_query}%"
-              )
-              .reorder('created_at DESC')
+    base_query.joins(:conversation)
+              .joins('LEFT JOIN contacts ON conversations.contact_id = contacts.id')
+              .where(MESSAGE_CONDITIONS, search_conditions)
+              .reorder('messages.created_at DESC')
               .page(params[:page])
               .per(15)
   end
 
   def message_base_query
-    query = current_account.messages.where('created_at >= ?', 3.months.ago)
+    query = current_account.messages.where('messages.created_at >= ?', MESSAGE_SEARCH_WINDOW.ago)
     query = query.where(inbox_id: accessable_inbox_ids) unless should_skip_inbox_filtering?
     query
   end
@@ -165,8 +202,10 @@ class SearchService
 
   def filter_contacts
     contacts_query = current_account.contacts.where(
-      "name ILIKE :search OR email ILIKE :search OR phone_number
-      ILIKE :search OR identifier ILIKE :search", search: "%#{search_query}%"
+      "contacts.name ILIKE :search OR contacts.email ILIKE :search OR contacts.phone_number ILIKE :search
+       OR contacts.identifier ILIKE :search OR contacts.additional_attributes ->> 'company_name' ILIKE :search
+       OR contacts.company_id IN (SELECT companies.id FROM companies WHERE companies.name ILIKE :search)",
+      search: "%#{search_query}%"
     )
 
     contacts_query = apply_time_filter(contacts_query, 'last_activity_at') if current_account.feature_enabled?('advanced_search')
