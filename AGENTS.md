@@ -1,5 +1,12 @@
 # Chatwoot Development Guidelines
 
+## Required Project Graph
+
+- Before making code changes, read `docs/PROJECT_GRAPH.md`.
+- If a change adds, moves, renames, or removes important modules, routes, models, services, UI areas, jobs, integrations, or Enterprise overlays, update `docs/PROJECT_GRAPH.md` in the same change.
+- Before making infrastructure, dependency, deployment, storage, queue, database, or integration changes, read `docs/OPERATIONAL_RISKS.md`.
+- If a change materially alters operational risk, support timelines, backup/restore posture, scaling behavior, or external-provider dependencies, update `docs/OPERATIONAL_RISKS.md` in the same change.
+
 ## Build / Test / Lint
 
 - **Setup**: `bundle install && pnpm install`
