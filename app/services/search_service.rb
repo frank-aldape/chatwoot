@@ -1,5 +1,12 @@
 class SearchService
-  MESSAGE_SEARCH_WINDOW = 3.months
+  # How far back message search looks. Unlimited by default: a hidden cutoff makes
+  # search quietly incomplete, which reads as "search is broken" rather than
+  # "search is bounded". Set MESSAGE_SEARCH_WINDOW_MONTHS to bound it if the
+  # messages table grows enough for the scan cost to matter.
+  def self.message_search_window
+    months = ENV.fetch('MESSAGE_SEARCH_WINDOW_MONTHS', '0').to_i
+    months.positive? ? months.months : nil
+  end
 
   COMPANY_NAME_CONDITIONS = <<~SQL.squish
     contacts.company_id IN (SELECT companies.id FROM companies WHERE companies.name ILIKE :search)
@@ -66,20 +73,33 @@ class SearchService
     @accessable_inbox_ids ||= @current_user.assigned_inboxes.pluck(:id)
   end
 
+  # Single source of truth shared with the conversation list: team-derived inbox
+  # access, the conversation-team rule, and Enterprise custom-role restrictions.
+  def accessible_conversations
+    @accessible_conversations ||= Conversations::PermissionFilterService.new(
+      current_account.conversations, @current_user, current_account
+    ).perform
+  end
+
   def search_query
     @search_query ||= params[:q].to_s.strip
+  end
+
+  # Epoch when unbounded, so the SQL keeps one shape either way.
+  def message_since
+    @message_since ||= self.class.message_search_window&.ago || Time.zone.at(0)
   end
 
   def search_conditions
     {
       search: "%#{search_query}%",
       account_id: current_account.id,
-      message_since: MESSAGE_SEARCH_WINDOW.ago
+      message_since: message_since
     }
   end
 
   def filter_conversations
-    conversations_query = current_account.conversations.where(inbox_id: accessable_inbox_ids)
+    conversations_query = accessible_conversations
 
     conversations_query = if use_gin_search
                             conversations_query.search_by_term(search_query)
@@ -144,8 +164,9 @@ class SearchService
   end
 
   def message_base_query
-    query = current_account.messages.where('messages.created_at >= ?', MESSAGE_SEARCH_WINDOW.ago)
-    query = query.where(inbox_id: accessable_inbox_ids) unless should_skip_inbox_filtering?
+    query = current_account.messages
+    query = query.where('messages.created_at >= ?', message_since) if self.class.message_search_window
+    query = query.where(conversation_id: accessible_conversations.select(:id)) unless should_skip_inbox_filtering?
     query
   end
 
@@ -189,11 +210,7 @@ class SearchService
   end
 
   def should_skip_inbox_filtering?
-    account_user.administrator? || user_has_access_to_all_inboxes?
-  end
-
-  def user_has_access_to_all_inboxes?
-    accessable_inbox_ids.sort == current_account.inboxes.pluck(:id).sort
+    account_user.administrator?
   end
 
   def use_gin_search
@@ -201,7 +218,7 @@ class SearchService
   end
 
   def filter_contacts
-    contacts_query = current_account.contacts.where(
+    contacts_query = current_account.contacts.accessible_to(@current_user).where(
       "contacts.name ILIKE :search OR contacts.email ILIKE :search OR contacts.phone_number ILIKE :search
        OR contacts.identifier ILIKE :search OR contacts.additional_attributes ->> 'company_name' ILIKE :search
        OR contacts.company_id IN (SELECT companies.id FROM companies WHERE companies.name ILIKE :search)",
@@ -230,12 +247,14 @@ class SearchService
     query
   end
 
+  # Bounded only when an operator configures a window; otherwise the requested
+  # range is honoured as asked.
   def cap_since_time(since_param)
-    max_lookback = 90.days.ago
     requested_time = Time.zone.at(since_param.to_i)
+    window = self.class.message_search_window
+    return requested_time if window.nil?
 
-    # Silently cap to max_lookback if requested time is too far back
-    [requested_time, max_lookback].max
+    [requested_time, window.ago].max
   end
 
   def cap_until_time(until_param)

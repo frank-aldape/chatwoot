@@ -39,8 +39,14 @@ class AccountUser < ApplicationRecord
   after_create_commit :notify_creation, :create_notification_setting
   after_destroy :notify_deletion, :remove_user_from_account
   after_save :update_presence_in_redis, if: :saved_change_to_availability?
+  # Roster membership excludes administrators, so a role change has to recompute it.
+  after_commit :sync_inbox_roster, if: :saved_change_to_role?
 
   validates :user_id, uniqueness: { scope: :account_id }
+
+  def sync_inbox_roster
+    ::Inboxes::SyncMemberRosterJob.perform_later(account_id, user_id)
+  end
 
   def create_notification_setting
     setting = user.notification_settings.new(account_id: account.id)

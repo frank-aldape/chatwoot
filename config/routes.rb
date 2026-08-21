@@ -221,12 +221,8 @@ Rails.application.routes.draw do
             resource :csat_template, only: [:show, :create], controller: 'inbox_csat_templates'
           end
 
-          resources :inbox_members, only: [:create, :show], param: :inbox_id do
-            collection do
-              delete :destroy
-              patch :update
-            end
-          end
+          # Membership is derived from teams; only reads are exposed.
+          resources :inbox_members, only: [:show], param: :inbox_id
           resources :labels, only: [:index, :show, :create, :update, :destroy]
 
           resources :notifications, only: [:index, :update, :destroy] do

@@ -20,7 +20,8 @@ import WeeklyAvailability from './components/WeeklyAvailability.vue';
 import GreetingsEditor from 'shared/components/GreetingsEditor.vue';
 import ConfigurationPage from './settingsPage/ConfigurationPage.vue';
 import CustomerSatisfactionPage from './settingsPage/CustomerSatisfactionPage.vue';
-import CollaboratorsPage from './settingsPage/CollaboratorsPage.vue';
+import AccessPage from './settingsPage/AccessPage.vue';
+import InboxRoutingSettings from './settingsPage/components/InboxRoutingSettings.vue';
 import WidgetBuilder from './WidgetBuilder.vue';
 import BotConfiguration from './components/BotConfiguration.vue';
 import AccountHealth from './components/AccountHealth.vue';
@@ -34,7 +35,8 @@ import Editor from 'dashboard/components-next/Editor/Editor.vue';
 export default {
   components: {
     BotConfiguration,
-    CollaboratorsPage,
+    AccessPage,
+    InboxRoutingSettings,
     ConfigurationPage,
     CustomerSatisfactionPage,
     FacebookReauthorize,
@@ -1058,6 +1060,7 @@ export default {
             </div>
           </div>
         </SettingsSection>
+        <InboxRoutingSettings :inbox="inbox" />
         <SettingsSection :show-border="false">
           <NextButton
             v-if="isAPIInbox"
@@ -1079,7 +1082,7 @@ export default {
       </div>
 
       <div v-if="selectedTabKey === 'collaborators'" class="mx-8">
-        <CollaboratorsPage :inbox="inbox" />
+        <AccessPage :inbox="inbox" />
       </div>
       <div v-if="selectedTabKey === 'configuration'">
         <ConfigurationPage :inbox="inbox" />

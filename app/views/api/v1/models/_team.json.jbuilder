@@ -2,6 +2,7 @@ json.id resource.id
 json.name resource.name
 json.description resource.description
 json.allow_auto_assign resource.allow_auto_assign
+json.mailboxes resource.mailboxes
 json.account_id resource.account_id
 json.managed_company_ids resource.managed_company_ids
 json.managed_company_assignments resource.managed_companies.map { |managed_company|

@@ -15,12 +15,27 @@ class Conversations::PermissionFilterService
 
   private
 
+  # Access comes from teams only. A conversation is visible when its inbox belongs
+  # to one of the user's teams, or when the conversation itself is assigned to one
+  # of those teams (mirrors ConversationPolicy#team_access? so the list, the search
+  # and opening by URL all agree).
   def accessible_conversations
-    conversations.where(inbox: user.inboxes.where(account_id: account.id))
+    conversations.where(inbox_id: accessible_inbox_ids)
+                 .or(conversations.where(team_id: user_team_ids))
+  end
+
+  def accessible_inbox_ids
+    user.accessible_inbox_ids_for(account)
+  end
+
+  def user_team_ids
+    user.team_ids_for(account)
   end
 
   def account_user
-    AccountUser.find_by(account_id: account.id, user_id: user.id)
+    return @account_user if defined?(@account_user)
+
+    @account_user = AccountUser.find_by(account_id: account.id, user_id: user.id)
   end
 
   def user_role

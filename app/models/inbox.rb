@@ -97,34 +97,12 @@ class Inbox < ApplicationRecord
 
   after_create_commit :dispatch_create_event
   after_create_commit :sync_team_channel_rule_access
+  # Company/channel rules run first; this fills in from the mailbox convention.
+  after_create_commit :sync_mailbox_team_access
   after_update_commit :dispatch_update_event
   after_update_commit :sync_team_channel_rule_access, if: :saved_change_to_managed_company_id?
 
   scope :order_by_name, -> { order('lower(name) ASC') }
-
-  # Adds multiple members to the inbox
-  # @param user_ids [Array<Integer>] Array of user IDs to add as members
-  # @return [void]
-  def add_members(user_ids, access_type: 'manual')
-    users = account.users.where(id: user_ids)
-    users.each do |user|
-      service = ::InboxMembers::AccessService.new(inbox: self, user: user)
-      access_type == 'team' ? service.grant_team_access! : service.grant_manual_access!
-    end
-    update_account_cache
-  end
-
-  # Removes multiple members from the inbox
-  # @param user_ids [Array<Integer>] Array of user IDs to remove
-  # @return [void]
-  def remove_members(user_ids, access_type: 'manual')
-    users = account.users.where(id: user_ids)
-    users.each do |user|
-      service = ::InboxMembers::AccessService.new(inbox: self, user: user)
-      access_type == 'team' ? service.revoke_team_access! : service.revoke_manual_access!
-    end
-    update_account_cache
-  end
 
   # Sanitizes inbox name for balanced email provider compatibility
   # ALLOWS: /'._- and Unicode letters/numbers/emojis
@@ -320,6 +298,10 @@ class Inbox < ApplicationRecord
 
   def sync_team_channel_rule_access
     ::Teams::ApplyManagedCompanyChannelRulesService.new(inbox: self).perform
+  end
+
+  def sync_mailbox_team_access
+    ::Teams::ApplyMailboxRulesService.new(inbox: self).perform
   end
 
   def delete_round_robin_agents

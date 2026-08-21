@@ -20,11 +20,13 @@ class Api::V1::Accounts::AgentsController < Api::V1::Accounts::BaseController
     )
 
     @agent = builder.perform
+    sync_teams
   end
 
   def update
     @agent.update!(agent_params.slice(:name).compact)
     @agent.current_account_user.update!(agent_params.slice(*account_user_attributes).compact)
+    sync_teams
   end
 
   def destroy
@@ -77,7 +79,17 @@ class Api::V1::Accounts::AgentsController < Api::V1::Accounts::BaseController
   end
 
   def allowed_agent_params
-    [:name, :email, :role, :availability, :auto_offline]
+    [:name, :email, :role, :availability, :auto_offline, { team_ids: [] }]
+  end
+
+  # Teams are how an agent gets access, so they are editable right here instead
+  # of forcing a detour through every team's own screen.
+  def sync_teams
+    return unless agent_params.key?(:team_ids)
+
+    ::Teams::SyncMemberTeamsService.new(
+      account: Current.account, user: @agent, team_ids: agent_params[:team_ids]
+    ).perform
   end
 
   def agent_params
@@ -89,7 +101,7 @@ class Api::V1::Accounts::AgentsController < Api::V1::Accounts::BaseController
   end
 
   def agents
-    @agents ||= Current.account.users.order_by_full_name.includes(:account_users, { avatar_attachment: [:blob] })
+    @agents ||= Current.account.users.order_by_full_name.includes(:account_users, :teams, { avatar_attachment: [:blob] })
   end
 
   def validate_limit_for_bulk_create

@@ -65,6 +65,8 @@
       "NO_AGENTS": "No se encontraron agentes",
       "NO_CONTACTS": "Comienza a buscar para ver resultados",
       "NO_INBOXES": "No se encontraron bandejas de entrada"
-    }
+    },
+    "ERROR": "No pudimos completar la búsqueda. No es que no haya resultados: la consulta falló.",
+    "RETRY": "Reintentar"
   }
 }

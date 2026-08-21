@@ -19,21 +19,16 @@ class TeamMember < ApplicationRecord
   belongs_to :team
   validates :user_id, uniqueness: { scope: :team_id }
 
-  after_create :grant_team_inbox_access
-  after_destroy :revoke_team_inbox_access
+  after_create :sync_team_inbox_roster
+  after_destroy :sync_team_inbox_roster
 
   private
 
-  def grant_team_inbox_access
+  def sync_team_inbox_roster
     team.inboxes.find_each do |inbox|
-      InboxMembers::AccessService.new(inbox: inbox, user: user).grant_team_access!
+      InboxMembers::AccessService.new(inbox: inbox, user: user).sync!
     end
-  end
-
-  def revoke_team_inbox_access
-    team.inboxes.find_each do |inbox|
-      InboxMembers::AccessService.new(inbox: inbox, user: user).revoke_team_access!
-    end
+    team.account.update_cache_key('inbox')
   end
 end
 

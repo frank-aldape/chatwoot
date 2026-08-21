@@ -1,10 +1,9 @@
 <script>
-import { mapGetters } from 'vuex';
 import { useVuelidate } from '@vuelidate/core';
 import { minValue } from '@vuelidate/validators';
 import { useAlert } from 'dashboard/composables';
 import { useConfig } from 'dashboard/composables/useConfig';
-import SettingsSection from '../../../../../components/SettingsSection.vue';
+import SettingsSection from '../../../../../../components/SettingsSection.vue';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import ManagedCompaniesAPI from 'dashboard/api/managedCompanies';
 import { parseAPIErrorResponse } from 'dashboard/store/utils/api';
@@ -27,22 +26,14 @@ export default {
   },
   data() {
     return {
-      selectedAgents: [],
-      selectedTeams: [],
       managedCompanies: [],
       selectedManagedCompanyId: null,
       isManagedCompanyUpdating: false,
-      isAgentListUpdating: false,
-      isTeamListUpdating: false,
       enableAutoAssignment: false,
       maxAssignmentLimit: null,
     };
   },
   computed: {
-    ...mapGetters({
-      agentList: 'agents/getAgents',
-      teamList: 'teams/getTeams',
-    }),
     selectedManagedCompany: {
       get() {
         return (
@@ -68,11 +59,6 @@ export default {
     inbox() {
       this.setDefaults();
     },
-    teamList() {
-      this.selectedTeams = this.teamList.filter(team =>
-        (this.inbox.team_ids || []).includes(team.id)
-      );
-    },
   },
   mounted() {
     this.fetchManagedCompanies();
@@ -84,10 +70,6 @@ export default {
       this.maxAssignmentLimit =
         this.inbox?.auto_assignment_config?.max_assignment_limit || null;
       this.selectedManagedCompanyId = this.inbox.managed_company_id || null;
-      this.selectedTeams = this.teamList.filter(team =>
-        (this.inbox.team_ids || []).includes(team.id)
-      );
-      this.fetchAttachedAgents();
     },
     async fetchManagedCompanies() {
       try {
@@ -97,35 +79,8 @@ export default {
         this.managedCompanies = [];
       }
     },
-    async fetchAttachedAgents() {
-      try {
-        const response = await this.$store.dispatch('inboxMembers/get', {
-          inboxId: this.inbox.id,
-        });
-        const {
-          data: { payload: inboxMembers },
-        } = response;
-        this.selectedAgents = inboxMembers;
-      } catch (error) {
-        //  Handle error
-      }
-    },
     handleEnableAutoAssignment() {
       this.updateInbox();
-    },
-    async updateAgents() {
-      const agentList = this.selectedAgents.map(el => el.id);
-      this.isAgentListUpdating = true;
-      try {
-        await this.$store.dispatch('inboxMembers/create', {
-          inboxId: this.inbox.id,
-          agentList,
-        });
-        useAlert(this.$t('AGENT_MGMT.EDIT.API.SUCCESS_MESSAGE'));
-      } catch (error) {
-        useAlert(this.$t('AGENT_MGMT.EDIT.API.ERROR_MESSAGE'));
-      }
-      this.isAgentListUpdating = false;
     },
     async updateManagedCompany() {
       this.isManagedCompanyUpdating = true;
@@ -144,46 +99,26 @@ export default {
       }
       this.isManagedCompanyUpdating = false;
     },
-    async updateTeams() {
-      this.isTeamListUpdating = true;
-      try {
-        await this.$store.dispatch('inboxes/updateInbox', {
-          id: this.inbox.id,
-          formData: false,
-          team_ids: this.selectedTeams.map(team => team.id),
-        });
-        useAlert(this.$t('INBOX_MGMT.EDIT.API.SUCCESS_MESSAGE'));
-      } catch (error) {
-        useAlert(this.$t('INBOX_MGMT.EDIT.API.ERROR_MESSAGE'));
-      }
-      this.isTeamListUpdating = false;
-    },
     companyLabel({ name, authorized_domain: domain }) {
       return domain ? `${name} (${domain})` : name;
     },
     async updateInbox() {
       try {
-        const payload = {
+        await this.$store.dispatch('inboxes/updateInbox', {
           id: this.inbox.id,
           formData: false,
           enable_auto_assignment: this.enableAutoAssignment,
           auto_assignment_config: {
             max_assignment_limit: this.maxAssignmentLimit,
           },
-        };
-        await this.$store.dispatch('inboxes/updateInbox', payload);
+        });
         useAlert(this.$t('INBOX_MGMT.EDIT.API.SUCCESS_MESSAGE'));
       } catch (error) {
-        useAlert(this.$t('INBOX_MGMT.EDIT.API.SUCCESS_MESSAGE'));
+        useAlert(this.$t('INBOX_MGMT.EDIT.API.ERROR_MESSAGE'));
       }
     },
   },
   validations: {
-    selectedAgents: {
-      isEmpty() {
-        return !!this.selectedAgents.length;
-      },
-    },
     maxAssignmentLimit: {
       minValue: minValue(1),
     },
@@ -214,59 +149,6 @@ export default {
         :label="$t('INBOX_MGMT.SETTINGS_POPUP.UPDATE')"
         :is-loading="isManagedCompanyUpdating"
         @click="updateManagedCompany"
-      />
-    </SettingsSection>
-
-    <SettingsSection
-      :title="$t('INBOX_MGMT.SETTINGS_POPUP.INBOX_AGENTS')"
-      :sub-title="$t('INBOX_MGMT.SETTINGS_POPUP.INBOX_AGENTS_SUB_TEXT')"
-    >
-      <multiselect
-        v-model="selectedAgents"
-        :options="agentList"
-        track-by="id"
-        label="name"
-        multiple
-        :close-on-select="false"
-        :clear-on-select="false"
-        hide-selected
-        :placeholder="$t('FORMS.MULTISELECT.SELECT')"
-        selected-label
-        :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
-        :deselect-label="$t('FORMS.MULTISELECT.ENTER_TO_REMOVE')"
-        @select="v$.selectedAgents.$touch"
-      />
-
-      <NextButton
-        :label="$t('INBOX_MGMT.SETTINGS_POPUP.UPDATE')"
-        :is-loading="isAgentListUpdating"
-        @click="updateAgents"
-      />
-    </SettingsSection>
-
-    <SettingsSection
-      :title="$t('INBOX_MGMT.SETTINGS_POPUP.INBOX_TEAMS')"
-      :sub-title="$t('INBOX_MGMT.SETTINGS_POPUP.INBOX_TEAMS_SUB_TEXT')"
-    >
-      <multiselect
-        v-model="selectedTeams"
-        :options="teamList"
-        track-by="id"
-        label="name"
-        multiple
-        :close-on-select="false"
-        :clear-on-select="false"
-        hide-selected
-        :placeholder="$t('FORMS.MULTISELECT.SELECT')"
-        selected-label
-        :select-label="$t('FORMS.MULTISELECT.ENTER_TO_SELECT')"
-        :deselect-label="$t('FORMS.MULTISELECT.ENTER_TO_REMOVE')"
-      />
-
-      <NextButton
-        :label="$t('INBOX_MGMT.SETTINGS_POPUP.UPDATE')"
-        :is-loading="isTeamListUpdating"
-        @click="updateTeams"
       />
     </SettingsSection>
 

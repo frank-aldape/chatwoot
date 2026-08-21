@@ -1,43 +1,33 @@
+# inbox_members is a materialized roster of "who works this inbox". It is fully
+# derived from team membership: a row exists if and only if the user belongs to a
+# team linked to the inbox. It powers auto-assignment, round-robin and the
+# assignable-agents list -- it is never the source of truth for visibility, which
+# is derived live from team_inboxes (see User#assigned_inboxes).
 class InboxMembers::AccessService
   pattr_initialize [:inbox!, :user!]
 
-  def grant_manual_access!
-    return if account_administrator?
+  # Recomputes this user's roster entry for this inbox from the current teams.
+  # Administrators reach every inbox implicitly and are never queued for
+  # round-robin, so they are kept out of the roster entirely.
+  def sync!
+    return remove_member! if account_administrator?
 
-    if inbox_member
-      inbox_member.update!(access_type: 'manual') if inbox_member.team_access?
-    else
-      inbox.inbox_members.create!(user: user, access_type: 'manual')
-    end
-  end
-
-  def revoke_manual_access!
-    return if account_administrator?
-    return unless inbox_member
-
-    if team_access_available?
-      inbox_member.update!(access_type: 'team') if inbox_member.manual_access?
-    else
-      inbox_member.destroy!
-    end
-  end
-
-  def grant_team_access!
-    return if account_administrator?
-    return if inbox_member&.manual_access? || inbox_member&.team_access?
-
-    inbox.inbox_members.create!(user: user, access_type: 'team')
-  end
-
-  def revoke_team_access!
-    return if account_administrator?
-    return unless inbox_member
-    return if inbox_member.manual_access? || team_access_available?
-
-    inbox_member.destroy!
+    team_access_available? ? ensure_member! : remove_member!
   end
 
   private
+
+  def ensure_member!
+    if inbox_member
+      inbox_member.update!(access_type: 'team') unless inbox_member.team_access?
+    else
+      inbox.inbox_members.create!(user: user, access_type: 'team')
+    end
+  end
+
+  def remove_member!
+    inbox_member&.destroy!
+  end
 
   def inbox_member
     @inbox_member ||= inbox.inbox_members.find_by(user_id: user.id)

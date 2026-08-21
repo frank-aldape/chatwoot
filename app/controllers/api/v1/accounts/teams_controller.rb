@@ -35,6 +35,7 @@ class Api::V1::Accounts::TeamsController < Api::V1::Accounts::BaseController
       :name,
       :description,
       :allow_auto_assign,
+      { mailboxes: [] },
       managed_company_assignments: [:managed_company_id, { inbox_ids: [], channel_keys: [] }]
     )
   end

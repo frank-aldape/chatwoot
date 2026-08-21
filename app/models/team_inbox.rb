@@ -7,8 +7,8 @@ class TeamInbox < ApplicationRecord
   validate :ensure_account_integrity
 
   before_validation :sync_account_id
-  after_create :grant_team_members_access
-  after_destroy :revoke_team_members_access
+  after_create :sync_team_members_roster
+  after_destroy :sync_team_members_roster
 
   private
 
@@ -26,15 +26,10 @@ class TeamInbox < ApplicationRecord
     errors.add(:team_id, 'must be linked to the inbox managed company')
   end
 
-  def grant_team_members_access
+  def sync_team_members_roster
     team.members.find_each do |member|
-      InboxMembers::AccessService.new(inbox: inbox, user: member).grant_team_access!
+      InboxMembers::AccessService.new(inbox: inbox, user: member).sync!
     end
-  end
-
-  def revoke_team_members_access
-    team.members.find_each do |member|
-      InboxMembers::AccessService.new(inbox: inbox, user: member).revoke_team_access!
-    end
+    account.update_cache_key('inbox')
   end
 end

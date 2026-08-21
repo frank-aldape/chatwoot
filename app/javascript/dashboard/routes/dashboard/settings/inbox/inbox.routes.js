@@ -79,7 +79,7 @@ export default {
                 featureFlag: FEATURE_FLAGS.INBOX_MANAGEMENT,
                 permissions: ['administrator'],
               },
-              component: () => import('./AddAgents.vue'),
+              component: () => import('./AddTeams.vue'),
             },
           ],
         },

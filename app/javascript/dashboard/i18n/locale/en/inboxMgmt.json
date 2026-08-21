@@ -541,12 +541,6 @@
           }
         }
       },
-      "AGENTS": {
-        "TITLE": "Agentes",
-        "DESC": "Aquí puedes agregar agentes para gestionar tu inbox recién creado. Solo estos agentes seleccionados tendrán acceso a tu inbox. Los agentes que no formen parte de este inbox no podrán ver ni responder mensajes en él al iniciar sesión. <br> <b>Nota:</b> como administrador, si necesitas acceso a todos los inboxes, debes agregarte como agente en todos los inboxes que crees.",
-        "VALIDATION_ERROR": "Agrega al menos un agente a tu nuevo inbox",
-        "PICK_AGENTS": "Elige los agentes para el inbox"
-      },
       "DETAILS": {
         "TITLE": "Detalles del inbox",
         "DESC": "En el menú desplegable de abajo, selecciona la página de Facebook que quieres conectar con Chatwoot. También puedes darle un nombre personalizado a tu inbox para identificarlo mejor."
@@ -572,6 +566,13 @@
         "SIGN_IN": "Iniciar sesión con Google",
         "EMAIL_PLACEHOLDER": "Ingresa la dirección de correo",
         "ERROR_MESSAGE": "Hubo un error al conectar con Google, intenta de nuevo"
+      },
+      "TEAMS": {
+        "TITLE": "Equipos",
+        "DESC": "Elige los equipos que atenderán este inbox. El acceso al inbox se otorga por equipo: todos los agentes que pertenezcan a los equipos seleccionados podrán ver y responder sus conversaciones. <br> <b>Nota:</b> los administradores acceden a todos los inboxes sin necesidad de pertenecer a un equipo.",
+        "VALIDATION_ERROR": "Asigna al menos un equipo a tu nuevo inbox",
+        "PICK_TEAMS": "Elige los equipos para el inbox",
+        "API_ERROR": "No pudimos asignar los equipos. Inténtalo de nuevo."
       }
     },
     "DETAILS": {
@@ -668,7 +669,7 @@
     },
     "TABS": {
       "SETTINGS": "Ajustes",
-      "COLLABORATORS": "Colaboradores",
+      "COLLABORATORS": "Acceso",
       "CONFIGURATION": "Configuración",
       "CAMPAIGN": "Campañas",
       "PRE_CHAT_FORM": "Formulario previo al chat",
@@ -749,13 +750,11 @@
         "SUBTITLE": "Agrega dominios comodín o regulares separados por comas (déjalo en blanco para permitir todos), ej. *.chatwoot.dev, chatwoot.com.",
         "PLACEHOLDER": "Ingresa dominios separados por comas (ej: *.chatwoot.dev, chatwoot.com)"
       },
-      "INBOX_AGENTS": "Agentes directos",
-      "INBOX_AGENTS_SUB_TEXT": "Gestiona el acceso específico de agentes para este inbox. El acceso basado en equipos se configura por separado abajo.",
       "MANAGED_COMPANY": "Compañía",
       "MANAGED_COMPANY_SUB_TEXT": "Vincula este inbox con la compañía a la que pertenece. Los equipos solo pueden recibir acceso a inboxes dentro de las compañías que operan.",
       "MANAGED_COMPANY_PLACEHOLDER": "Ninguna compañía seleccionada",
-      "INBOX_TEAMS": "Asignar equipos",
-      "INBOX_TEAMS_SUB_TEXT": "Otorga acceso al inbox automáticamente a todos los agentes que pertenezcan a los equipos seleccionados",
+      "INBOX_TEAMS": "Equipos que atienden esta bandeja",
+      "INBOX_TEAMS_SUB_TEXT": "El acceso se otorga por equipo: todos los agentes de los equipos seleccionados podrán ver y responder las conversaciones de esta bandeja.",
       "AGENT_ASSIGNMENT": "Asignación de conversaciones",
       "AGENT_ASSIGNMENT_SUB_TEXT": "Actualiza los ajustes de asignación de conversaciones",
       "UPDATE": "Actualizar",
@@ -827,7 +826,12 @@
       "WHATSAPP_TEMPLATES_SYNC_SUBHEADER": "Sincroniza manualmente las plantillas de mensajes de WhatsApp para actualizar tus plantillas disponibles.",
       "WHATSAPP_TEMPLATES_SYNC_BUTTON": "Sincronizar plantillas",
       "WHATSAPP_TEMPLATES_SYNC_SUCCESS": "Se inició la sincronización de plantillas correctamente. Puede tardar unos minutos en actualizarse.",
-      "UPDATE_PRE_CHAT_FORM_SETTINGS": "Actualizar ajustes del formulario previo al chat"
+      "UPDATE_PRE_CHAT_FORM_SETTINGS": "Actualizar ajustes del formulario previo al chat",
+      "INBOX_VIEWERS": "Quién ve esta bandeja",
+      "INBOX_VIEWERS_SUB_TEXT": "Derivado de los equipos asignados arriba. Para cambiarlo, ajusta los equipos o sus miembros.",
+      "INBOX_VIEWERS_EMPTY": "Ningún agente ve esta bandeja todavía. Asígnale al menos un equipo arriba.",
+      "INBOX_VIEWERS_TEAM_EMPTY": "Este equipo no tiene miembros.",
+      "INBOX_VIEWERS_ADMINS": "Además, {count} administrador(es) ven todas las bandejas."
     },
     "HELP_CENTER": {
       "LABEL": "Centro de ayuda",

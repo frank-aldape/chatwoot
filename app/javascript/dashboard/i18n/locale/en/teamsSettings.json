@@ -139,7 +139,14 @@
         "TOGGLE_INBOXES": "Mostrar u ocultar canales",
         "NO_MATCHES": "No hay canales que coincidan con esa búsqueda."
       },
-      "SUBMIT_CREATE": "Crear equipo"
+      "SUBMIT_CREATE": "Crear equipo",
+      "MAILBOXES": {
+        "TITLE": "Buzones que atiende este equipo",
+        "DESCRIPTION": "Escribe la parte del correo antes de la arroba (por ejemplo: compras). El equipo tendrá acceso a ese buzón en todas las empresas, y las bandejas que se creen después se vincularán solas. Quitar un buzón no revoca los accesos ya otorgados: para eso, desvincula el equipo desde la bandeja.",
+        "PLACEHOLDER": "compras, ventas, sistemas… (Enter para agregar)",
+        "REMOVE": "Quitar buzón"
+      },
+      "ADVANCED": "Avanzado: asignar bandejas concretas por empresa"
     }
   }
 }

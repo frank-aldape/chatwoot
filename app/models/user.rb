@@ -132,15 +132,30 @@ class User < ApplicationRecord
     self.uid = email
   end
 
+  # Teams are the permission preset: a user reaches an inbox only through a team
+  # linked to that inbox. Derived live from team_inboxes on purpose -- inbox_members
+  # is a materialized cache for assignment/round-robin, never the source of truth,
+  # so cache drift can never silently revoke visibility.
   def assigned_inboxes
     return Current.account.inboxes if administrator?
 
-    manually_assigned_inboxes = Current.account.inboxes.where(id: inbox_members.select(:inbox_id))
-    team_assigned_inboxes = Current.account.inboxes.where(
-      id: TeamInbox.joins(team: :team_members).where(team_members: { user_id: id }).select(:inbox_id)
-    )
+    Current.account.inboxes.where(id: accessible_inbox_ids_for(Current.account))
+  end
 
-    manually_assigned_inboxes.or(team_assigned_inboxes).distinct
+  def accessible_inbox_ids_for(account)
+    TeamInbox.joins(team: :team_members)
+             .where(account_id: account.id, team_members: { user_id: id })
+             .select(:inbox_id)
+  end
+
+  def member_of_inbox?(account, inbox_id)
+    accessible_inbox_ids_for(account).where(inbox_id: inbox_id).exists?
+  end
+
+  def team_ids_for(account)
+    TeamMember.joins(:team)
+              .where(teams: { account_id: account.id }, user_id: id)
+              .select(:team_id)
   end
 
   def serializable_hash(options = nil)

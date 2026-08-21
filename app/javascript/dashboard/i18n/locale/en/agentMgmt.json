@@ -89,7 +89,13 @@
           "PLACEHOLDER": "Selecciona un estado de disponibilidad",
           "ERROR": "La disponibilidad es obligatoria"
         },
-        "SUBMIT": "Editar agente"
+        "SUBMIT": "Editar agente",
+        "TEAMS": {
+          "LABEL": "Equipos",
+          "HELP": "El acceso a las bandejas se otorga por equipo: este agente verá las bandejas que atiendan los equipos seleccionados.",
+          "ADMIN_HELP": "Los administradores ven todas las bandejas sin importar sus equipos. Los equipos solo definen a qué conversaciones se les asigna.",
+          "EMPTY": "Todavía no hay equipos. Crea uno en Ajustes → Equipos para poder dar acceso."
+        }
       },
       "BUTTON_TEXT": "Editar",
       "CANCEL_BUTTON_TEXT": "Cancelar",

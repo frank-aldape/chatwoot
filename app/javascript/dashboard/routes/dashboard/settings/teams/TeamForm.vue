@@ -55,6 +55,7 @@ export default {
       description = '',
       name: title = '',
       allow_auto_assign: allowAutoAssign = true,
+      mailboxes = [],
       managed_company_assignments: managedCompanyAssignments = [],
     } = formData;
 
@@ -62,6 +63,8 @@ export default {
       description,
       title,
       allowAutoAssign,
+      mailboxes: [...mailboxes],
+      mailboxDraft: '',
       managedCompanyAssignments:
         managedCompanyAssignments.length > 0
           ? managedCompanyAssignments.map(buildAssignment)
@@ -363,6 +366,20 @@ export default {
           channel_keys: channelKeys,
         }));
     },
+    // Accepts 'compras', 'compras@' or a full address; keeps only the local-part
+    // so one rule covers the mailbox across every company domain.
+    addMailbox() {
+      const mailbox = this.state.mailboxDraft
+        .split('@')[0]
+        .trim()
+        .toLowerCase();
+      this.state.mailboxDraft = '';
+      if (!mailbox || this.state.mailboxes.includes(mailbox)) return;
+      this.state.mailboxes.push(mailbox);
+    },
+    removeMailbox(mailbox) {
+      this.state.mailboxes = this.state.mailboxes.filter(m => m !== mailbox);
+    },
     handleSubmit() {
       this.v$.$touch();
       if (this.v$.$invalid) {
@@ -373,6 +390,7 @@ export default {
         description: this.state.description,
         name: this.state.title,
         allow_auto_assign: this.state.allowAutoAssign,
+        mailboxes: this.state.mailboxes,
         managed_company_assignments: this.normalizedManagedCompanyAssignments(),
       });
     },
@@ -417,238 +435,288 @@ export default {
         </label>
       </div>
       <div class="grid gap-3 rounded-lg border border-n-weak p-4">
-        <div class="flex items-start justify-between gap-3">
-          <div>
-            <p class="mb-1 text-sm font-medium text-n-slate-12">
-              {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.TITLE') }}
-            </p>
-            <p class="mb-0 text-sm text-n-slate-11">
-              {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.DESCRIPTION') }}
-            </p>
-          </div>
-          <NextButton
-            type="button"
-            size="sm"
-            slate
-            :label="$t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.ADD')"
-            @click="addManagedCompanyAssignment"
-          />
+        <div>
+          <p class="mb-1 text-sm font-medium text-n-slate-12">
+            {{ $t('TEAMS_SETTINGS.FORM.MAILBOXES.TITLE') }}
+          </p>
+          <p class="mb-0 text-sm text-n-slate-11">
+            {{ $t('TEAMS_SETTINGS.FORM.MAILBOXES.DESCRIPTION') }}
+          </p>
         </div>
-
-        <p
-          v-if="isManagedCompaniesLoading"
-          class="mb-0 text-sm text-n-slate-11"
-        >
-          {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.LOADING') }}
-        </p>
-        <p
-          v-else-if="!hasManagedCompanies"
-          class="mb-0 text-sm text-n-slate-11"
-        >
-          {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.EMPTY') }}
-        </p>
-
-        <div
-          v-for="(assignment, index) in state.managedCompanyAssignments"
-          :key="`${assignment.managedCompanyId || 'new'}-${index}`"
-          class="grid gap-3 rounded-lg border border-n-weak bg-n-alpha-1 p-3"
-        >
-          <div class="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto]">
-            <label class="grid gap-2 text-sm font-medium text-n-slate-12">
-              {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.COMPANY_LABEL') }}
-              <select
-                v-model="assignment.managedCompanyId"
-                class="h-10 rounded-lg border border-n-weak bg-n-background px-3 text-sm text-n-slate-12"
-                @change="onManagedCompanyChange(index)"
-              >
-                <option value="">
-                  {{
-                    $t(
-                      'TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.COMPANY_PLACEHOLDER'
-                    )
-                  }}
-                </option>
-                <option
-                  v-for="managedCompany in availableManagedCompanies(
-                    assignment.managedCompanyId
-                  )"
-                  :key="managedCompany.id"
-                  :value="managedCompany.id"
-                >
-                  {{ managedCompanyOptionLabel(managedCompany) }}
-                </option>
-              </select>
-            </label>
-
-            <div class="flex items-end">
-              <NextButton
-                type="button"
-                size="sm"
-                slate
-                :label="$t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.REMOVE')"
-                @click="removeManagedCompanyAssignment(index)"
-              />
-            </div>
-          </div>
-
-          <div class="grid gap-2">
-            <div
-              class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
-            >
-              <div>
-                <p class="mb-0 text-sm font-medium text-n-slate-12">
-                  {{
-                    $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.INBOXES_LABEL')
-                  }}
-                </p>
-                <p class="mb-0 text-xs text-n-slate-11">
-                  {{
-                    $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SELECTED_COUNT', {
-                      selected: selectedInboxCount(assignment),
-                      total: inboxesForManagedCompany(
-                        assignment.managedCompanyId
-                      ).length,
-                    })
-                  }}
-                </p>
-              </div>
-              <div class="flex items-center gap-2">
-                <NextButton
-                  type="button"
-                  size="sm"
-                  slate
-                  :disabled="!assignment.managedCompanyId"
-                  :label="
-                    isAllCompanyInboxesSelected(assignment)
-                      ? $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.CLEAR_ALL')
-                      : $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SELECT_ALL')
-                  "
-                  @click="toggleAllCompanyInboxes(index)"
-                />
-                <NextButton
-                  v-if="assignment.managedCompanyId"
-                  type="button"
-                  size="sm"
-                  slate
-                  :icon="
-                    assignment.isCollapsed
-                      ? 'i-lucide-chevron-down'
-                      : 'i-lucide-chevron-up'
-                  "
-                  :aria-label="
-                    $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.TOGGLE_INBOXES')
-                  "
-                  @click="toggleAssignmentCollapse(index)"
-                />
-              </div>
-            </div>
-
-            <div
-              v-if="!assignment.managedCompanyId"
-              class="rounded-lg border border-n-weak bg-n-alpha-1 p-3 text-sm text-n-slate-11"
-            >
-              {{
-                $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SELECT_COMPANY_FIRST')
-              }}
-            </div>
-
-            <div
-              v-else-if="
-                inboxesForManagedCompany(assignment.managedCompanyId).length ===
-                0
-              "
-              class="rounded-lg border border-n-weak bg-n-alpha-1 p-3 text-sm text-n-slate-11"
-            >
-              {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.NO_INBOXES') }}
-            </div>
-
-            <div
-              v-else-if="!assignment.isCollapsed"
-              class="grid gap-3 rounded-lg border border-n-weak bg-n-background p-3"
-            >
-              <div
-                v-if="assignment.managedCompanyId"
-                class="flex flex-wrap gap-2"
-              >
-                <button
-                  v-for="channelOption in channelOptionsForManagedCompany(
-                    assignment.managedCompanyId
-                  )"
-                  :key="channelOption.key"
-                  type="button"
-                  class="rounded-md border px-3 py-1.5 text-xs font-medium"
-                  :class="
-                    isChannelSelected(assignment, channelOption)
-                      ? 'border-n-brand bg-n-brand/10 text-n-brand'
-                      : 'border-n-weak text-n-slate-11 hover:bg-n-alpha-2'
-                  "
-                  @click="toggleChannelInboxes(assignment, channelOption)"
-                >
-                  {{
-                    $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.CHANNEL_PRESET', {
-                      channel: channelOption.label,
-                      selected: selectedChannelCount(assignment, channelOption),
-                      total: channelOption.inboxes.length,
-                    })
-                  }}
-                </button>
-              </div>
-
-              <input
-                v-if="assignment.managedCompanyId"
-                v-model="assignment.inboxSearchQuery"
-                type="search"
-                class="h-10 rounded-lg border border-n-weak bg-n-alpha-1 px-3 text-sm text-n-slate-12"
-                :aria-label="
-                  $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SEARCH_INBOXES')
-                "
-                :placeholder="
-                  $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SEARCH_INBOXES')
-                "
-              />
-
-              <div class="grid max-h-72 gap-2 overflow-y-auto">
-                <p
-                  v-if="
-                    assignment.managedCompanyId &&
-                    filteredInboxesForAssignment(assignment).length === 0
-                  "
-                  class="mb-0 rounded-lg bg-n-alpha-1 p-3 text-sm text-n-slate-11"
-                >
-                  {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.NO_MATCHES') }}
-                </p>
-
-                <label
-                  v-for="inbox in filteredInboxesForAssignment(assignment)"
-                  :key="inbox.id"
-                  class="flex cursor-pointer items-start gap-3 rounded-lg border border-n-weak bg-n-alpha-1 p-3 hover:bg-n-alpha-2"
-                >
-                  <input
-                    type="checkbox"
-                    class="mt-1"
-                    :checked="assignment.inboxIds.includes(inbox.id)"
-                    @change="toggleInbox(assignment, inbox.id)"
-                  />
-                  <ChannelIcon
-                    class="mt-0.5 size-4 text-n-slate-10"
-                    :inbox="inbox"
-                  />
-                  <span class="min-w-0 flex-1">
-                    <span
-                      class="block truncate text-sm font-medium text-n-slate-12"
-                    >
-                      {{ inbox.name }}
-                    </span>
-                    <span class="block truncate text-xs text-n-slate-11">
-                      {{ inboxSubtitle(inbox) }}
-                    </span>
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div>
+        <div v-if="state.mailboxes.length" class="flex flex-wrap gap-2">
+          <span
+            v-for="mailbox in state.mailboxes"
+            :key="mailbox"
+            class="inline-flex items-center gap-1 rounded-md bg-n-slate-3 px-2 py-1 text-sm text-n-slate-12"
+          >
+            {{ `${mailbox}@` }}
+            <button
+              type="button"
+              class="i-lucide-x size-3 text-n-slate-11"
+              :aria-label="$t('TEAMS_SETTINGS.FORM.MAILBOXES.REMOVE')"
+              @click="removeMailbox(mailbox)"
+            />
+          </span>
         </div>
+        <input
+          v-model="state.mailboxDraft"
+          type="text"
+          class="w-full"
+          :aria-label="$t('TEAMS_SETTINGS.FORM.MAILBOXES.TITLE')"
+          :placeholder="$t('TEAMS_SETTINGS.FORM.MAILBOXES.PLACEHOLDER')"
+          @keydown.enter.prevent="addMailbox"
+          @blur="addMailbox"
+        />
       </div>
+      <details class="rounded-lg border border-n-weak p-4">
+        <summary class="text-sm font-medium text-n-slate-12 cursor-pointer">
+          {{ $t('TEAMS_SETTINGS.FORM.ADVANCED') }}
+        </summary>
+        <div class="grid gap-3 pt-3">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="mb-1 text-sm font-medium text-n-slate-12">
+                {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.TITLE') }}
+              </p>
+              <p class="mb-0 text-sm text-n-slate-11">
+                {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.DESCRIPTION') }}
+              </p>
+            </div>
+            <NextButton
+              type="button"
+              size="sm"
+              slate
+              :label="$t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.ADD')"
+              @click="addManagedCompanyAssignment"
+            />
+          </div>
+
+          <p
+            v-if="isManagedCompaniesLoading"
+            class="mb-0 text-sm text-n-slate-11"
+          >
+            {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.LOADING') }}
+          </p>
+          <p
+            v-else-if="!hasManagedCompanies"
+            class="mb-0 text-sm text-n-slate-11"
+          >
+            {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.EMPTY') }}
+          </p>
+
+          <div
+            v-for="(assignment, index) in state.managedCompanyAssignments"
+            :key="`${assignment.managedCompanyId || 'new'}-${index}`"
+            class="grid gap-3 rounded-lg border border-n-weak bg-n-alpha-1 p-3"
+          >
+            <div class="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto]">
+              <label class="grid gap-2 text-sm font-medium text-n-slate-12">
+                {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.COMPANY_LABEL') }}
+                <select
+                  v-model="assignment.managedCompanyId"
+                  class="h-10 rounded-lg border border-n-weak bg-n-background px-3 text-sm text-n-slate-12"
+                  @change="onManagedCompanyChange(index)"
+                >
+                  <option value="">
+                    {{
+                      $t(
+                        'TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.COMPANY_PLACEHOLDER'
+                      )
+                    }}
+                  </option>
+                  <option
+                    v-for="managedCompany in availableManagedCompanies(
+                      assignment.managedCompanyId
+                    )"
+                    :key="managedCompany.id"
+                    :value="managedCompany.id"
+                  >
+                    {{ managedCompanyOptionLabel(managedCompany) }}
+                  </option>
+                </select>
+              </label>
+
+              <div class="flex items-end">
+                <NextButton
+                  type="button"
+                  size="sm"
+                  slate
+                  :label="$t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.REMOVE')"
+                  @click="removeManagedCompanyAssignment(index)"
+                />
+              </div>
+            </div>
+
+            <div class="grid gap-2">
+              <div
+                class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+              >
+                <div>
+                  <p class="mb-0 text-sm font-medium text-n-slate-12">
+                    {{
+                      $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.INBOXES_LABEL')
+                    }}
+                  </p>
+                  <p class="mb-0 text-xs text-n-slate-11">
+                    {{
+                      $t(
+                        'TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SELECTED_COUNT',
+                        {
+                          selected: selectedInboxCount(assignment),
+                          total: inboxesForManagedCompany(
+                            assignment.managedCompanyId
+                          ).length,
+                        }
+                      )
+                    }}
+                  </p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <NextButton
+                    type="button"
+                    size="sm"
+                    slate
+                    :disabled="!assignment.managedCompanyId"
+                    :label="
+                      isAllCompanyInboxesSelected(assignment)
+                        ? $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.CLEAR_ALL')
+                        : $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SELECT_ALL')
+                    "
+                    @click="toggleAllCompanyInboxes(index)"
+                  />
+                  <NextButton
+                    v-if="assignment.managedCompanyId"
+                    type="button"
+                    size="sm"
+                    slate
+                    :icon="
+                      assignment.isCollapsed
+                        ? 'i-lucide-chevron-down'
+                        : 'i-lucide-chevron-up'
+                    "
+                    :aria-label="
+                      $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.TOGGLE_INBOXES')
+                    "
+                    @click="toggleAssignmentCollapse(index)"
+                  />
+                </div>
+              </div>
+
+              <div
+                v-if="!assignment.managedCompanyId"
+                class="rounded-lg border border-n-weak bg-n-alpha-1 p-3 text-sm text-n-slate-11"
+              >
+                {{
+                  $t(
+                    'TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SELECT_COMPANY_FIRST'
+                  )
+                }}
+              </div>
+
+              <div
+                v-else-if="
+                  inboxesForManagedCompany(assignment.managedCompanyId)
+                    .length === 0
+                "
+                class="rounded-lg border border-n-weak bg-n-alpha-1 p-3 text-sm text-n-slate-11"
+              >
+                {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.NO_INBOXES') }}
+              </div>
+
+              <div
+                v-else-if="!assignment.isCollapsed"
+                class="grid gap-3 rounded-lg border border-n-weak bg-n-background p-3"
+              >
+                <div
+                  v-if="assignment.managedCompanyId"
+                  class="flex flex-wrap gap-2"
+                >
+                  <button
+                    v-for="channelOption in channelOptionsForManagedCompany(
+                      assignment.managedCompanyId
+                    )"
+                    :key="channelOption.key"
+                    type="button"
+                    class="rounded-md border px-3 py-1.5 text-xs font-medium"
+                    :class="
+                      isChannelSelected(assignment, channelOption)
+                        ? 'border-n-brand bg-n-brand/10 text-n-brand'
+                        : 'border-n-weak text-n-slate-11 hover:bg-n-alpha-2'
+                    "
+                    @click="toggleChannelInboxes(assignment, channelOption)"
+                  >
+                    {{
+                      $t(
+                        'TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.CHANNEL_PRESET',
+                        {
+                          channel: channelOption.label,
+                          selected: selectedChannelCount(
+                            assignment,
+                            channelOption
+                          ),
+                          total: channelOption.inboxes.length,
+                        }
+                      )
+                    }}
+                  </button>
+                </div>
+
+                <input
+                  v-if="assignment.managedCompanyId"
+                  v-model="assignment.inboxSearchQuery"
+                  type="search"
+                  class="h-10 rounded-lg border border-n-weak bg-n-alpha-1 px-3 text-sm text-n-slate-12"
+                  :aria-label="
+                    $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SEARCH_INBOXES')
+                  "
+                  :placeholder="
+                    $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.SEARCH_INBOXES')
+                  "
+                />
+
+                <div class="grid max-h-72 gap-2 overflow-y-auto">
+                  <p
+                    v-if="
+                      assignment.managedCompanyId &&
+                      filteredInboxesForAssignment(assignment).length === 0
+                    "
+                    class="mb-0 rounded-lg bg-n-alpha-1 p-3 text-sm text-n-slate-11"
+                  >
+                    {{ $t('TEAMS_SETTINGS.FORM.MANAGED_COMPANIES.NO_MATCHES') }}
+                  </p>
+
+                  <label
+                    v-for="inbox in filteredInboxesForAssignment(assignment)"
+                    :key="inbox.id"
+                    class="flex cursor-pointer items-start gap-3 rounded-lg border border-n-weak bg-n-alpha-1 p-3 hover:bg-n-alpha-2"
+                  >
+                    <input
+                      type="checkbox"
+                      class="mt-1"
+                      :checked="assignment.inboxIds.includes(inbox.id)"
+                      @change="toggleInbox(assignment, inbox.id)"
+                    />
+                    <ChannelIcon
+                      class="mt-0.5 size-4 text-n-slate-10"
+                      :inbox="inbox"
+                    />
+                    <span class="min-w-0 flex-1">
+                      <span
+                        class="block truncate text-sm font-medium text-n-slate-12"
+                      >
+                        {{ inbox.name }}
+                      </span>
+                      <span class="block truncate text-xs text-n-slate-11">
+                        {{ inboxSubtitle(inbox) }}
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
       <div class="flex flex-row justify-end gap-2 py-2 px-0 w-full">
         <div class="w-full">
           <NextButton

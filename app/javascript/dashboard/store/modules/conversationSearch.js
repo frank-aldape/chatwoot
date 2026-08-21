@@ -9,6 +9,7 @@ export const initialState = {
   uiFlags: {
     isFetching: false,
     isSearchCompleted: false,
+    hasError: false,
     contact: { isFetching: false },
     conversation: { isFetching: false },
     message: { isFetching: false },
@@ -35,6 +36,9 @@ export const getters = {
   getUIFlags(state) {
     return state.uiFlags;
   },
+  getHasError(state) {
+    return state.uiFlags.hasError;
+  },
 };
 
 export const actions = {
@@ -50,7 +54,7 @@ export const actions = {
       } = await SearchAPI.get({ q });
       commit(types.SEARCH_CONVERSATIONS_SET, payload);
     } catch (error) {
-      // Ignore error
+      commit(types.SEARCH_CONVERSATIONS_SET_UI_FLAG, { hasError: true });
     } finally {
       commit(types.SEARCH_CONVERSATIONS_SET_UI_FLAG, {
         isFetching: false,
@@ -65,6 +69,7 @@ export const actions = {
     commit(types.FULL_SEARCH_SET_UI_FLAG, {
       isFetching: true,
       isSearchCompleted: false,
+      hasError: false,
     });
     try {
       await Promise.all([
@@ -74,7 +79,7 @@ export const actions = {
         dispatch('articleSearch', { q, ...filters }),
       ]);
     } catch (error) {
-      // Ignore error
+      commit(types.FULL_SEARCH_SET_UI_FLAG, { hasError: true });
     } finally {
       commit(types.FULL_SEARCH_SET_UI_FLAG, {
         isFetching: false,
@@ -89,7 +94,9 @@ export const actions = {
       const { data } = await SearchAPI.contacts({ ...searchParams, page });
       commit(types.CONTACT_SEARCH_SET, data.payload.contacts);
     } catch (error) {
-      // Ignore error
+      // Surfaced in the UI: an empty result and a failed request are not the
+      // same thing, and showing them the same way reads as "nothing found".
+      commit(types.FULL_SEARCH_SET_UI_FLAG, { hasError: true });
     } finally {
       commit(types.CONTACT_SEARCH_SET_UI_FLAG, { isFetching: false });
     }
@@ -101,7 +108,9 @@ export const actions = {
       const { data } = await SearchAPI.conversations({ ...searchParams, page });
       commit(types.CONVERSATION_SEARCH_SET, data.payload.conversations);
     } catch (error) {
-      // Ignore error
+      // Surfaced in the UI: an empty result and a failed request are not the
+      // same thing, and showing them the same way reads as "nothing found".
+      commit(types.FULL_SEARCH_SET_UI_FLAG, { hasError: true });
     } finally {
       commit(types.CONVERSATION_SEARCH_SET_UI_FLAG, { isFetching: false });
     }
@@ -113,7 +122,9 @@ export const actions = {
       const { data } = await SearchAPI.messages({ ...searchParams, page });
       commit(types.MESSAGE_SEARCH_SET, data.payload.messages);
     } catch (error) {
-      // Ignore error
+      // Surfaced in the UI: an empty result and a failed request are not the
+      // same thing, and showing them the same way reads as "nothing found".
+      commit(types.FULL_SEARCH_SET_UI_FLAG, { hasError: true });
     } finally {
       commit(types.MESSAGE_SEARCH_SET_UI_FLAG, { isFetching: false });
     }
@@ -125,7 +136,9 @@ export const actions = {
       const { data } = await SearchAPI.articles({ ...searchParams, page });
       commit(types.ARTICLE_SEARCH_SET, data.payload.articles);
     } catch (error) {
-      // Ignore error
+      // Surfaced in the UI: an empty result and a failed request are not the
+      // same thing, and showing them the same way reads as "nothing found".
+      commit(types.FULL_SEARCH_SET_UI_FLAG, { hasError: true });
     } finally {
       commit(types.ARTICLE_SEARCH_SET_UI_FLAG, { isFetching: false });
     }
@@ -170,6 +183,7 @@ export const mutations = {
     state.uiFlags.article = { ...state.uiFlags.article, ...uiFlags };
   },
   [types.CLEAR_SEARCH_RESULTS](state) {
+    state.uiFlags.hasError = false;
     state.contactRecords = [];
     state.conversationRecords = [];
     state.messageRecords = [];

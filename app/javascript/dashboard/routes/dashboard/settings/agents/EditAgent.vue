@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength } from '@vuelidate/validators';
 import { useStore, useMapGetter } from 'dashboard/composables/store';
@@ -38,6 +38,10 @@ const props = defineProps({
     type: Number,
     default: null,
   },
+  teamIds: {
+    type: Array,
+    default: () => [],
+  },
 });
 
 const emit = defineEmits(['close']);
@@ -51,6 +55,7 @@ const agentName = ref(props.name);
 const agentAvailability = ref(props.availability);
 const selectedRoleId = ref(props.customRoleId || props.type);
 const agentCredentials = ref({ email: props.email });
+const selectedTeamIds = ref([...props.teamIds]);
 
 const rules = {
   agentName: { required, minLength: minLength(1) },
@@ -69,6 +74,10 @@ const pageTitle = computed(
 );
 
 const uiFlags = useMapGetter('agents/getUIFlags');
+const teams = useMapGetter('teams/getTeams');
+
+onMounted(() => store.dispatch('teams/get'));
+
 const getCustomRoles = useMapGetter('customRole/getCustomRoles');
 
 const roles = computed(() => {
@@ -99,6 +108,11 @@ const selectedRole = computed(() =>
     role =>
       role.id === selectedRoleId.value || role.name === selectedRoleId.value
   )
+);
+
+// Administrators reach every inbox regardless of their teams.
+const isAdministrator = computed(
+  () => selectedRole.value?.name === 'administrator'
 );
 
 const statusList = computed(() => {
@@ -134,6 +148,8 @@ const editAgent = async () => {
       payload.role = selectedRole.value.name;
       payload.custom_role_id = null;
     }
+
+    payload.team_ids = selectedTeamIds.value;
 
     await store.dispatch('agents/update', payload);
     useAlert(t('AGENT_MGMT.EDIT.API.SUCCESS_MESSAGE'));
@@ -202,6 +218,37 @@ const resetPassword = async () => {
             {{ $t('AGENT_MGMT.EDIT.FORM.AGENT_AVAILABILITY.ERROR') }}
           </span>
         </label>
+      </div>
+
+      <div class="w-full">
+        <label>
+          {{ $t('AGENT_MGMT.EDIT.FORM.TEAMS.LABEL') }}
+        </label>
+        <p class="mt-0 mb-2 text-sm text-n-slate-11">
+          {{
+            isAdministrator
+              ? $t('AGENT_MGMT.EDIT.FORM.TEAMS.ADMIN_HELP')
+              : $t('AGENT_MGMT.EDIT.FORM.TEAMS.HELP')
+          }}
+        </p>
+        <div v-if="teams.length" class="flex flex-col gap-1 mb-4">
+          <label
+            v-for="team in teams"
+            :key="team.id"
+            class="flex items-center gap-2 mb-0 font-normal"
+          >
+            <input
+              v-model="selectedTeamIds"
+              type="checkbox"
+              :value="team.id"
+              class="m-0"
+            />
+            {{ team.name }}
+          </label>
+        </div>
+        <p v-else class="mb-4 text-sm text-n-slate-11">
+          {{ $t('AGENT_MGMT.EDIT.FORM.TEAMS.EMPTY') }}
+        </p>
       </div>
 
       <div class="flex flex-row justify-start w-full gap-2 px-0 py-2">

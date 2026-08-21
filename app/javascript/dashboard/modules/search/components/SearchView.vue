@@ -192,8 +192,11 @@ const isFetchingAny = computed(() => {
   );
 });
 
+const hasError = computed(() => uiFlags.value.hasError);
+
 const showEmptySearchResults = computed(
   () =>
+    !hasError.value &&
     totalSearchResultsCount.value === 0 &&
     uiFlags.value.isSearchCompleted &&
     isSelectedTabAll.value &&
@@ -309,7 +312,15 @@ const onBack = () => {
   clearSearchResult();
 };
 
-const loadMore = () => {
+const recordsForTab = tab =>
+  ({
+    contacts: mappedContacts,
+    conversations: mappedConversations,
+    messages: mappedMessages,
+    articles: mappedArticles,
+  })[tab]?.value ?? [];
+
+const loadMore = async () => {
   const SEARCH_ACTIONS = {
     contacts: 'conversationSearch/contactSearch',
     conversations: 'conversationSearch/conversationSearch',
@@ -320,14 +331,19 @@ const loadMore = () => {
   if (uiFlags.value.isFetching || selectedTab.value === 'all') return;
 
   const tab = selectedTab.value;
-  pages.value[tab] += 1;
+  const nextPage = pages.value[tab] + 1;
+  const countBefore = recordsForTab(tab).length;
 
-  const payload = buildSearchPayload(
-    { q: query.value, page: pages.value[tab] },
-    tab
+  await store.dispatch(
+    SEARCH_ACTIONS[tab],
+    buildSearchPayload({ q: query.value, page: nextPage }, tab)
   );
 
-  store.dispatch(SEARCH_ACTIONS[tab], payload);
+  // Only advance the page when the fetch actually appended results. Bumping it
+  // on a failed request used to strand the button hidden until a fresh search.
+  if (recordsForTab(tab).length > countBefore) {
+    pages.value[tab] = nextPage;
+  }
 };
 
 const onTabChange = tab => {
@@ -388,6 +404,23 @@ onUnmounted(() => {
       </div>
       <div class="flex-grow w-full h-full overflow-y-auto">
         <div class="w-full max-w-5xl mx-auto px-4 pb-6">
+          <div
+            v-if="hasError"
+            class="flex flex-col items-center justify-center px-4 py-6 mt-8 text-center rounded-md bg-n-ruby-2"
+          >
+            <span class="i-lucide-triangle-alert size-4 text-n-ruby-11" />
+            <p class="m-2 text-center text-n-ruby-11">
+              {{ t('SEARCH.ERROR') }}
+            </p>
+            <NextButton
+              :label="t('SEARCH.RETRY')"
+              icon="i-lucide-refresh-cw"
+              slate
+              sm
+              outline
+              @click="onSearch(query)"
+            />
+          </div>
           <div v-if="showResultsSection">
             <Policy
               :permissions="[...ROLES, CONTACT_PERMISSIONS]"

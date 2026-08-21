@@ -32,9 +32,20 @@ class Team < ApplicationRecord
             presence: { message: I18n.t('errors.validations.presence') },
             uniqueness: { scope: :account_id }
 
+  # Mailboxes this team serves, as email local-parts ('compras', 'ventas').
+  # The domain is deliberately ignored: one rule covers every company.
+  scope :serving_mailbox, lambda { |mailbox|
+    where('teams.mailboxes @> ARRAY[?]::text[]', mailbox.to_s)
+  }
+
   before_validation do
     self.name = name.downcase if attribute_present?('name')
   end
+
+  before_validation :normalize_mailboxes
+  # Adding a mailbox links matching inboxes that already exist. Removing one does
+  # not revoke links already granted -- unlink per inbox from its settings.
+  after_commit :sync_mailbox_inboxes, if: :saved_change_to_mailboxes?
 
   # Adds multiple members to the team
   # @param user_ids [Array<Integer>] Array of user IDs to add as members
@@ -69,6 +80,23 @@ class Team < ApplicationRecord
       id: id,
       name: name
     }
+  end
+
+  private
+
+  def normalize_mailboxes
+    return if mailboxes.nil?
+
+    # Accepts 'compras', 'compras@' or a full address; keeps only the local-part.
+    self.mailboxes = Array(mailboxes).filter_map do |entry|
+      entry.to_s.split('@').first.to_s.strip.downcase.presence
+    end.uniq
+  end
+
+  def sync_mailbox_inboxes
+    return if mailboxes.blank?
+
+    ::Teams::SyncMailboxInboxesJob.perform_later(id)
   end
 end
 

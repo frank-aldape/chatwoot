@@ -1,11 +1,9 @@
 import InboxMembersAPI from '../../api/inboxMembers';
 
 export const actions = {
+  // Read-only: membership is derived from the teams linked to the inbox.
   get(_, { inboxId }) {
     return InboxMembersAPI.show(inboxId);
-  },
-  create(_, { inboxId, agentList }) {
-    return InboxMembersAPI.update({ inboxId, agentList });
   },
 };
 
