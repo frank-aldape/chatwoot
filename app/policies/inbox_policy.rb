@@ -11,7 +11,12 @@ class InboxPolicy < ApplicationPolicy
     end
 
     def resolve
-      user.assigned_inboxes
+      # Narrow the scope we were handed instead of building a fresh relation:
+      # returning a new one discarded the controller's eager loading and turned
+      # the inbox list into an N+1 over teams, managed_company and channel.
+      return scope if account_user&.administrator?
+
+      scope.where(id: user.accessible_inbox_ids_for(account))
     end
   end
 
@@ -22,8 +27,12 @@ class InboxPolicy < ApplicationPolicy
   def show?
     # FIXME: for agent bots, lets bring this validation to policies as well in future
     return true if @user.is_a?(AgentBot)
+    return true if account_user&.administrator?
+    return false if account.blank?
 
-    Current.user.assigned_inboxes.include? record
+    # exists? instead of loading the relation: for an administrator the old
+    # `assigned_inboxes.include?` materialized every inbox in the account.
+    Current.user.member_of_inbox?(account, record.id)
   end
 
   def assignable_agents?
