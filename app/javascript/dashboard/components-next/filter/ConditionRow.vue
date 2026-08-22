@@ -160,6 +160,8 @@ defineExpose({ validate });
       <FilterSelect
         v-model="attributeKey"
         variant="faded"
+        searchable
+        :search-placeholder="t('FILTER.SEARCH_ATTRIBUTE_PLACEHOLDER')"
         :options="filterTypes"
         @update:model-value="resetModelOnAttributeKeyChange"
       />

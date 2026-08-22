@@ -281,5 +281,33 @@ export function useConversationFilterContext() {
     ...customFilterTypes.value,
   ]);
 
-  return { filterTypes };
+  // Attributes are shown under a section heading so the agent scans one short
+  // group instead of the whole flat list. Anything unmapped (custom attributes)
+  // falls into the custom attributes group.
+  const ATTRIBUTE_GROUPS = {
+    [CONVERSATION_ATTRIBUTES.STATUS]: 'CONVERSATION',
+    [CONVERSATION_ATTRIBUTES.PRIORITY]: 'CONVERSATION',
+    [CONVERSATION_ATTRIBUTES.DISPLAY_ID]: 'CONVERSATION',
+    [CONVERSATION_ATTRIBUTES.LABELS]: 'CONVERSATION',
+    [CONVERSATION_ATTRIBUTES.ASSIGNEE_ID]: 'ASSIGNMENT',
+    [CONVERSATION_ATTRIBUTES.TEAM_ID]: 'ASSIGNMENT',
+    [CONVERSATION_ATTRIBUTES.INBOX_ID]: 'ORIGIN',
+    [CONVERSATION_ATTRIBUTES.MANAGED_COMPANY_ID]: 'ORIGIN',
+    [CONVERSATION_ATTRIBUTES.CAMPAIGN_ID]: 'ORIGIN',
+    [CONVERSATION_ATTRIBUTES.BROWSER_LANGUAGE]: 'CONTACT',
+    [CONVERSATION_ATTRIBUTES.REFERER]: 'CONTACT',
+    [CONVERSATION_ATTRIBUTES.CREATED_AT]: 'DATES',
+    [CONVERSATION_ATTRIBUTES.LAST_ACTIVITY_AT]: 'DATES',
+  };
+
+  const groupedFilterTypes = computed(() =>
+    filterTypes.value.map(filterType => ({
+      ...filterType,
+      group: t(
+        `FILTER.GROUPS.${ATTRIBUTE_GROUPS[filterType.attributeKey] ?? 'CUSTOM_ATTRIBUTES'}`
+      ),
+    }))
+  );
+
+  return { filterTypes: groupedFilterTypes };
 }

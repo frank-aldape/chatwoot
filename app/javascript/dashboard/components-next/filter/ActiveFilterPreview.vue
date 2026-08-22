@@ -1,36 +1,35 @@
 <script setup>
+import { useI18n } from 'vue-i18n';
 import { replaceUnderscoreWithSpace } from './helper/filterHelper.js';
 
 import Button from 'dashboard/components-next/button/Button.vue';
 
-defineProps({
+const props = defineProps({
   appliedFilters: { type: Array, default: () => [] },
   maxVisibleFilters: { type: Number, default: 2 },
   clearButtonLabel: { type: String, default: '' },
   moreFiltersLabel: { type: String, default: '' },
   showClearButton: { type: Boolean, default: true },
+  // Maps an attributeKey to the human readable name shown in the filter form,
+  // so the chip reads the same as the condition the agent built.
+  attributeLabels: { type: Object, default: () => ({}) },
 });
 
 const emit = defineEmits(['clearFilters', 'openFilter']);
+
+const { t, te } = useI18n();
 
 const shouldCapitalizeFirstLetter = key => {
   const lowercaseKeys = ['email'];
   return !lowercaseKeys.includes(key);
 };
 
+const formatAttributeLabel = key =>
+  props.attributeLabels[key] || replaceUnderscoreWithSpace(key);
+
 const formatOperatorLabel = operator => {
-  const operators = {
-    equal_to: 'is',
-    not_equal_to: 'is not',
-    contains: 'contains',
-    does_not_contain: 'does not contain',
-    is_present: 'is present',
-    is_not_present: 'is not present',
-    is_greater_than: 'is greater than',
-    is_less_than: 'is less than',
-    days_before: 'days before',
-  };
-  return operators[operator] || replaceUnderscoreWithSpace(operator);
+  const key = `FILTER.OPERATOR_LABELS.${operator}`;
+  return te(key) ? t(key) : replaceUnderscoreWithSpace(operator);
 };
 
 const formatFilterValue = value => {
@@ -62,7 +61,7 @@ const formatFilterValue = value => {
           <span
             class="lowercase whitespace-nowrap first-letter:capitalize text-n-slate-12"
           >
-            {{ replaceUnderscoreWithSpace(filter.attributeKey) }}
+            {{ formatAttributeLabel(filter.attributeKey) }}
           </span>
           <span class="px-1 text-xs text-n-slate-10 whitespace-nowrap">
             {{ formatOperatorLabel(filter.filterOperator) }}

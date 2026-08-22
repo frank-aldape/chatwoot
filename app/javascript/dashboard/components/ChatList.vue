@@ -24,6 +24,7 @@ import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller';
 import ChatListHeader from './ChatListHeader.vue';
 import Dialog from 'dashboard/components-next/dialog/Dialog.vue';
 import ConversationFilter from 'next/filter/ConversationFilter.vue';
+import ConversationActiveFiltersPreview from 'next/filter/ConversationActiveFiltersPreview.vue';
 import SaveCustomView from 'next/filter/SaveCustomView.vue';
 import ChatTypeTabs from './widgets/ChatTypeTabs.vue';
 import ConversationItem from './ConversationItem.vue';
@@ -1161,6 +1162,14 @@ watch(conversationFilters, (newVal, oldVal) => {
       @reset-filters="resetAndFetchData"
       @basic-filter-change="onBasicFilterChange"
     />
+
+    <div v-if="hasAppliedFilters" class="border-b border-n-weak px-3 py-2">
+      <ConversationActiveFiltersPreview
+        :show-clear-button="!hasActiveFolders"
+        @open-filter="onToggleAdvanceFiltersModal"
+        @clear-filters="resetAndFetchData"
+      />
+    </div>
 
     <div class="border-b border-n-weak px-4 py-2">
       <div

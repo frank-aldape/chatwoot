@@ -30,6 +30,16 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  // Shows a search box above the options. Use it when the list is long enough
+  // that scanning it is slower than typing.
+  searchable: {
+    type: Boolean,
+    default: false,
+  },
+  searchPlaceholder: {
+    type: String,
+    default: '',
+  },
 });
 
 const selected = defineModel({
@@ -63,8 +73,31 @@ const dropdownPosition = computed(() => {
   return spaceBelow < menuHeight ? 'bottom-0' : 'top-0';
 });
 
+const searchQuery = ref('');
+
+const filteredOptions = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase();
+  if (!query) return props.options;
+  return props.options.filter(option =>
+    (option.label || '').toLowerCase().includes(query)
+  );
+});
+
+// Options carrying a `group` are rendered under a section heading, so related
+// attributes stay together instead of forming one long flat list.
+const optionGroups = computed(() => {
+  const groups = new Map();
+  filteredOptions.value.forEach(option => {
+    const title = option.group || '';
+    if (!groups.has(title)) groups.set(title, []);
+    groups.get(title).push(option);
+  });
+  return Array.from(groups, ([title, options]) => ({ title, options }));
+});
+
 const updateSelected = newValue => {
   selected.value = newValue;
+  searchQuery.value = '';
 };
 </script>
 
@@ -91,9 +124,28 @@ const updateSelected = newValue => {
       :class="dropdownPosition"
       strong
     >
-      <DropdownSection class="[&>ul]:max-h-80">
+      <div v-if="searchable" class="px-2 pt-1 pb-2">
+        <div
+          class="flex h-8 items-center gap-2 rounded-lg bg-n-alpha-black2 px-2 text-n-slate-11 outline outline-1 outline-n-weak focus-within:outline-n-brand"
+        >
+          <span class="i-lucide-search size-3.5 flex-shrink-0" />
+          <input
+            v-model="searchQuery"
+            type="search"
+            class="reset-base min-w-0 flex-1 appearance-none border-0 bg-transparent p-0 text-sm text-n-slate-12 outline-none placeholder:text-n-slate-10 focus:border-0 focus:outline-none focus:ring-0"
+            :placeholder="searchPlaceholder"
+            :aria-label="searchPlaceholder"
+          />
+        </div>
+      </div>
+      <DropdownSection
+        v-for="group in optionGroups"
+        :key="group.title"
+        :title="group.title"
+        class="[&>ul]:max-h-80"
+      >
         <DropdownItem
-          v-for="option in options"
+          v-for="option in group.options"
           :key="option.value"
           :label="option.label"
           :icon="option.icon"
