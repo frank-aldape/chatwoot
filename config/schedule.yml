@@ -69,3 +69,20 @@ purge_orphaned_active_storage_blobs_job:
   cron: '0 3 * * *'
   class: 'Internal::PurgeOrphanedActiveStorageBlobsJob'
   queue: housekeeping
+
+# executed every 5 minutes
+# runs the production health checks (db pool, sidekiq queues, redis, disks) and
+# posts to ALERT_WEBHOOK_URL when a threshold is crossed. Scheduling it here
+# instead of a host cron means it ships with the image and survives rebuilds.
+production_alerts_check_job:
+  cron: '*/5 * * * *'
+  class: 'Internal::ProductionAlertsCheckJob'
+  queue: scheduled_jobs
+
+# executed weekly on Mondays at 0700 UTC
+# reports inboxes no team can see and roster drift, so access gaps surface
+# without anyone remembering to run the rake task
+inbox_access_drift_report_job:
+  cron: '0 7 * * 1'
+  class: 'Internal::InboxAccessDriftReportJob'
+  queue: housekeeping
