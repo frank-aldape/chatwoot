@@ -1,18 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe AutoAssignment::RateLimiter do
-  # Stub Math methods for testing when assignment_policy is nil
-  # rubocop:disable RSpec/BeforeAfterAll, RSpec/InstanceVariable
-  before(:all) do
-    @math_had_positive = Math.respond_to?(:positive?)
-    Math.define_singleton_method(:positive?) { false } unless @math_had_positive
-  end
-
-  after(:all) do
-    Math.singleton_class.send(:remove_method, :positive?) unless @math_had_positive
-  end
-  # rubocop:enable RSpec/BeforeAfterAll, RSpec/InstanceVariable
-
   let(:account) { create(:account) }
   let(:inbox) { create(:inbox, account: account) }
   let(:agent) { create(:user, account: account, role: :agent) }

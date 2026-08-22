@@ -193,8 +193,7 @@
   chatwoot_internal: true
 - name: assignment_v2
   display_name: Assignment V2
-  enabled: false
-  chatwoot_internal: true
+  enabled: true
 - name: twilio_content_templates
   display_name: Twilio Content Templates
   enabled: false
