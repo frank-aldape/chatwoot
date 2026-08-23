@@ -4,7 +4,23 @@
 
 json.meta do
   json.sender do
-    json.partial! 'api/v1/models/contact', formats: [:json], resource: conversation.contact
+    # A conversation outlives its contact whenever `Contact#conversations`
+    # (dependent: :destroy_async) has not run yet, or its job failed. Degrade to an
+    # empty sender instead of 500-ing the whole conversation index over one row.
+    if conversation.contact
+      json.partial! 'api/v1/models/contact', formats: [:json], resource: conversation.contact
+    else
+      json.additional_attributes({})
+      json.availability_status nil
+      json.email nil
+      json.id nil
+      json.name ''
+      json.phone_number nil
+      json.blocked false
+      json.identifier nil
+      json.thumbnail ''
+      json.custom_attributes({})
+    end
   end
   json.channel conversation.inbox.try(:channel_type)
   if conversation.assigned_entity.is_a?(AgentBot)
