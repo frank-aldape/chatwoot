@@ -33,7 +33,7 @@ class AgentMergeAction
       validate_agents
       repoint_records
       repoint_scoped_records
-      repoint_messages
+      repoint_polymorphic_records
       remove_mergee_agent
       apply_prevailing_email
     end
@@ -77,8 +77,13 @@ class AgentMergeAction
     end
   end
 
-  def repoint_messages
+  # Polymorphic references the plain column repoints above cannot express.
+  def repoint_polymorphic_records
     Message.where(sender_type: 'User', sender_id: @mergee_agent.id).update_all(sender_id: @base_agent.id)
+    # NotificationBuilder parks the acting user here, which is what renders as
+    # "assigned by X"; left behind it would resolve to nil once the mergee is gone.
+    Notification.where(secondary_actor_type: 'User', secondary_actor_id: @mergee_agent.id)
+                .update_all(secondary_actor_id: @base_agent.id)
   end
   # rubocop:enable Rails/SkipsModelValidations
 
