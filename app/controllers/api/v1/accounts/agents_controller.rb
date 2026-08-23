@@ -24,6 +24,7 @@ class Api::V1::Accounts::AgentsController < Api::V1::Accounts::BaseController
   end
 
   def update
+    update_email
     @agent.update!(agent_params.slice(:name).compact)
     @agent.current_account_user.update!(agent_params.slice(*account_user_attributes).compact)
     sync_teams
@@ -72,6 +73,20 @@ class Api::V1::Accounts::AgentsController < Api::V1::Accounts::BaseController
 
   def fetch_agent
     @agent = agents.find(params[:id])
+  end
+
+  # Admins correct agent addresses in place (typos, domain moves), so the new
+  # address applies right away instead of waiting on a reconfirmation click.
+  # An agent who had not accepted the invitation yet gets it resent to the new address.
+  def update_email
+    new_email = agent_params[:email].presence&.downcase
+    return if new_email.blank? || new_email == @agent.email
+
+    @agent.skip_reconfirmation!
+    # uid is the login handle only for password logins; SSO logins key off the provider id.
+    @agent.uid = new_email if @agent.provider == 'email'
+    @agent.update!(email: new_email)
+    @agent.send_confirmation_instructions unless @agent.confirmed?
   end
 
   def account_user_attributes

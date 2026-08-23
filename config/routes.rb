@@ -49,6 +49,7 @@ Rails.application.routes.draw do
         scope module: :accounts do
           namespace :actions do
             resource :contact_merge, only: [:create]
+            resource :agent_merge, only: [:create]
           end
           resource :bulk_actions, only: [:create]
           resources :agents, only: [:index, :create, :update, :destroy] do

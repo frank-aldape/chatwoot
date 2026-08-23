@@ -1,6 +1,8 @@
 import * as MutationHelpers from 'shared/helpers/vuex/mutationHelpers';
 import * as types from '../mutation-types';
 import AgentAPI from '../../api/agents';
+import { throwErrorMessage } from '../utils/api';
+import AccountActionsAPI from '../../api/accountActions';
 
 export const state = {
   records: [],
@@ -70,7 +72,25 @@ export const actions = {
       commit(types.default.SET_AGENT_UPDATING_STATUS, false);
     } catch (error) {
       commit(types.default.SET_AGENT_UPDATING_STATUS, false);
-      throw new Error(error);
+      throwErrorMessage(error);
+    }
+  },
+  // Unifies two duplicate agents: the mergee's history moves to the base agent,
+  // the mergee record disappears and the chosen email stays on the survivor.
+  merge: async ({ commit }, { baseAgentId, mergeeAgentId, email }) => {
+    commit(types.default.SET_AGENT_UPDATING_STATUS, true);
+    try {
+      const response = await AccountActionsAPI.mergeAgents({
+        baseAgentId,
+        mergeeAgentId,
+        email,
+      });
+      commit(types.default.DELETE_AGENT, mergeeAgentId);
+      commit(types.default.EDIT_AGENT, response.data);
+      commit(types.default.SET_AGENT_UPDATING_STATUS, false);
+    } catch (error) {
+      commit(types.default.SET_AGENT_UPDATING_STATUS, false);
+      throw error;
     }
   },
   updateSingleAgentPresence: ({ commit }, { id, availabilityStatus }) => {

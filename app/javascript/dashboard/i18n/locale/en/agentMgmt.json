@@ -82,7 +82,9 @@
         },
         "EMAIL": {
           "LABEL": "Correo electrónico",
-          "PLACEHOLDER": "Ingresa el correo electrónico del agente"
+          "PLACEHOLDER": "Ingresa el correo electrónico del agente",
+          "ERROR": "Ingresa un correo electrónico válido",
+          "HELP": "El cambio se aplica de inmediato: el agente inicia sesión con el nuevo correo y conserva todo su historial. Si aún no acepta la invitación, se le reenviará a la nueva dirección."
         },
         "AGENT_AVAILABILITY": {
           "LABEL": "Disponibilidad",
@@ -108,6 +110,34 @@
         "ADMIN_SUCCESS_MESSAGE": "Se envió al agente un correo con instrucciones para restablecer la contraseña",
         "SUCCESS_MESSAGE": "Contraseña del agente restablecida correctamente",
         "ERROR_MESSAGE": "No se pudo conectar con el servidor de Woot. Por favor, inténtalo de nuevo más tarde"
+      }
+    },
+    "MERGE": {
+      "HEADER_BTN_TXT": "Unificar agentes",
+      "TITLE": "Unificar agentes duplicados",
+      "DESC": "Combina dos cuentas de la misma persona en una sola. Todo el historial de conversaciones, notas, menciones y reportes del agente duplicado pasa al agente principal.",
+      "CANCEL_BUTTON_TEXT": "Cancelar",
+      "SUMMARY": "Se moverá todo el historial de {mergee} a {base}, se eliminará la cuenta duplicada y el agente quedará con el correo {email}.",
+      "FORM": {
+        "BASE_AGENT": {
+          "LABEL": "Agente principal",
+          "PLACEHOLDER": "Selecciona el agente que se conserva",
+          "HELP": "Es la cuenta que sobrevive: conserva su nombre, rol, equipos y contraseña."
+        },
+        "MERGEE_AGENT": {
+          "LABEL": "Agente duplicado",
+          "PLACEHOLDER": "Selecciona el agente que se elimina",
+          "HELP": "Esta cuenta se elimina después de mover su historial al agente principal. No se puede deshacer."
+        },
+        "EMAIL": {
+          "LABEL": "Correo que prevalece",
+          "HELP": "Con este correo iniciará sesión el agente principal después de la unificación."
+        },
+        "SUBMIT": "Unificar agentes"
+      },
+      "API": {
+        "SUCCESS_MESSAGE": "Agentes unificados correctamente",
+        "ERROR_MESSAGE": "No se pudieron unificar los agentes. Por favor, inténtalo de nuevo más tarde"
       }
     },
     "SEARCH": {

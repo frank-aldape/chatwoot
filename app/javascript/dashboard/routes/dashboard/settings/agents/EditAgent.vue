@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, minLength } from '@vuelidate/validators';
+import { required, minLength, email as isEmail } from '@vuelidate/validators';
 import { useStore, useMapGetter } from 'dashboard/composables/store';
 import { useI18n } from 'vue-i18n';
 import { useAlert } from 'dashboard/composables';
@@ -52,6 +52,7 @@ const store = useStore();
 const { t } = useI18n();
 
 const agentName = ref(props.name);
+const agentEmail = ref(props.email);
 const agentAvailability = ref(props.availability);
 const selectedRoleId = ref(props.customRoleId || props.type);
 const agentCredentials = ref({ email: props.email });
@@ -59,12 +60,14 @@ const selectedTeamIds = ref([...props.teamIds]);
 
 const rules = {
   agentName: { required, minLength: minLength(1) },
+  agentEmail: { required, isEmail },
   selectedRoleId: { required },
   agentAvailability: { required },
 };
 
 const v$ = useVuelidate(rules, {
   agentName,
+  agentEmail,
   selectedRoleId,
   agentAvailability,
 });
@@ -139,6 +142,7 @@ const editAgent = async () => {
     const payload = {
       id: props.id,
       name: agentName.value,
+      email: agentEmail.value,
       availability: agentAvailability.value,
     };
 
@@ -155,7 +159,7 @@ const editAgent = async () => {
     useAlert(t('AGENT_MGMT.EDIT.API.SUCCESS_MESSAGE'));
     emit('close');
   } catch (error) {
-    useAlert(t('AGENT_MGMT.EDIT.API.ERROR_MESSAGE'));
+    useAlert(error.message || t('AGENT_MGMT.EDIT.API.ERROR_MESSAGE'));
   }
 };
 
@@ -183,6 +187,24 @@ const resetPassword = async () => {
             @input="v$.agentName.$touch"
           />
         </label>
+      </div>
+
+      <div class="w-full">
+        <label :class="{ error: v$.agentEmail.$error }">
+          {{ $t('AGENT_MGMT.EDIT.FORM.EMAIL.LABEL') }}
+          <input
+            v-model="agentEmail"
+            type="email"
+            :placeholder="$t('AGENT_MGMT.EDIT.FORM.EMAIL.PLACEHOLDER')"
+            @input="v$.agentEmail.$touch"
+          />
+          <span v-if="v$.agentEmail.$error" class="message">
+            {{ $t('AGENT_MGMT.EDIT.FORM.EMAIL.ERROR') }}
+          </span>
+        </label>
+        <p class="mt-0 mb-4 text-sm text-n-slate-11">
+          {{ $t('AGENT_MGMT.EDIT.FORM.EMAIL.HELP') }}
+        </p>
       </div>
 
       <div class="w-full">

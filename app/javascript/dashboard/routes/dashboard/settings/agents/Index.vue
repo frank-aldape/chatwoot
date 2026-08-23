@@ -11,6 +11,7 @@ import {
 
 import AddAgent from './AddAgent.vue';
 import EditAgent from './EditAgent.vue';
+import MergeAgents from './MergeAgents.vue';
 import BaseSettingsHeader from '../components/BaseSettingsHeader.vue';
 import SettingsLayout from '../SettingsLayout.vue';
 import Button from 'dashboard/components-next/button/Button.vue';
@@ -27,6 +28,7 @@ const resendLoading = ref({});
 const showAddPopup = ref(false);
 const showDeletePopup = ref(false);
 const showEditPopup = ref(false);
+const showMergePopup = ref(false);
 const agentAPI = ref({ message: '' });
 const currentAgent = ref({});
 const searchQuery = ref('');
@@ -184,6 +186,13 @@ const hideEditPopup = () => {
   showEditPopup.value = false;
 };
 
+const openMergePopup = () => {
+  showMergePopup.value = true;
+};
+const hideMergePopup = () => {
+  showMergePopup.value = false;
+};
+
 const openDeletePopup = agent => {
   showDeletePopup.value = true;
   currentAgent.value = agent;
@@ -222,6 +231,14 @@ const confirmDeletion = () => {
         feature-name="agents"
       >
         <template #actions>
+          <Button
+            v-if="agentList.length > 1"
+            faded
+            slate
+            icon="i-lucide-merge"
+            :label="$t('AGENT_MGMT.MERGE.HEADER_BTN_TXT')"
+            @click="openMergePopup"
+          />
           <Button
             icon="i-lucide-circle-plus"
             :label="$t('AGENT_MGMT.HEADER_BTN_TXT')"
@@ -383,6 +400,10 @@ const confirmDeletion = () => {
         :team-ids="currentAgent.team_ids || []"
         @close="hideEditPopup"
       />
+    </woot-modal>
+
+    <woot-modal v-model:show="showMergePopup" :on-close="hideMergePopup">
+      <MergeAgents v-if="showMergePopup" @close="hideMergePopup" />
     </woot-modal>
 
     <woot-delete-modal
